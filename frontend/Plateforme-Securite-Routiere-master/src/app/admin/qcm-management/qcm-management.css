@@ -1,0 +1,82 @@
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-action i {
+  font-size: 0.9rem;
+}
+
+.btn-action span {
+  display: inline;
+}
+
+/* Modify Button - Blue */
+.btn-modify {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+  color: #ffffff;
+  border: 1px solid #0d47a1;
+}
+
+.btn-modify:hover {
+  background: linear-gradient(135deg, #0d47a1, #0a3a87);
+  box-shadow: 0 4px 12px rgba(21, 101, 192, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-modify:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(21, 101, 192, 0.3);
+}
+
+/* Delete Button - Red */
+.btn-delete {
+  background: linear-gradient(135deg, #d32f2f, #c62828);
+  color: #ffffff;
+  border: 1px solid #c62828;
+}
+
+.btn-delete:hover {
+  background: linear-gradient(135deg, #c62828, #b71c1c);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-delete:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(211, 47, 47, 0.3);
+}
+
+/* Responsive - Hide text on very small screens */
+@media (max-width: 576px) {
+  .btn-action span {
+    display: none;
+  }
+
+  .btn-action {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .action-buttons {
+    gap: 0.35rem;
+  }
+}

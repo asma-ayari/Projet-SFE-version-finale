@@ -1,0 +1,197 @@
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi me-2" [ngClass]="editMode ? 'bi-pencil-square' : 'bi-plus-circle'"></i>
+            {{ editMode ? ('ADMIN.QCM_CREATE.EDIT_TITLE' | translate) : ('ADMIN.QCM_CREATE.CREATE_TITLE' | translate) }}</h2>
+        <a routerLink="/admin/qcm" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i>{{ 'ADMIN.QCM_CREATE.BACK' | translate }}
+        </a>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+        {{ error }}
+        <button type="button" class="btn-close" (click)="error=''"></button>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">{{ 'ADMIN.QCM_CREATE.LOADING' | translate }}</p>
+    </div>
+
+    <div *ngIf="!loading">
+
+        <!-- Meta -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">{{ 'ADMIN.QCM_CREATE.GENERAL_INFO' | translate }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">{{ 'ADMIN.QCM_CREATE.TITLE' | translate }} *</label>
+                        <input type="text" class="form-control" [(ngModel)]="title"
+                            [placeholder]="('ADMIN.QCM_CREATE.TITLE_PH' | translate)">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">{{ 'ADMIN.QCM_CREATE.DESCRIPTION' | translate }}</label>
+                        <textarea class="form-control" rows="2" [(ngModel)]="description"
+                            [placeholder]="('ADMIN.QCM_CREATE.DESCRIPTION_PH' | translate)"></textarea>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ 'ADMIN.QCM_CREATE.CATEGORY' | translate }}</label>
+                        <select class="form-select" [(ngModel)]="category">
+                            <option *ngIf="categories.length === 0" value="">Aucune categorie</option>
+                            <option *ngFor="let cat of categories" [value]="cat.slug">
+                                {{ cat.name }}{{ cat.is_active ? '' : ' (desactivee)' }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ 'ADMIN.QCM_CREATE.DIFFICULTY' | translate }}</label>
+                        <select class="form-select" [(ngModel)]="difficulty">
+                            <option value="facile">Facile</option>
+                            <option value="moyen">Moyen</option>
+                            <option value="difficile">Difficile</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ 'ADMIN.QCM_CREATE.DURATION' | translate }}</label>
+                        <input type="number" class="form-control" [(ngModel)]="duration_minutes" min="1" max="120">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ 'ADMIN.QCM_CREATE.MIN_SCORE' | translate }}</label>
+                        <input type="number" class="form-control" [(ngModel)]="pass_score" min="0" max="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions -->
+        <div class="card mb-3" *ngFor="let q of questions; let qi = index">
+            <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                <h6 class="mb-0">{{ 'ADMIN.QCM_CREATE.QUESTION' | translate }} {{ qi + 1 }}</h6>
+                <button class="btn btn-sm btn-outline-danger" (click)="removeQuestion(qi)" *ngIf="questions.length > 1">
+                    <span class="material-icons" aria-hidden="true">delete</span>
+                </button>
+            </div>
+            <div class="card-body">
+
+                <!-- Texte question -->
+                <div class="mb-3">
+                    <input type="text" class="form-control"
+                        [(ngModel)]="q.text"
+                        [placeholder]="('ADMIN.QCM_CREATE.QUESTION_PH' | translate)">
+                </div>
+
+                <!-- Explication -->
+                <div class="mb-3">
+                    <input type="text" class="form-control form-control-sm"
+                        [(ngModel)]="q.explanation"
+                        placeholder="Explication (affichée après correction)">
+                </div>
+
+                <!-- ✅ Zone upload image -->
+                <div class="mb-3">
+                    <label class="form-label small text-muted">
+                        <i class="bi bi-image me-1"></i>Image de la question (optionnel)
+                    </label>
+
+                    <!-- Pas encore d'image -->
+                    <div *ngIf="!q.image_url && !imagePreviews[qi]">
+                        <label [for]="'img-' + qi" class="image-upload-zone">
+                            <i class="bi bi-cloud-upload fs-4 text-muted"></i>
+                            <span class="text-muted small ms-2">Cliquez pour ajouter une image</span>
+                            <input [id]="'img-' + qi"
+                                   type="file"
+                                   accept="image/jpeg,image/png,image/webp"
+                                   (change)="onFileSelected($event, qi)"
+                                   hidden>
+                        </label>
+                    </div>
+
+                    <!-- Prévisualisation image -->
+                    <div *ngIf="q.image_url || imagePreviews[qi]" class="image-preview-wrapper">
+                        <img [src]="imagePreviews[qi] || getImageUrl(q.image_url)"
+                             class="image-preview"
+                             alt="Aperçu image question">
+                        <div class="image-preview-actions">
+                            <!-- Changer l'image -->
+                            <label [for]="'img-change-' + qi" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil me-1"></i>Changer
+                                <input [id]="'img-change-' + qi"
+                                       type="file"
+                                       accept="image/jpeg,image/png,image/webp"
+                                       (change)="onFileSelected($event, qi)"
+                                       hidden>
+                            </label>
+                            <!-- Supprimer l'image -->
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-danger ms-2"
+                                    (click)="removeImage(qi)">
+                                <i class="bi bi-trash me-1"></i>Supprimer
+                            </button>
+                        </div>
+                        <!-- Statut upload -->
+                        <div *ngIf="uploadingImage[qi]" class="mt-2">
+                            <div class="spinner-border spinner-border-sm text-primary me-2"></div>
+                            <small class="text-muted">Upload en cours...</small>
+                        </div>
+                        <div *ngIf="uploadSuccess[qi]" class="mt-2">
+                            <small class="text-success">
+                                <i class="bi bi-check-circle me-1"></i>Image uploadée avec succès
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Answers -->
+                <label class="form-label small text-muted">
+                    {{ 'ADMIN.QCM_CREATE.ANSWERS_LABEL' | translate }}
+                </label>
+                <div class="input-group mb-2" *ngFor="let a of q.answers; let ai = index">
+                    <div class="input-group-text">
+                        <input type="radio"
+                               [name]="'correct_' + qi"
+                               [checked]="a.is_correct"
+                               (change)="setCorrect(qi, ai)">
+                    </div>
+                    <input type="text" class="form-control"
+                           [(ngModel)]="a.text"
+                           [placeholder]="('ADMIN.QCM_CREATE.ANSWER_PH' | translate) + ' ' + (ai + 1)">
+                    <button type="button"
+                            class="btn qcm-answer-delete-btn"
+                            (click)="removeAnswer(qi, ai)"
+                            *ngIf="q.answers.length > 2"
+                            aria-label="Supprimer la réponse"
+                            title="Supprimer">
+                        <span class="material-icons" aria-hidden="true">delete</span>
+                    </button>
+                </div>
+                <button class="btn btn-sm btn-primary" (click)="addAnswer(qi)" *ngIf="q.answers.length < 6">
+                    <span class="material-icons me-1" aria-hidden="true">add</span>
+                    {{ 'ADMIN.QCM_CREATE.ADD_ANSWER' | translate }}
+                </button>
+
+            </div>
+        </div>
+
+        <button class="btn btn-outline-primary mb-4" (click)="addQuestion()">
+            <i class="bi bi-plus-lg me-1"></i>{{ 'ADMIN.QCM_CREATE.ADD_QUESTION' | translate }}
+        </button>
+
+        <!-- Submit -->
+        <div class="d-flex justify-content-end gap-2">
+            <a routerLink="/admin/qcm" class="btn btn-secondary">
+                {{ 'ADMIN.QCM_CREATE.CANCEL' | translate }}
+            </a>
+            <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+                <span *ngIf="saving" class="spinner-border spinner-border-sm me-1"></span>
+                {{ saving
+                    ? ('ADMIN.QCM_CREATE.SAVING' | translate)
+                    : (editMode
+                        ? ('ADMIN.QCM_CREATE.EDIT_BTN' | translate)
+                        : ('ADMIN.QCM_CREATE.CREATE_BTN' | translate)) }}
+            </button>
+        </div>
+
+    </div>
+</div>

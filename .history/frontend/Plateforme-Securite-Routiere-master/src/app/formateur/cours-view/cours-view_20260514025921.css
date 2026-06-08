@@ -1,0 +1,72 @@
+@import '../../core/data/courses/course-1-distance.css';
+
+.formateur-cours-detail-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.formateur-cours-detail-page .course-header {
+  padding-bottom: 2rem;
+}
+
+.formateur-cours-detail-page .header-top {
+  align-items: center;
+}
+
+.formateur-cours-detail-page .back-link,
+.formateur-cours-detail-page .edit-link {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.16);
+  text-decoration: none;
+}
+
+.formateur-cours-detail-page .edit-link {
+  margin-left: auto;
+}
+
+.formateur-cours-detail-page .course-badge {
+  margin-bottom: 0;
+}
+
+.formateur-cours-detail-page .course-content {
+  margin-top: -1.5rem;
+}
+
+.formateur-cours-detail-page .course-content .container {
+  max-width: 1000px;
+}
+
+.formateur-cours-detail-page .lesson-host {
+  display: block;
+}
+
+.loading-container,
+.error-container {
+  margin: 1rem;
+  padding: 2rem;
+  text-align: center;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.error-container {
+  color: #b42318;
+}
+
+.error-container i {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .formateur-cours-detail-page .header-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .formateur-cours-detail-page .edit-link {
+    margin-left: 0;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,102 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="bi bi-tags me-2"></i>{{ 'ADMIN.QCM_CATEGORIES.TITLE' | translate }}</h2>
+            <p class="text-muted mb-0">{{ 'ADMIN.QCM_CATEGORIES.SUBTITLE' | translate }}</p>
+        </div>
+        <a routerLink="/admin/qcm" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>{{ 'ADMIN.QCM_CATEGORIES.BACK' | translate }}
+        </a>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+        {{ error }}
+        <button type="button" class="btn-close" (click)="error=''"></button>
+    </div>
+    <div *ngIf="success" class="alert alert-success alert-dismissible fade show">
+        {{ success }}
+        <button type="button" class="btn-close" (click)="success=''"></button>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">{{ 'ADMIN.QCM_CATEGORIES.NEW_CATEGORY' | translate }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label">{{ 'ADMIN.QCM_CATEGORIES.CATEGORY_NAME' | translate }}</label>
+                    <input class="form-control" [(ngModel)]="newCategoryName" [placeholder]="('ADMIN.QCM_CATEGORIES.CATEGORY_PLACEHOLDER' | translate)" />
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-primary w-100" (click)="createCategory()"
+                        [disabled]="creating || !newCategoryName.trim()">
+                        <span *ngIf="creating" class="spinner-border spinner-border-sm me-1"></span>
+                        {{ 'ADMIN.QCM_CATEGORIES.ADD' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+            </div>
+
+            <div class="table-responsive" *ngIf="!loading">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>{{ 'ADMIN.QCM_CATEGORIES.CATEGORY_NAME' | translate }}</th>
+                            <th>{{ 'ADMIN.QCM_CATEGORIES.SLUG' | translate }}</th>
+                            <th>{{ 'ADMIN.QCM_CATEGORIES.STATUS' | translate }}</th>
+                            <th class="text-end">{{ 'ADMIN.QCM_CATEGORIES.ACTIONS' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cat of categories">
+                            <td>
+                                <div *ngIf="editingId !== cat.id">{{ cat.name }}</div>
+                                <input *ngIf="editingId === cat.id" class="form-control form-control-sm"
+                                    [(ngModel)]="editingName" />
+                            </td>
+                            <td><span class="text-muted">{{ cat.slug }}</span></td>
+                            <td>
+                                <span class="badge" [ngClass]="cat.is_active ? 'bg-success' : 'bg-secondary'">
+                                    {{ cat.is_active ? ('ADMIN.QCM_CATEGORIES.ACTIVE' | translate) : ('ADMIN.QCM_CATEGORIES.INACTIVE' | translate) }}
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="action-buttons">
+                                    <button *ngIf="editingId !== cat.id" class="btn btn-sm btn-outline-primary"
+                                        (click)="startEdit(cat)">
+                                        {{ 'ADMIN.QCM_CATEGORIES.EDIT' | translate }}
+                                    </button>
+                                    <button *ngIf="editingId === cat.id" class="btn btn-sm btn-success"
+                                        (click)="saveEdit(cat)">
+                                        {{ 'ADMIN.QCM_CATEGORIES.SAVE' | translate }}
+                                    </button>
+                                    <button *ngIf="editingId === cat.id" class="btn btn-sm btn-outline-secondary"
+                                        (click)="cancelEdit()">
+                                        {{ 'ADMIN.QCM_CATEGORIES.CANCEL' | translate }}
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" (click)="toggleActive(cat)">
+                                        {{ cat.is_active ? ('ADMIN.QCM_CATEGORIES.DEACTIVATE' | translate) : ('ADMIN.QCM_CATEGORIES.ACTIVATE' | translate) }}
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" (click)="deleteCategory(cat)">
+                                        {{ 'ADMIN.QCM_CATEGORIES.DELETE' | translate }}
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="categories.length === 0">
+                            <td colspan="4" class="text-center text-muted py-4">{{ 'ADMIN.QCM_CATEGORIES.NO_CATEGORIES' | translate }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

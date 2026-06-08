@@ -1,0 +1,420 @@
+{
+  "NAV": {
+    "HOME": "Accueil",
+    "COURSES": "Cours",
+    "QCM": "QCM",
+    "CHATBOT": "Assistant IA",
+    "PRESENTATION": "Présentation",
+    "CONTACT": "Contact",
+    "LOGIN": "Connexion",
+    "REGISTER": "Inscription",
+    "DASHBOARD": "Tableau de bord",
+    "LOGOUT": "Déconnexion"
+  },
+  "HOME": {
+    "HERO": {
+      "BADGE": "Plateforme Officielle",
+      "TITLE_1": "Apprenez la",
+      "TITLE_HIGHLIGHT": "Sécurité Routière",
+      "TITLE_2": "de Manière Intelligente",
+      "DESCRIPTION": "Découvrez notre plateforme innovante de sensibilisation à la sécurité routière. Cours interactifs, tests QCM et un chatbot intelligent bilingue pour répondre à toutes vos questions.",
+      "CTA_PRIMARY": "Commencer Maintenant",
+      "CTA_SECONDARY": "Découvrir la Plateforme"
+    },
+    "SCROLL": "Défiler",
+    "CARDS": {
+      "TRAINING": {
+        "TITLE": "Formation Complète",
+        "DESC": "Code de la route, signalisation, règles de conduite"
+      },
+      "TESTS": {
+        "TITLE": "Tests Validés",
+        "DESC": "QCM par des experts"
+      },
+      "AI": {
+        "TITLE": "Assistant IA",
+        "DESC": "Réponses instantanées"
+      }
+    },
+    "STATS": {
+      "LEARNERS": "Apprenants Formés",
+      "COURSES": "Cours Disponibles",
+      "QUESTIONS": "Questions QCM",
+      "SATISFACTION": "Taux de Satisfaction"
+    },
+    "FEATURES": {
+      "BADGE": "Fonctionnalités",
+      "TITLE": "Une Plateforme Complète pour Votre Apprentissage",
+      "SUBTITLE": "Découvrez tous les outils mis à votre disposition pour maîtriser la sécurité routière",
+      "COURSES": {
+        "TITLE": "Cours Interactifs",
+        "DESC": "Accédez à des cours complets sur le code de la route, la signalisation et les bonnes pratiques de conduite."
+      },
+      "QCM": {
+        "TITLE": "Tests QCM",
+        "DESC": "Évaluez vos connaissances avec des questionnaires à choix multiples validés par des experts."
+      },
+      "CHATBOT": {
+        "TITLE": "Chatbot Intelligent",
+        "DESC": "Posez vos questions et obtenez des réponses instantanées grâce à notre assistant IA bilingue."
+      },
+      "PROGRESS": {
+        "TITLE": "Suivi des Progrès",
+        "DESC": "Suivez votre progression et identifiez vos points faibles pour mieux vous améliorer."
+      }
+    },
+    "STEPS": {
+      "BADGE": "Comment ça marche",
+      "TITLE": "Trois Étapes Simples pour Commencer",
+      "SUBTITLE": "Rejoignez notre communauté d'apprenants en quelques clics",
+      "STEP1": {
+        "TITLE": "Créez Votre Compte",
+        "DESC": "Inscrivez-vous gratuitement et accédez à l'ensemble de la plateforme"
+      },
+      "STEP2": {
+        "TITLE": "Suivez les Cours",
+        "DESC": "Apprenez à votre rythme avec nos cours interactifs et vidéos"
+      },
+      "STEP3": {
+        "TITLE": "Testez Vos Connaissances",
+        "DESC": "Validez vos acquis avec nos QCM et obtenez votre certificat"
+      }
+    },
+    "CHATBOT": {
+      "BADGE": "Assistant Intelligent",
+      "TITLE": "Posez Vos Questions à Notre Chatbot IA",
+      "DESCRIPTION": "Notre assistant intelligent basé sur la technologie RAG peut répondre à toutes vos questions sur la sécurité routière en français et en arabe. Il analyse les documents pédagogiques validés pour vous fournir des réponses fiables et contextualisées.",
+      "FEATURE1": "Réponses instantanées 24h/24",
+      "FEATURE2": "Support bilingue (Français / العربية)",
+      "FEATURE3": "Basé sur des documents officiels",
+      "FEATURE4": "Apprentissage personnalisé",
+      "CTA": "Essayer le Chatbot",
+      "BOT_NAME": "Assistant Sécurité Routière",
+      "DEMO_MSG1": "Bonjour ! 👋 Je suis votre assistant virtuel. Comment puis-je vous aider avec la sécurité routière ?",
+      "DEMO_MSG2": "Quelle est la vitesse maximale en agglomération ?",
+      "DEMO_MSG3": "En Tunisie, la vitesse maximale autorisée en agglomération est de <strong>50 km/h</strong>. Cette limite peut être réduite dans certaines zones."
+    },
+    "CTA": {
+      "TITLE": "Prêt à Améliorer Vos Connaissances ?",
+      "SUBTITLE": "Rejoignez des milliers d'apprenants et maîtrisez les règles de la sécurité routière",
+      "REGISTER": "S'inscrire Gratuitement",
+      "CONTACT": "Nous Contacter"
+    }
+  },
+  "FOOTER": {
+    "BRAND_TITLE": "Sécurité Routière",
+    "BRAND_SUBTITLE": "Tunisie",
+    "DESCRIPTION": "Plateforme intelligente de sensibilisation à la sécurité routière. Apprenez les règles de circulation et testez vos connaissances.",
+    "QUICK_LINKS": "Liens Rapides",
+    "QCM_TESTS": "Tests QCM",
+    "ABOUT": "À propos",
+    "RESOURCES": "Ressources",
+    "ROAD_CODE": "Code de la Route",
+    "SIGNAGE": "Signalisation",
+    "DRIVING_RULES": "Règles de Conduite",
+    "FIRST_AID": "Premiers Secours",
+    "AI_ASSISTANT": "Assistant IA",
+    "COPYRIGHT": "Association Tunisienne pour la Sécurité Routière. Tous droits réservés.",
+    "PRIVACY": "Politique de confidentialité",
+    "TERMS": "Conditions d'utilisation"
+  },
+  "PRESENTATION": {
+    "HERO_BADGE": "À propos du projet",
+    "HERO_TITLE": "Notre Mission",
+    "HERO_SUBTITLE": "Découvrez le projet de plateforme intelligente de sensibilisation à la sécurité routière",
+    "CONTEXT_TITLE": "Contexte du Projet",
+    "CONTEXT_TEXT": "Dans le cadre du projet de fin d'études pour l'obtention du diplôme de Master Professionnel en Développement des Systèmes d'Information à l'ISET de Sfax, nous avons développé cette plateforme innovante en partenariat avec l'Association Tunisienne de Prévention Routière.",
+    "OBJECTIVES_TITLE": "Objectifs",
+    "OBJ_1": "Sensibilisation à la sécurité routière",
+    "OBJ_2": "Formation interactive et moderne",
+    "OBJ_3": "Accessibilité bilingue (FR/AR)",
+    "OBJ_4": "Suivi des performances",
+    "SOLUTION_TITLE": "Notre Solution",
+    "SOL_1": "Cours vidéo avec documents PDF",
+    "SOL_2": "QCM interactifs avec correction",
+    "SOL_3": "Chatbot RAG bilingue intelligent",
+    "SOL_4": "Tableaux de bord analytiques",
+    "TEAM_TITLE": "Notre Équipe",
+    "PARTNER_TITLE": "Partenaire",
+    "PARTNER_NAME": "Association Tunisie pour la Sécurité Routière ATSR - Section Sfax"
+  },
+  "CONTACT": {
+    "HERO_BADGE": "Nous contacter",
+    "HERO_TITLE": "Contactez-nous",
+    "HERO_SUBTITLE": "Une question ? N'hésitez pas à nous contacter",
+    "INFO_TITLE": "Informations de contact",
+    "INFO_SUBTITLE": "Plusieurs moyens de nous joindre",
+    "ADDRESS": "Adresse",
+    "PHONE": "Téléphone",
+    "EMAIL": "Email",
+    "HOURS": "Horaires",
+    "HOURS_VALUE": "Lun - Ven: 8h - 17h\nSam: 8h - 12h",
+    "FOLLOW_US": "Suivez-nous",
+    "FORM_TITLE": "Envoyez-nous un message",
+    "FORM_NAME": "Nom complet",
+    "FORM_EMAIL": "Adresse email",
+    "FORM_SUBJECT": "Sujet",
+    "FORM_MESSAGE": "Votre message",
+    "FORM_SUBMIT": "Envoyer le message",
+    "FORM_SENDING": "Envoi en cours...",
+    "SUCCESS_TITLE": "Message envoyé !",
+    "SUCCESS_TEXT": "Nous vous répondrons dans les plus brefs délais.",
+    "SUCCESS_BUTTON": "Envoyer un autre message"
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Connexion",
+    "LOGIN_SUBTITLE": "Accédez à votre espace personnel",
+    "EMAIL": "Adresse email",
+    "PASSWORD": "Mot de passe",
+    "REMEMBER_ME": "Se souvenir de moi",
+    "FORGOT_PASSWORD": "Mot de passe oublié ?",
+    "LOGIN_BUTTON": "Se connecter",
+    "NO_ACCOUNT": "Pas encore de compte ?",
+    "REGISTER_LINK": "Inscrivez-vous",
+    "REGISTER_TITLE": "Inscription",
+    "REGISTER_SUBTITLE": "Créez votre compte gratuitement",
+    "FIRST_NAME": "Prénom",
+    "LAST_NAME": "Nom",
+    "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+    "REGISTER_BUTTON": "S'inscrire",
+    "HAS_ACCOUNT": "Déjà un compte ?",
+    "LOGIN_LINK": "Connectez-vous",
+    "OR_CONTINUE": "Ou continuer avec"
+  },
+  "CHATBOT": {
+    "TITLE": "Assistant Sécurité Routière",
+    "STATUS": "En ligne - Prêt à vous aider",
+    "ONLINE": "En ligne",
+    "QUICK_QUESTIONS": "Questions Rapides",
+    "SUGGESTIONS": "Suggestions",
+    "INFO_TEXT": "Je suis un assistant IA entraîné sur le code de la route tunisien. Posez-moi vos questions !",
+    "PLACEHOLDER": "Posez votre question sur la sécurité routière...",
+    "INPUT_PLACEHOLDER": "Posez votre question...",
+    "SECURE_TEXT": "Vos conversations sont privées et sécurisées",
+    "WELCOME": "Bonjour ! 👋 Je suis votre assistant virtuel spécialisé en sécurité routière. Comment puis-je vous aider aujourd'hui ?",
+    "Q_SIGNS": "Panneaux de signalisation",
+    "Q_PRIORITY": "Règles de priorité",
+    "Q_FIRST_AID": "Premiers secours",
+    "Q_SPEED": "Limitations de vitesse"
+  },
+  "DASHBOARD": {
+    "TITLE": "Tableau de bord",
+    "WELCOME": "Bienvenue",
+    "OVERVIEW": "Voici un aperçu de votre plateforme",
+    "TOTAL_USERS": "Total Utilisateurs",
+    "COURSES_PUBLISHED": "Cours Publiés",
+    "QCM_COMPLETED": "QCM Complétés",
+    "SUCCESS_RATE": "Taux de Réussite",
+    "QUICK_ACTIONS": "Actions rapides",
+    "ADD_COURSE": "Ajouter un cours",
+    "CREATE_QCM": "Créer un QCM",
+    "MANAGE_USERS": "Gérer utilisateurs",
+    "VIEW_DOCUMENTS": "Voir documents",
+    "REGISTRATIONS": "Évolution des inscriptions",
+    "QCM_SUCCESS": "Taux de réussite par QCM",
+    "USER_DISTRIBUTION": "Répartition des utilisateurs",
+    "POPULAR_COURSES": "Cours les plus populaires",
+    "RECENT_ACTIVITY": "Activités récentes",
+    "VIEW_ALL": "Voir tout",
+    "LAST_MONTHS": "derniers mois",
+    "THIS_MONTH": "Ce mois"
+  },
+  "USERS": {
+    "TITLE": "Gestion des Utilisateurs",
+    "SUBTITLE": "Gérez les comptes utilisateurs de la plateforme",
+    "ADD_USER": "Ajouter un utilisateur",
+    "TOTAL": "Total utilisateurs",
+    "LEARNERS": "Apprenants",
+    "TRAINERS": "Formateurs",
+    "ACTIVE": "Actifs",
+    "SEARCH": "Rechercher un utilisateur...",
+    "ALL_ROLES": "Tous les rôles",
+    "ALL_STATUS": "Tous les statuts",
+    "USER": "Utilisateur",
+    "EMAIL": "Email",
+    "ROLE": "Rôle",
+    "STATUS": "Statut",
+    "REGISTRATION_DATE": "Date d'inscription",
+    "PROGRESS": "Progression",
+    "ACTIONS": "Actions",
+    "ROLE_LEARNER": "Apprenant",
+    "ROLE_TRAINER": "Formateur",
+    "ROLE_ADMIN": "Administrateur",
+    "STATUS_ACTIVE": "Actif",
+    "STATUS_INACTIVE": "Inactif",
+    "STATUS_SUSPENDED": "Suspendu",
+    "CONFIRM_DELETE": "Confirmer la suppression",
+    "DELETE_WARNING": "Cette action est irréversible.",
+    "CANCEL": "Annuler",
+    "DELETE": "Supprimer"
+  },
+  "COMMON": {
+    "LOADING": "Chargement...",
+    "ERROR": "Une erreur est survenue",
+    "SAVE": "Enregistrer",
+    "CANCEL": "Annuler",
+    "DELETE": "Supprimer",
+    "EDIT": "Modifier",
+    "VIEW": "Voir",
+    "BACK": "Retour",
+    "NEXT": "Suivant",
+    "PREVIOUS": "Précédent",
+    "YES": "Oui",
+    "NO": "Non",
+    "VIEWS": "vues",
+    "TOTAL": "Total",
+    "LEARN_MORE": "En savoir plus"
+  },
+  "COURSES": {
+    "BADGE": "Formation",
+    "TITLE": "Nos Cours",
+    "SUBTITLE": "Découvrez notre catalogue de formations sur la sécurité routière",
+    "COURSES_LABEL": "Cours",
+    "LEARNERS_LABEL": "Apprenants",
+    "SEARCH_PLACEHOLDER": "Rechercher un cours...",
+    "ALL_CATEGORIES": "Toutes les catégories",
+    "CAT_CODE": "Code de la route",
+    "CAT_SIGNALISATION": "Signalisation",
+    "CAT_CONDUITE": "Conduite",
+    "CAT_SECURITE": "Sécurité",
+    "CAT_SECOURS": "Premiers secours",
+    "ALL_LEVELS": "Tous les niveaux",
+    "LEVEL_BEGINNER": "Débutant",
+    "LEVEL_INTERMEDIATE": "Intermédiaire",
+    "LEVEL_ADVANCED": "Avancé",
+    "ENROLLED": "Inscrit",
+    "LESSONS": "leçons",
+    "PROGRESS": "Progression",
+    "CONTINUE": "Continuer",
+    "VIEW_COURSE": "Voir le cours",
+    "NO_RESULTS": "Aucun cours trouvé",
+    "NO_RESULTS_DESC": "Essayez de modifier vos filtres de recherche"
+  },
+  "QCM_PANEL": {
+    "LIST": {
+      "TITLE": "Quiz disponibles",
+      "SUBTITLE": "Testez vos connaissances en sécurité routière",
+      "AUTO_GENERATE": "Auto-générer un QCM",
+      "ALL_CATEGORIES": "Toutes les catégories",
+      "CAT_CODE": "Code de la route",
+      "CAT_SIGNALISATION": "Signalisation",
+      "CAT_SECURITE": "Sécurité routière",
+      "CAT_CONDUITE": "Conduite",
+      "CAT_GENERAL": "Général",
+      "NO_DESCRIPTION": "Aucune description",
+      "QUESTIONS": "questions",
+      "MIN": "min",
+      "PUBLISHED": "Publié le",
+      "START_QUIZ": "Commencer le quiz",
+      "MY_GENERATED": "Mes QCM auto-générés",
+      "PREV": "Précédent",
+      "NEXT": "Suivant",
+      "NO_QUIZZES": "Aucun quiz disponible pour le moment"
+    },
+    "TEST": {
+      "LOADING": "Chargement du quiz…",
+      "BACK": "Retour aux quiz",
+      "ANSWERED": "répondu(es)",
+      "QUESTIONS": "Questions",
+      "QUESTION": "Question",
+      "PREVIOUS": "Précédent",
+      "NEXT": "Suivant",
+      "SUBMITTING": "Envoi…",
+      "FINISH": "Terminer le quiz",
+      "OF": "/"
+    },
+    "RESULT": {
+      "LOADING": "Chargement...",
+      "SUCCESS": "Félicitations ! Quiz réussi !",
+      "FAILED": "Quiz non réussi",
+      "SCORE": "Score",
+      "CORRECT_ANSWERS": "Bonnes réponses",
+      "DURATION": "Durée",
+      "DETAIL": "Détail des réponses",
+      "CORRECT": "Correcte",
+      "INCORRECT": "Incorrecte",
+      "VIEW_OTHER": "Voir d'autres quiz",
+      "RETAKE": "Repasser ce quiz",
+      "HISTORY": "Historique des résultats",
+      "QUIZ": "Quiz",
+      "RESULT": "Résultat",
+      "DATE": "Date",
+      "VIEW": "Voir",
+      "PASSED": "Réussi",
+      "FAILED_BADGE": "Échoué",
+      "NO_RESULTS": "Vous n'avez pas encore passé de quiz",
+      "DISCOVER": "Découvrir les quiz"
+    }
+  },
+  "CHATBOT_PAGE": {
+    "HEADER": {
+      "TITLE": "Assistant Sécurité Routière",
+      "STATUS_ONLINE": "En ligne",
+      "HISTORY": "Historique",
+      "NEW_CONVERSATION": "Nouvelle conversation"
+    },
+    "SIDEBAR": {
+      "HISTORY_TITLE": "Historique"
+    },
+    "MESSAGES": {
+      "BLOCKED_RESPONSE": "Réponse bloquée: contexte documentaire insuffisant ou citations non conformes.",
+      "SOURCES_TITLE": "Justifications documentaires",
+      "SOURCE_SCORE": "score:",
+      "LISTEN": "Écouter",
+      "STOP": "Arrêter",
+      "HELPFUL": "Utile",
+      "NOT_HELPFUL": "Pas utile",
+      "FEEDBACK_SUCCESS": "Merci pour votre retour. Votre feedback nous aide à améliorer les réponses.",
+      "FEEDBACK_SORRY": "Désolé que cette réponse ne vous ait pas aidé.",
+      "OFFICIAL_SOURCES": "Consultez ces sources officielles :",
+      "MINISTRY_TRANSPORT": "Ministère du Transport",
+      "ANTT": "ANTT",
+      "ROAD_SAFETY": "Sécurité routière (si disponible)",
+      "FEEDBACK_LABEL": "Qu'est-ce qui manquait ? (optionnel)",
+      "FEEDBACK_SEND": "Envoyer",
+      "FEEDBACK_THANKS": "Merci pour votre retour."
+    },
+    "INPUT": {
+      "PLACEHOLDER": "Posez votre question sur la sécurité routière...",
+      "RECORDING": "Parlez maintenant...",
+      "HINT": "Ce chatbot utilise l'IA pour vous aider. Les informations fournies sont à titre indicatif.",
+      "SPEAK_IMAGE": "Envoyer une image de panneau"
+    },
+    "INFO_PANEL": {
+      "TIPS_TITLE": "Conseils d'utilisation",
+      "TIP_1": "Posez des questions claires et précises",
+      "TIP_2": "Utilisez des mots-clés comme \"priorité\", \"vitesse\", \"panneau\"",
+      "TIP_3": "Demandez des explications sur les règles du code",
+      "EMERGENCY_TITLE": "Numéros d'urgence",
+      "POLICE": "Police :",
+      "AMBULANCE": "SAMU :",
+      "FIRE": "Pompiers :",
+      "POLICE_NUMBER": "190",
+      "AMBULANCE_NUMBER": "198",
+      "FIRE_NUMBER": "198"
+    }
+  },
+  "APPRENANT": {
+    "DASHBOARD": {
+      "HELLO": "Bonjour",
+      "SUBTITLE": "Bienvenue sur votre tableau de bord personnel. Continuez votre apprentissage !",
+      "CONTINUE": "Continuer les cours",
+      "WATCH_VIDEOS": "Regarder les vidéos",
+      "TAKE_QCM": "Passer un QCM",
+      "CHATBOT": "Discuter avec l'IA",
+      "LOADING_STATS": "Chargement de vos statistiques...",
+      "RECENT_QCM": "Résultats récents",
+      "HISTORY": "Historique",
+      "MY_SKILLS": "Mes compétences",
+      "RECOMMENDED": "Cours recommandés",
+      "START": "Commencer",
+      "NEED_HELP": "Besoin d'aide ?",
+      "HELP_TEXT": "Notre assistant IA est disponible pour répondre à vos questions sur la sécurité routière.",
+      "CHAT_ASSISTANT": "Discuter avec l'assistant",
+      "AVAILABLE_COURSES": "Cours disponibles",
+      "SUCCESSFUL_QCM": "QCM réussis",
+      "FAILED_QCM": "QCM échoués",
+      "AVERAGE_SCORE": "Score moyen"
+    }
+  }
+}

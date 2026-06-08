@@ -1,0 +1,73 @@
+========================================
+QCM ID: 1
+Title: code niveau 
+Description: code de la route
+Difficulty: facile
+Category: code_de_la_route
+----------------------------------------
+  Question 1 (ID: 1): Quel est le panneau indiquant une priorité à droite ?
+  Explanation: nxggh
+    Answer A (ID: 1): Panneau triangulaire rouge (Correct: True)
+    Answer B (ID: 2): Panneau rond bleu (Correct: False)
+    Answer C (ID: 3): Panneau carré vert (Correct: False)
+    Answer D (ID: 4): Panneau octogonal rouge (Correct: False)
+========================================
+QCM ID: 3
+Title: asmadhoha
+Description: asmaayari aa
+Difficulty: moyen
+Category: securite
+----------------------------------------
+  Question 1 (ID: 4): asma asmaa asmass amsmas
+  Explanation: dhouhz dhouhz
+    Answer A (ID: 13): dzdzdez (Correct: False)
+    Answer B (ID: 14): asasasasasasa (Correct: True)
+    Answer C (ID: 15): dsfzezfzef (Correct: False)
+    Answer D (ID: 16): ezfzeffefffeefeffefefefefe (Correct: False)
+  Question 2 (ID: 5): ssssssss
+  Explanation: asasa
+    Answer A (ID: 17): aaaa (Correct: False)
+    Answer B (ID: 18): sss (Correct: False)
+    Answer C (ID: 19): ssaas (Correct: True)
+    Answer D (ID: 20): as (Correct: False)
+========================================
+QCM ID: 5
+Title: Test QCM 4
+Description: Description QCM test 4
+Difficulty: moyen
+Category: general
+----------------------------------------
+  Question 1 (ID: 11): Quelle est la limite de vitesse en zone urbaine?
+  Explanation: La bonne reponse est: 50 km/h
+    Answer A (ID: 41): 50 km/h (Correct: True)
+    Answer B (ID: 42): 90 km/h (Correct: False)
+    Answer C (ID: 43): 130 km/h (Correct: False)
+  Question 2 (ID: 12): Qu'est-ce qu'un panneau triangle?
+  Explanation: La bonne reponse est: Triangle
+    Answer A (ID: 44): Triangle (Correct: True)
+    Answer B (ID: 45): Rond (Correct: False)
+    Answer C (ID: 46): Carré (Correct: False)
+========================================
+QCM ID: 9
+Title: QCM pour les panneaux routiers
+Description: 
+Difficulty: facile
+Category: securite
+----------------------------------------
+  Question 1 (ID: 23): Que signifie ce panneau : STOP ?
+  Explanation: 
+    Answer A (ID: 87): Ralentir uniquement (Correct: False)
+    Answer B (ID: 88): S'arrêter obligatoirement (Correct: True)
+    Answer C (ID: 89): Interdiction de stationner (Correct: False)
+  Question 2 (ID: 24): Que signifie un panneau triangulaire à bord rouge ?
+  Explanation: 
+    Answer A (ID: 90): Obligation (Correct: False)
+    Answer B (ID: 91): Information (Correct: False)
+    Answer C (ID: 92): Danger (Correct: True)
+    Answer D (ID: 93): Direction (Correct: False)
+  Question 3 (ID: 25): Que signifie un panneau circulaire à fond bleu ?
+  Explanation: 
+    Answer A (ID: 94): Interdiction (Correct: False)
+    Answer B (ID: 95): Obligation (Correct: True)
+    Answer C (ID: 96): Danger (Correct: False)
+    Answer D (ID: 97): Priorité (Correct: False)

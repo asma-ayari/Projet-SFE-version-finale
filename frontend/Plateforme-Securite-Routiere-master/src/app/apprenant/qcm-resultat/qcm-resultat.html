@@ -1,0 +1,212 @@
+<div class="container py-4">
+
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+    </div>
+
+    <!-- Résultat principal -->
+    <div *ngIf="result && !loading">
+
+        <!-- Titre succès/échec -->
+        <div class="text-center mb-4">
+            <i class="bi display-1"
+               [ngClass]="scoreIcon + ' ' + scoreClass"></i>
+            <h2 class="mt-3" [ngClass]="scoreClass">
+                {{ isQuizPassed(result)
+                    ? ('QCM_PANEL.RESULT.SUCCESS' | translate)
+                    : ('QCM_PANEL.RESULT.FAILED' | translate) }}
+            </h2>
+            <p class="text-muted">{{ getQcmTitle(result.qcm_id, result.qcm_title) }}</p>
+        </div>
+
+        <!-- Scores -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="display-6 fw-bold" [ngClass]="scoreClass">
+                                    {{ result.score }}%
+                                </div>
+                                <small class="text-muted">
+                                    {{ 'QCM_PANEL.RESULT.SCORE' | translate }}
+                                </small>
+                            </div>
+                            <div class="col-4">
+                                <div class="display-6 fw-bold text-primary">
+                                    {{ result.correct_answers }}/{{ result.total_questions }}
+                                </div>
+                                <small class="text-muted">
+                                    {{ 'QCM_PANEL.RESULT.CORRECT_ANSWERS' | translate }}
+                                </small>
+                            </div>
+                            <div class="col-4">
+                                <div class="display-6 fw-bold text-info">
+                                    {{ formatDuration(result.duration_seconds) }}
+                                </div>
+                                <small class="text-muted">
+                                    {{ 'QCM_PANEL.RESULT.DURATION' | translate }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ Détail complet avec textes et images — TOUJOURS affiché -->
+        <div class="row justify-content-center"
+             *ngIf="normalizedDetails && normalizedDetails.length > 0">
+            <div class="col-md-8">
+
+                <h5 class="mb-3">
+                    {{ 'QCM_PANEL.RESULT.DETAIL' | translate }}
+                </h5>
+
+                <div *ngFor="let d of normalizedDetails; let i = index"
+                     class="card mb-3"
+                     [ngClass]="d.is_correct ? 'border-success' : 'border-danger'">
+                    <div class="card-body">
+
+                        <!-- Numéro + statut -->
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <strong>Q{{ i + 1 }}</strong>
+                            <span [ngClass]="d.is_correct ? 'text-success' : 'text-danger'">
+                                <i class="bi me-1"
+                                   [ngClass]="d.is_correct
+                                       ? 'bi-check-circle-fill'
+                                       : 'bi-x-circle-fill'"></i>
+                                {{ d.is_correct
+                                    ? ('QCM_PANEL.RESULT.CORRECT' | translate)
+                                    : ('QCM_PANEL.RESULT.INCORRECT' | translate) }}
+                            </span>
+                        </div>
+
+                        <!-- Texte de la question -->
+                        <div class="mb-3 fw-semibold">{{ d.question_text }}</div>
+
+                        <!-- ✅ Image de la question -->
+                        <div class="mb-3 text-center" *ngIf="d.question_image">
+                            <img [src]="getImageUrl(d.question_image)"
+                                 alt="Image de la question"
+                                 class="question-result-image">
+                        </div>
+
+                        <hr>
+
+                        <!-- Votre réponse + bonne réponse -->
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <div class="fw-semibold mb-1">
+                                    {{ 'QCM_PANEL.RESULT.YOUR_ANSWER' | translate }}
+                                </div>
+                                <div [ngClass]="d.is_correct ? 'text-success' : 'text-danger'">
+                                    <i class="bi me-1"
+                                       [ngClass]="d.is_correct
+                                           ? 'bi-check-lg'
+                                           : 'bi-x-lg'"></i>
+                                    {{ d.selected_answer }}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <div class="fw-semibold mb-1">
+                                    {{ 'QCM_PANEL.RESULT.CORRECT_ANSWER' | translate }}
+                                </div>
+                                <div class="text-success">
+                                    <i class="bi bi-check-lg me-1"></i>
+                                    {{ d.correct_answer }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explication -->
+                        <div *ngIf="d.explanation"
+                             class="mt-3 p-2 bg-light rounded">
+                            <div class="fw-semibold small text-muted mb-1">
+                                <i class="bi bi-lightbulb me-1"></i>
+                                {{ 'QCM_PANEL.RESULT.EXPLANATION' | translate }}
+                            </div>
+                            <div class="text-muted small">{{ d.explanation }}</div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Boutons navigation -->
+        <div class="text-center mt-4">
+            <a routerLink="/apprenant/qcm" class="btn btn-primary me-2">
+                <i class="bi bi-list me-1"></i>
+                {{ 'QCM_PANEL.RESULT.VIEW_OTHER' | translate }}
+            </a>
+            <a [routerLink]="['/apprenant/qcm', result.qcm_id]"
+               class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-repeat me-1"></i>
+                {{ 'QCM_PANEL.RESULT.RETAKE' | translate }}
+            </a>
+        </div>
+
+    </div>
+
+    <!-- ✅ Historique — affiché seulement si plus d'un résultat -->
+    <div *ngIf="allResults.length > 1" class="mt-5">
+        <h4 class="mb-3">
+            <i class="bi bi-clock-history me-2"></i>
+            {{ 'QCM_PANEL.RESULT.HISTORY' | translate }}
+        </h4>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>{{ 'QCM_PANEL.RESULT.QUIZ' | translate }}</th>
+                        <th>{{ 'QCM_PANEL.RESULT.SCORE' | translate }}</th>
+                        <th>{{ 'QCM_PANEL.RESULT.RESULT' | translate }}</th>
+                        <th>{{ 'QCM_PANEL.RESULT.DURATION' | translate }}</th>
+                        <th>{{ 'QCM_PANEL.RESULT.DATE' | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let r of allResults"
+                        [class.table-active]="r.id === result?.id">
+                        <td>{{ getQcmTitle(r.qcm_id, r.qcm_title) }}</td>
+                        <td>
+                            <span class="fw-bold"
+                                  [ngClass]="isQuizPassed(r) ? 'text-success' : 'text-danger'">
+                                {{ r.score }}%
+                            </span>
+                            <small class="text-muted ms-1">
+                                ({{ r.correct_answers }}/{{ r.total_questions }})
+                            </small>
+                        </td>
+                        <td>
+                            <span class="badge"
+                                  [ngClass]="isQuizPassed(r) ? 'bg-success' : 'bg-danger'">
+                                {{ isQuizPassed(r)
+                                    ? ('QCM_PANEL.RESULT.PASSED' | translate)
+                                    : ('QCM_PANEL.RESULT.FAILED_BADGE' | translate) }}
+                            </span>
+                        </td>
+                        <td>{{ formatDuration(r.duration_seconds) }}</td>
+                        <td>{{ r.completed_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!result && !loading && allResults.length === 0"
+         class="text-center py-5">
+        <i class="bi bi-clipboard-x display-4 text-muted"></i>
+        <p class="mt-3 text-muted">
+            {{ 'QCM_PANEL.RESULT.NO_RESULTS' | translate }}
+        </p>
+        <a routerLink="/apprenant/qcm" class="btn btn-primary">
+            {{ 'QCM_PANEL.RESULT.DISCOVER' | translate }}
+        </a>
+    </div>
+
+</div>

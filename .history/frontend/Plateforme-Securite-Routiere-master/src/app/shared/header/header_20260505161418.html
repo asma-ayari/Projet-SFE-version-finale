@@ -1,0 +1,144 @@
+<header class="header" [class.scrolled]="true">
+  <div class="header-container">
+    <!-- Logo -->
+    <a routerLink="/" class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <div class="logo-text">
+        <span class="logo-title">Sécurité Routière</span>
+        <span class="logo-subtitle">En Tunisie</span>
+      </div>
+    </a>
+
+    <!-- Public Navigation Desktop (Hidden for authenticated users) -->
+    <nav class="nav-desktop" *ngIf="!isAuthenticated()">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+        <i class="fas fa-home"></i>
+        Accueil
+      </a>
+      <a routerLink="/presentation" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-info-circle"></i>
+        Présentation
+      </a>
+      <a routerLink="/apprenant/cours" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-book-open"></i>
+        Courses
+      </a>
+      <a routerLink="/apprenant/qcm" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-clipboard-check"></i>
+        Tests
+      </a>
+      <a routerLink="/apprenant/chatbot" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-robot"></i>
+        Chatbot
+      </a>
+      <a routerLink="/contact" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-envelope"></i>
+        Contact
+      </a>
+    </nav>
+
+    <!-- Actions -->
+    <div class="header-actions">
+
+
+      <!-- Auth Buttons -->
+      @if (!isAuthenticated()) {
+      <a routerLink="/auth/login" class="btn-login">
+        <i class="fas fa-sign-in-alt"></i>
+        Connexion
+      </a>
+      <a routerLink="/auth/register" class="btn-register">
+        <i class="fas fa-user-plus"></i>
+        S'inscrire
+      </a>
+      } @else {
+      <div class="user-menu">
+        <button class="btn-user" [matMenuTriggerFor]="userMenu">
+          <!-- Avatar avec photo -->
+          <div class="user-avatar">
+            <div class="avatar-container">
+              <!-- Photo si elle existe, sinon initiales -->
+              @if (getUserAvatarUrl()) {
+              <img [src]="getUserAvatarUrl()" alt="Avatar" class="avatar-photo" />
+              } @else {
+              <div class="avatar-initials">{{ getUserInitials() }}</div>
+              }
+            </div>
+          </div>
+          <!-- Nom et prénom -->
+          <span class="user-name">{{ getUserDisplayName() }}</span>
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <a mat-menu-item [routerLink]="getDashboardRoute()">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+          <a mat-menu-item routerLink="/apprenant/profile">
+            <i class="fas fa-user"></i> Profil
+          </a>
+          <button mat-menu-item (click)="logout()">
+            <i class="fas fa-sign-out-alt"></i> Déconnexion
+          </button>
+        </mat-menu>
+      </div>
+      }
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-toggle" (click)="toggleMenu()">
+        <i [class]="isMenuOpen() ? 'fas fa-times' : 'fas fa-bars'"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation (Hidden for authenticated users) -->
+  <nav class="nav-mobile" [class.open]="isMenuOpen()" *ngIf="!isAuthenticated()">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link"
+      (click)="toggleMenu()">
+      <i class="fas fa-home"></i>
+      Accueil
+    </a>
+    <a routerLink="/presentation" routerLinkActive="active" class="nav-link" (click)="toggleMenu()">
+      <i class="fas fa-info-circle"></i>
+      Présentation
+    </a>
+    <a routerLink="/apprenant/cours" routerLinkActive="active" class="nav-link" (click)="toggleMenu()">
+      <i class="fas fa-book-open"></i>
+      Courses
+    </a>
+    <a routerLink="/apprenant/qcm" routerLinkActive="active" class="nav-link" (click)="toggleMenu()">
+      <i class="fas fa-clipboard-check"></i>
+      Tests
+    </a>
+    <a routerLink="/apprenant/chatbot" routerLinkActive="active" class="nav-link" (click)="toggleMenu()">
+      <i class="fas fa-robot"></i>
+      Chatbot
+    </a>
+    <a routerLink="/contact" routerLinkActive="active" class="nav-link" (click)="toggleMenu()">
+      <i class="fas fa-envelope"></i>
+      Contact
+    </a>
+    <div class="mobile-auth">
+      @if (!isAuthenticated()) {
+      <a routerLink="/auth/login" class="btn-login" (click)="toggleMenu()">
+        <i class="fas fa-sign-in-alt"></i>
+        Connexion
+      </a>
+      <a routerLink="/auth/register" class="btn-register" (click)="toggleMenu()">
+        <i class="fas fa-user-plus"></i>
+        S'inscrire
+      </a>
+      } @else {
+      <a [routerLink]="getDashboardRoute()" class="btn-login" (click)="toggleMenu()">
+        <i class="fas fa-tachometer-alt"></i>
+        Dashboard
+      </a>
+      <button class="btn-register" (click)="logout(); toggleMenu()">
+        <i class="fas fa-sign-out-alt"></i>
+        Déconnexion
+      </button>
+      }
+    </div>
+  </nav>
+</header>

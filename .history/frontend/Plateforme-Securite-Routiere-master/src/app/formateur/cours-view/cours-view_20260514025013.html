@@ -1,0 +1,33 @@
+<div class="formateur-lesson-shell">
+  <div class="lesson-toolbar">
+    <button class="toolbar-link" type="button" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+      {{ 'FORMATEUR.COURS_VIEW.BACK' | translate }}
+    </button>
+    <span class="toolbar-pill">
+      {{ courseContent()?.title || course()?.title || ('FORMATEUR.COURS_VIEW.LOADING_TITLE' | translate) }}
+    </span>
+    <button class="toolbar-link" type="button" (click)="editCourse()">
+      <i class="fas fa-edit"></i>
+      {{ 'FORMATEUR.COURS_VIEW.EDIT' | translate }}
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>{{ 'FORMATEUR.COURS_VIEW.LOADING' | translate }}</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-container">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  @if (!loading() && !error() && currentLessonHtml()) {
+    <div class="lesson-host" [innerHTML]="currentLessonHtml()"></div>
+  }
+</div>

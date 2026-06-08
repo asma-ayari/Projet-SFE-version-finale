@@ -1,0 +1,45 @@
+⚡ DÉMARRAGE 2 MINUTES ⚡
+
+1️⃣ INSTALLER
+npm install @ngx-translate/core @ngx-translate/http-loader
+
+2️⃣ COPIER CE CODE DANS app.config.ts
+───────────────────────────────────────────────
+import { provideHttpClient } from '@angular/common/http';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './locales/', '/translation.json');
+}
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideHttpClient(),
+    provideTranslateService({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      },
+      defaultLanguage: 'fr'
+    })
+  ]
+};
+───────────────────────────────────────────────
+
+3️⃣ LANCER
+ng serve --open
+
+4️⃣ TESTER
+Cliquer sur FR/ع button dans la navbar
+
+✅ FAIT! 🎉
+
+Prochaines étapes:
+→ Lire QUICK_START.md (5 min)
+→ Lire CHECKLIST_INTEGRATION.md (pour intégration complète)
+
+Questions?
+→ Consulter LOOKUP_TABLE.md

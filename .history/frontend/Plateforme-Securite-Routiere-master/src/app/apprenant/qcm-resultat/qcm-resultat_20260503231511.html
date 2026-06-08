@@ -1,0 +1,117 @@
+<div class="container py-4">
+    <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+    </div>
+
+    <!-- Current Result Card -->
+        <div *ngIf="result">
+        <div class="text-center mb-4">
+            <i class="bi display-1" [ngClass]="scoreIcon + ' ' + scoreClass"></i>
+            <h2 class="mt-3" [ngClass]="scoreClass">
+                {{ result.passed ? 'Félicitations ! Quiz réussi !' : 'Quiz non réussi' }}
+            </h2>
+            <p class="text-muted">{{ result.qcm_title }}</p>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="display-6 fw-bold" [ngClass]="scoreClass">{{ result.score }}%</div>
+                                <small class="text-muted">Score</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="display-6 fw-bold text-primary">{{ result.correct_answers }}/{{
+                                    result.total_questions }}</div>
+                                <small class="text-muted">Bonnes réponses</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="display-6 fw-bold text-info">{{ formatDuration(result.duration_seconds) }}
+                                </div>
+                                <small class="text-muted">Durée</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail of answers -->
+        <div class="row justify-content-center" *ngIf="result.details && result.details.length > 0">
+            <div class="col-md-8">
+                <h5 class="mb-3">Détail des réponses</h5>
+                <div class="list-group mb-4">
+                    <div *ngFor="let d of result.details; let i = index"
+                        class="list-group-item d-flex justify-content-between align-items-center"
+                        [ngClass]="d.is_correct ? 'list-group-item-success' : 'list-group-item-danger'">
+                        <span>
+                            <strong>Q{{ i + 1 }}</strong>
+                        </span>
+                        <span>
+                            <i class="bi"
+                                [ngClass]="d.is_correct ? 'bi-check-lg text-success' : 'bi-x-lg text-danger'"></i>
+                            {{ d.is_correct ? 'Correcte' : 'Incorrecte' }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a routerLink="/apprenant/qcm" class="btn btn-primary me-2">
+                <i class="bi bi-list me-1"></i>Voir d'autres quiz
+            </a>
+            <a [routerLink]="['/apprenant/qcm', result.qcm_id]" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-repeat me-1"></i>Repasser ce quiz
+            </a>
+        </div>
+    </div>
+
+    <!-- Results History -->
+    <div *ngIf="allResults.length > 1" class="mt-5">
+        <h4 class="mb-3"><i class="bi bi-clock-history me-2"></i>Historique des résultats</h4>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Quiz</th>
+                        <th>Score</th>
+                        <th>Résultat</th>
+                        <th>Durée</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let r of allResults" [class.table-active]="r.id === result?.id">
+                        <td>{{ r.qcm_title }}</td>
+                        <td>
+                            <span class="fw-bold" [ngClass]="r.passed ? 'text-success' : 'text-danger'">{{ r.score
+                                }}%</span>
+                            <small class="text-muted ms-1">({{ r.correct_answers }}/{{ r.total_questions }})</small>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="r.passed ? 'bg-success' : 'bg-danger'">
+                                {{ r.passed ? 'Réussi' : 'Échoué' }}
+                            </span>
+                        </td>
+                        <td>{{ formatDuration(r.duration_seconds) }}</td>
+                        <td>{{ r.completed_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" (click)="selectResult(r)">Voir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!result && !loading && allResults.length === 0" class="text-center py-5">
+        <i class="bi bi-clipboard-x display-4 text-muted"></i>
+        <p class="mt-3 text-muted">Vous n'avez pas encore passé de quiz</p>
+        <a routerLink="/apprenant/qcm" class="btn btn-primary">Découvrir les quiz</a>
+    </div>
+</div>

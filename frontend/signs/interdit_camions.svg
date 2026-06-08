@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="90" fill="white" stroke="#e74c3c" stroke-width="12"/>
+  <!-- Truck body -->
+  <rect x="45" y="85" width="65" height="40" rx="3" fill="#333"/>
+  <!-- Truck cabin -->
+  <rect x="110" y="95" width="30" height="30" rx="3" fill="#333"/>
+  <!-- Wheels -->
+  <circle cx="65" cy="130" r="8" fill="#333" stroke="white" stroke-width="2"/>
+  <circle cx="125" cy="130" r="8" fill="#333" stroke="white" stroke-width="2"/>
+  <!-- Windshield -->
+  <rect x="115" y="100" width="20" height="12" rx="2" fill="#a0d2db"/>
+  <!-- Red diagonal line -->
+  <line x1="30" y1="170" x2="170" y2="30" stroke="#e74c3c" stroke-width="12" stroke-linecap="round"/>
+</svg>

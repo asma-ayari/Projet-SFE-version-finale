@@ -1,0 +1,38 @@
+/* Pager buttons for generated QCM list */
+.pager-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 2px solid #ffffff;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.pager-btn i {
+    font-size: 14px;
+}
+
+.pager-prev {
+    background: linear-gradient(135deg, #f3a300 0%, #f4b232 100%);
+}
+
+.pager-next {
+    background: linear-gradient(135deg, #1aa46a 0%, #2fc07b 100%);
+}
+
+.pager-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+}
+
+.pager-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}

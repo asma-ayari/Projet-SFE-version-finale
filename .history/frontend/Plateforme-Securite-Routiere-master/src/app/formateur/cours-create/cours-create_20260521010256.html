@@ -1,0 +1,63 @@
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-plus-circle me-2"></i>{{ 'FORMATEUR.COURS_CREATE.TITLE' | translate }}</h2>
+        <a routerLink="/formateur/cours" class="btn btn-outline-secondary back-button-orange">
+            <i class="bi bi-arrow-left me-1"></i>{{ 'FORMATEUR.COURS_CREATE.BACK' | translate }}
+        </a>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+        {{ error }}<button type="button" class="btn-close" (click)="error=''"></button>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.TITLE' | translate }}</label>
+                    <input type="text" class="form-control" [(ngModel)]="title" [placeholder]="'FORMATEUR.COURS_CREATE.FORM.TITLE_PLACEHOLDER' | translate">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.DESCRIPTION' | translate }}</label>
+                    <textarea class="form-control" rows="2" [(ngModel)]="description"
+                        [placeholder]="'FORMATEUR.COURS_CREATE.FORM.DESCRIPTION_PLACEHOLDER' | translate"></textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.CATEGORY' | translate }}</label>
+                    <select class="form-select" [(ngModel)]="category">
+                        <option value="conduite">{{ 'FORMATEUR.COURS_CREATE.CATEGORIES.CONDUITE' | translate }}</option>
+                        <option value="securite">{{ 'FORMATEUR.COURS_CREATE.CATEGORIES.SECURITE' | translate }}</option>
+                        <option value="secours">{{ 'FORMATEUR.COURS_CREATE.CATEGORIES.SECOURS' | translate }}</option>
+                        <option value="signalisation">{{ 'FORMATEUR.COURS_CREATE.CATEGORIES.SIGNALISATION' | translate }}</option>
+                        <option value="general">{{ 'FORMATEUR.COURS_CREATE.CATEGORIES.GENERAL' | translate }}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.DURATION' | translate }}</label>
+                    <input type="text" class="form-control" [(ngModel)]="duration" [placeholder]="'FORMATEUR.COURS_CREATE.FORM.DURATION_PLACEHOLDER' | translate">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.IMAGE_URL' | translate }}</label>
+                    <input type="text" class="form-control" [(ngModel)]="image_url" placeholder="https://...">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.VIDEO_URL' | translate }}</label>
+                    <input type="text" class="form-control" [(ngModel)]="video_url"
+                        placeholder="https://youtube.com/...">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.CONTENT' | translate }}</label>
+                    <textarea class="form-control" rows="12" [(ngModel)]="content"
+                        [placeholder]="'FORMATEUR.COURS_CREATE.FORM.CONTENT_PLACEHOLDER' | translate"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-end gap-2">
+            <a routerLink="/formateur/cours" class="btn btn-secondary">{{ 'FORMATEUR.COURS_CREATE.ACTIONS.CANCEL' | translate }}</a>
+            <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+                <span *ngIf="saving" class="spinner-border spinner-border-sm me-1"></span>
+                {{ saving ? ('FORMATEUR.COURS_CREATE.ACTIONS.SAVING' | translate) : ('FORMATEUR.COURS_CREATE.ACTIONS.CREATE' | translate) }}
+            </button>
+        </div>
+    </div>
+</div>

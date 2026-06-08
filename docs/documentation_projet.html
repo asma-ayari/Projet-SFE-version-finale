@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Technique — Chatbot Sécurité Routière Tunisie</title>
+    <style>
+        @media print {
+            body {
+                font-size: 11pt;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            h1,
+            h2,
+            h3 {
+                page-break-after: avoid;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: #1a1a2e;
+            background: #f8f9fa;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 50px;
+            background: white;
+        }
+
+        /* Cover */
+        .cover {
+            text-align: center;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+            color: white;
+            border-radius: 0;
+            margin: -40px -50px 40px;
+        }
+
+        .cover .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .cover h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .cover h2 {
+            font-size: 1.3rem;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .cover .meta {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 2;
+        }
+
+        /* Print button */
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: #e63946;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .print-btn:hover {
+            background: #c1121f;
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 1.6rem;
+            color: #e63946;
+            margin: 40px 0 16px;
+            border-bottom: 3px solid #e63946;
+            padding-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            color: #1a1a2e;
+            margin: 30px 0 12px;
+            border-left: 4px solid #e63946;
+            padding-left: 12px;
+        }
+
+        h3 {
+            font-size: 1.05rem;
+            color: #333;
+            margin: 20px 0 8px;
+        }
+
+        p {
+            margin: 8px 0;
+            text-align: justify;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        th {
+            background: #e63946;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        td {
+            padding: 9px 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tr:hover {
+            background: #fff5f5;
+        }
+
+        /* Code */
+        code {
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #c1121f;
+        }
+
+        pre {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 16px 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 12px 0;
+            font-size: 0.82rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Lists */
+        ul,
+        ol {
+            margin: 8px 0 8px 24px;
+        }
+
+        li {
+            margin: 4px 0;
+        }
+
+        /* Boxes */
+        .info-box {
+            background: #fff5f5;
+            border-left: 4px solid #e63946;
+            padding: 14px 18px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .tech-box {
+            background: #f0f7ff;
+            border-left: 4px solid #3b82f6;
+            padding: 14px 18px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        /* Architecture diagram */
+        .arch-diagram {
+            background: #fafafa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 0.82rem;
+            line-height: 1.8;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* TOC */
+        .toc {
+            background: #f8f9fa;
+            padding: 24px 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .toc h2 {
+            border: none;
+            padding: 0;
+            margin: 0 0 12px;
+        }
+
+        .toc ol {
+            margin-left: 20px;
+        }
+
+        .toc li {
+            margin: 6px 0;
+        }
+
+        .toc a {
+            color: #e63946;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .badge-green {
+            background: #16a34a;
+        }
+
+        .badge-blue {
+            background: #3b82f6;
+        }
+
+        .badge-red {
+            background: #e63946;
+        }
+
+        .badge-purple {
+            background: #7c3aed;
+        }
+
+        .badge-orange {
+            background: #ea580c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="print-btn no-print" onclick="window.print()">🖨️ Imprimer / Sauvegarder en PDF</button>
+
+    <div class="container">
+
+        <!-- ==================== COVER ==================== -->
+        <div class="cover">
+            <div class="icon">🚗</div>
+            <h1>Chatbot Sécurité Routière — Tunisie</h1>
+            <h2>Documentation Technique Complète du Projet</h2>
+            <div class="meta">
+                Projet de Fin d'Études (PFE)<br>
+                Architecture • Base de données • Sécurité • Déploiement<br>
+                Technologies utilisées • Tableaux comparatifs<br><br>
+                <strong>Date :</strong> Mars 2026
+            </div>
+        </div>
+
+        <!-- ==================== TOC ==================== -->
+        <div class="toc">
+            <h2>📋 Table des matières</h2>
+            <ol>
+                <li><a href="#intro">Introduction et objectifs du projet</a></li>
+                <li><a href="#arch">Architecture générale</a></li>
+                <li><a href="#tech">Technologies utilisées et tableaux comparatifs</a></li>
+                <li><a href="#backend">Backend — Structure et composants</a></li>
+                <li><a href="#bdd">Base de données — Schéma et modèles</a></li>
+                <li><a href="#rag">Pipeline RAG (Intelligence Artificielle)</a></li>
+                <li><a href="#auth">Authentification et autorisation</a></li>
+                <li><a href="#security">Sécurité — 8 techniques implémentées</a></li>
+                <li><a href="#frontend">Frontend — Interface utilisateur</a></li>
+                <li><a href="#features">Fonctionnalités avancées</a></li>
+                <li><a href="#deploy">Déploiement et hébergement</a></li>
+                <li><a href="#api">Référence API complète</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ol>
+        </div>
+
+        <!-- ==================== 1. INTRODUCTION ==================== -->
+        <h1 id="intro">1. Introduction et objectifs du projet</h1>
+
+        <p>Ce projet de fin d'études (PFE) consiste en la conception et le développement d'un <strong>chatbot
+                intelligent bilingue (français/arabe)</strong> dédié à la sécurité routière en Tunisie. L'application
+            utilise l'intelligence artificielle pour répondre aux questions des utilisateurs concernant le code de la
+            route tunisien, la signalisation, et les bonnes pratiques de conduite.</p>
+
+        <h2>Objectifs principaux</h2>
+        <ul>
+            <li><strong>Accessibilité bilingue</strong> — Répondre en français et en arabe avec détection automatique de
+                la langue</li>
+            <li><strong>Réponses précises</strong> — Utilisation de la technique RAG (Retrieval-Augmented Generation)
+                basée sur les documents officiels tunisiens</li>
+            <li><strong>Détection des panneaux</strong> — Reconnaissance des panneaux routiers par texte et par image
+                (caméra)</li>
+            <li><strong>Authentification sécurisée</strong> — Système complet avec JWT, Google OAuth2, et
+                réinitialisation par email</li>
+            <li><strong>Sécurité robuste</strong> — 8 techniques de sécurité implémentées (OWASP)</li>
+            <li><strong>Interface moderne</strong> — Design inspiré de ChatGPT/Claude avec conversations persistantes
+            </li>
+        </ul>
+
+        <!-- ==================== 2. ARCHITECTURE ==================== -->
+        <div class="page-break"></div>
+        <h1 id="arch">2. Architecture générale</h1>
+
+        <h2>Architecture 3-tiers</h2>
+        <p>Le projet suit une architecture <strong>3-tiers</strong> (Présentation → Logique métier → Données) avec une
+            API REST comme couche intermédiaire.</p>
+
+        <div class="arch-diagram">
+            ┌─────────────────────────────────────────────────────────┐
+            │ COUCHE PRÉSENTATION │
+            │ Frontend (HTML/CSS/JavaScript) │
+            │ Servie via FastAPI StaticFiles (/static/) │
+            └─────────────────────┬───────────────────────────────────┘
+            │ HTTP/REST (JSON)
+            ▼
+            ┌─────────────────────────────────────────────────────────┐
+            │ COUCHE LOGIQUE MÉTIER │
+            │ FastAPI (Python 3.12) │
+            │ ┌──────────┐ ┌──────────┐ ┌───────────────────────┐ │
+            │ │ Auth API │ │ Chat API │ │ Conversations API │ │
+            │ └────┬─────┘ └────┬─────┘ └───────────┬───────────┘ │
+            │ │ │ │ │
+            │ ┌────▼─────────────▼────────────────────▼───────────┐ │
+            │ │ SERVICES │ │
+            │ │ auth_service │ rag_service │ sign_detector │ │
+            │ │ email_service│ vector_store│ image_detector │ │
+            │ │ audit_logger │ lang_detect │ document_loader │ │
+            │ └────────────────────────────────────────────────────┘ │
+            │ ┌────────────────────────────────────────────────────┐ │
+            │ │ MIDDLEWARES DE SÉCURITÉ │ │
+            │ │ CORS │ SecurityHeaders │ APIRateLimit │ │
+            │ └────────────────────────────────────────────────────┘ │
+            └─────────────────────┬───────────────────────────────────┘
+            │
+            ┌───────────┼───────────────┐
+            ▼ ▼ ▼
+            ┌──────────────┐ ┌──────────┐ ┌──────────────┐
+            │ MySQL DB │ │ Pinecone │ │ Groq Cloud │
+            │ (Users, │ │ (Vectors)│ │ (LLM API) │
+            │ Conversations│ │ Cloud │ │ Llama 3.1 │
+            │ Messages) │ │ │ │ Llama 4 Scout│
+            └──────────────┘ └──────────┘ └──────────────┘
+        </div>
+
+        <h2>Structure des fichiers</h2>
+        <pre><code>securite-routiere-pfe/
+├── backend/
+│   ├── app/
+│   │   ├── main.py                 # Point d'entrée FastAPI
+│   │   ├── database.py             # Connexion MySQL (SQLAlchemy)
+│   │   ├── api/
+│   │   │   ├── auth.py             # Endpoints authentification
+│   │   │   ├── chat.py             # Endpoints chatbot + détection
+│   │   │   └── conversations.py    # Endpoints conversations
+│   │   ├── core/
+│   │   │   ├── config.py           # Configuration centralisée
+│   │   │   └── security.py         # Middlewares sécurité
+│   │   ├── models/
+│   │   │   ├── user.py             # Modèle User
+│   │   │   ├── conversation.py     # Modèles Conversation + Message
+│   │   │   └── feedback.py         # Modèle Feedback
+│   │   ├── schemas/
+│   │   │   ├── auth.py             # Schémas Pydantic auth
+│   │   │   ├── chat.py             # Schémas Pydantic chat
+│   │   │   └── conversation.py     # Schémas Pydantic conversations
+│   │   └── services/
+│   │       ├── auth_service.py     # JWT + bcrypt + Google OAuth2
+│   │       ├── rag_service.py      # Pipeline RAG complet
+│   │       ├── vector_store.py     # Pinecone Cloud vector store
+│   │       ├── sign_detector.py    # Détection panneaux par texte
+│   │       ├── image_detector.py   # Détection panneaux par image
+│   │       ├── language_detector.py# Détection FR/AR
+│   │       ├── email_service.py    # Envoi emails SMTP
+│   │       ├── audit_logger.py     # Logs d'audit sécurité
+│   │       └── document_loader.py  # Chargement documents source
+│   ├── data/
+│   │   └── documents/
+│   │       ├── fr/code_route_tunisie.txt
+│   │       └── ar/code_route_tunisie.txt
+│   ├── logs/
+│   │   └── security_audit.log      # Fichier logs sécurité
+│   ├── requirements.txt
+│   └── .env                        # Variables d'environnement
+└── frontend/
+    └── index.html                  # SPA complète (HTML+CSS+JS)</code></pre>
+
+        <!-- ==================== 3. TECHNOLOGIES ==================== -->
+        <div class="page-break"></div>
+        <h1 id="tech">3. Technologies utilisées et tableaux comparatifs</h1>
+
+        <h2>3.1 Stack technologique</h2>
+        <table>
+            <tr>
+                <th>Couche</th>
+                <th>Technologie</th>
+                <th>Version</th>
+                <th>Rôle</th>
+            </tr>
+            <tr>
+                <td>Langage backend</td>
+                <td><strong>Python</strong></td>
+                <td>3.12</td>
+                <td>Langage principal du serveur</td>
+            </tr>
+            <tr>
+                <td>Framework API</td>
+                <td><strong>FastAPI</strong></td>
+                <td>≥0.109</td>
+                <td>API REST asynchrone haute performance</td>
+            </tr>
+            <tr>
+                <td>Base de données</td>
+                <td><strong>MySQL</strong> (XAMPP)</td>
+                <td>8.0</td>
+                <td>Stockage relationnel (users, conversations)</td>
+            </tr>
+            <tr>
+                <td>ORM</td>
+                <td><strong>SQLAlchemy</strong></td>
+                <td>≥2.0</td>
+                <td>Mapping objet-relationnel</td>
+            </tr>
+            <tr>
+                <td>Vector Store</td>
+                <td><strong>Pinecone</strong></td>
+                <td>Cloud (Serverless)</td>
+                <td>Stockage et recherche de vecteurs dans le cloud (embeddings)</td>
+            </tr>
+            <tr>
+                <td>LLM (texte)</td>
+                <td><strong>Groq — Llama 3.1 8B</strong></td>
+                <td>instruct</td>
+                <td>Génération de réponses textuelles</td>
+            </tr>
+            <tr>
+                <td>LLM (vision)</td>
+                <td><strong>Groq — Llama 4 Scout 17B</strong></td>
+                <td>instruct</td>
+                <td>Analyse d'images de panneaux</td>
+            </tr>
+            <tr>
+                <td>Embeddings</td>
+                <td><strong>HuggingFace</strong></td>
+                <td>MiniLM-L12-v2</td>
+                <td>Transformation texte → vecteurs multilingues</td>
+            </tr>
+            <tr>
+                <td>Framework IA</td>
+                <td><strong>LangChain</strong></td>
+                <td>≥0.2</td>
+                <td>Orchestration du pipeline RAG</td>
+            </tr>
+            <tr>
+                <td>Auth JWT</td>
+                <td><strong>python-jose</strong></td>
+                <td>≥3.3</td>
+                <td>Création et vérification des tokens JWT</td>
+            </tr>
+            <tr>
+                <td>Hachage MDP</td>
+                <td><strong>bcrypt</strong></td>
+                <td>direct</td>
+                <td>Hachage sécurisé des mots de passe</td>
+            </tr>
+            <tr>
+                <td>OAuth2</td>
+                <td><strong>Google Identity Services</strong></td>
+                <td>GIS</td>
+                <td>Authentification Google One Tap</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><strong>SMTP (Gmail)</strong></td>
+                <td>TLS</td>
+                <td>Envoi d'emails de réinitialisation</td>
+            </tr>
+            <tr>
+                <td>Frontend</td>
+                <td><strong>HTML5 + CSS3 + JavaScript</strong></td>
+                <td>Vanilla</td>
+                <td>Interface utilisateur SPA</td>
+            </tr>
+            <tr>
+                <td>Serveur ASGI</td>
+                <td><strong>Uvicorn</strong></td>
+                <td>≥0.27</td>
+                <td>Serveur de production Python</td>
+            </tr>
+        </table>
+
+        <h2>3.2 Tableau comparatif — Pourquoi ces choix ?</h2>
+
+        <h3>Framework Backend</h3>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>FastAPI ✅</th>
+                <th>Django</th>
+                <th>Flask</th>
+                <th>Express.js</th>
+            </tr>
+            <tr>
+                <td>Performance</td>
+                <td><span class="badge badge-green">Excellent</span> (async natif)</td>
+                <td>Moyen</td>
+                <td>Moyen</td>
+                <td>Bon</td>
+            </tr>
+            <tr>
+                <td>Validation auto</td>
+                <td><span class="badge badge-green">Oui</span> (Pydantic)</td>
+                <td>Formulaires</td>
+                <td>Non</td>
+                <td>Non</td>
+            </tr>
+            <tr>
+                <td>Doc API auto</td>
+                <td><span class="badge badge-green">Swagger auto</span></td>
+                <td>Via plugin</td>
+                <td>Via plugin</td>
+                <td>Via plugin</td>
+            </tr>
+            <tr>
+                <td>Typage Python</td>
+                <td><span class="badge badge-green">Natif</span></td>
+                <td>Partiel</td>
+                <td>Non</td>
+                <td>N/A (JS)</td>
+            </tr>
+            <tr>
+                <td>Async/Await</td>
+                <td><span class="badge badge-green">Natif</span></td>
+                <td>Django 4+</td>
+                <td>Limité</td>
+                <td>Natif</td>
+            </tr>
+            <tr>
+                <td>Courbe d'apprentissage</td>
+                <td>Facile</td>
+                <td>Complexe</td>
+                <td>Facile</td>
+                <td>Facile</td>
+            </tr>
+            <tr>
+                <td>Écosystème IA/ML</td>
+                <td><span class="badge badge-green">Python</span></td>
+                <td>Python</td>
+                <td>Python</td>
+                <td>Limité</td>
+            </tr>
+        </table>
+        <div class="info-box">
+            <strong>Choix :</strong> FastAPI combine la rapidité d'Express.js, la validation automatique de Django, et
+            l'écosystème Python essentiel pour l'IA (LangChain, Groq, etc.). Sa documentation Swagger auto-générée
+            facilite les tests.
+        </div>
+
+        <h3>Base de données relationnelle</h3>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>MySQL ✅</th>
+                <th>PostgreSQL</th>
+                <th>SQLite</th>
+                <th>MongoDB</th>
+            </tr>
+            <tr>
+                <td>Disponibilité (XAMPP)</td>
+                <td><span class="badge badge-green">Intégré</span></td>
+                <td>Installation séparée</td>
+                <td>Fichier local</td>
+                <td>Installation séparée</td>
+            </tr>
+            <tr>
+                <td>Données relationnelles</td>
+                <td><span class="badge badge-green">Excellent</span></td>
+                <td>Excellent</td>
+                <td>Bon</td>
+                <td>Non adapté</td>
+            </tr>
+            <tr>
+                <td>Performance</td>
+                <td>Bon</td>
+                <td>Excellent</td>
+                <td>Limité</td>
+                <td>Bon</td>
+            </tr>
+            <tr>
+                <td>Interface graphique</td>
+                <td><span class="badge badge-green">phpMyAdmin</span></td>
+                <td>pgAdmin</td>
+                <td>Aucune</td>
+                <td>Compass</td>
+            </tr>
+            <tr>
+                <td>Popularité</td>
+                <td><span class="badge badge-green">Très élevée</span></td>
+                <td>Élevée</td>
+                <td>Moyenne</td>
+                <td>Élevée</td>
+            </tr>
+        </table>
+        <div class="info-box">
+            <strong>Choix :</strong> MySQL avec XAMPP offre un environnement de développement prêt à l'emploi avec
+            phpMyAdmin. Les données du projet (users, conversations, messages) sont naturellement relationnelles.
+        </div>
+
+        <h3>LLM (Modèle de langage)</h3>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>Groq (Llama) ✅</th>
+                <th>OpenAI (GPT-4)</th>
+                <th>Gemini</th>
+                <th>LLM Local</th>
+            </tr>
+            <tr>
+                <td>Coût</td>
+                <td><span class="badge badge-green">Gratuit</span></td>
+                <td>Payant ($$$)</td>
+                <td>Gratuit limité</td>
+                <td>Gratuit</td>
+            </tr>
+            <tr>
+                <td>Vitesse</td>
+                <td><span class="badge badge-green">Ultra-rapide</span> (LPU)</td>
+                <td>Rapide</td>
+                <td>Rapide</td>
+                <td>Très lent</td>
+            </tr>
+            <tr>
+                <td>Qualité FR/AR</td>
+                <td>Bon</td>
+                <td>Excellent</td>
+                <td>Bon</td>
+                <td>Variable</td>
+            </tr>
+            <tr>
+                <td>Vision (images)</td>
+                <td><span class="badge badge-green">Oui</span> (Llama 4)</td>
+                <td>Oui (GPT-4V)</td>
+                <td>Oui</td>
+                <td>Rare</td>
+            </tr>
+            <tr>
+                <td>Limite API</td>
+                <td>30 req/min</td>
+                <td>Illimité (payant)</td>
+                <td>60 req/min</td>
+                <td>Illimité</td>
+            </tr>
+            <tr>
+                <td>Hardware requis</td>
+                <td>Aucun (cloud)</td>
+                <td>Aucun (cloud)</td>
+                <td>Aucun (cloud)</td>
+                <td>GPU puissant</td>
+            </tr>
+        </table>
+        <div class="info-box">
+            <strong>Choix :</strong> Groq est 100% gratuit avec une vitesse exceptionnelle grâce à son processeur LPU.
+            Il supporte Llama 3.1 (texte) et Llama 4 Scout (vision) — parfait pour un PFE sans budget.
+        </div>
+
+        <h3>Embeddings multilingues</h3>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>MiniLM-L12-v2 ✅</th>
+                <th>OpenAI ada-002</th>
+                <th>Cohere multilingual</th>
+            </tr>
+            <tr>
+                <td>Coût</td>
+                <td><span class="badge badge-green">Gratuit</span></td>
+                <td>Payant</td>
+                <td>Freemium</td>
+            </tr>
+            <tr>
+                <td>Multilingue (FR+AR)</td>
+                <td><span class="badge badge-green">50+ langues</span></td>
+                <td>Bon</td>
+                <td>100+ langues</td>
+            </tr>
+            <tr>
+                <td>Taille</td>
+                <td>Léger (120 Mo)</td>
+                <td>Cloud</td>
+                <td>Cloud</td>
+            </tr>
+            <tr>
+                <td>Exécution locale</td>
+                <td><span class="badge badge-green">Oui</span></td>
+                <td>Non</td>
+                <td>Non</td>
+            </tr>
+        </table>
+        <div class="info-box">
+            <strong>Choix :</strong> <code>paraphrase-multilingual-MiniLM-L12-v2</code> de HuggingFace supporte le
+            français ET l'arabe nativement, s'exécute localement (pas de dépendance cloud pour les embeddings), et est
+            gratuit.
+        </div>
+
+        <h3>Vector Store</h3>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>Pinecone ✅</th>
+                <th>ChromaDB</th>
+                <th>Weaviate</th>
+                <th>Qdrant</th>
+            </tr>
+            <tr>
+                <td>Hébergement</td>
+                <td><span class="badge badge-green">Cloud serverless</span></td>
+                <td>Local (fichier)</td>
+                <td>Cloud / Self-hosted</td>
+                <td>Cloud / Self-hosted</td>
+            </tr>
+            <tr>
+                <td>Déploiement</td>
+                <td><span class="badge badge-green">Zéro config</span></td>
+                <td><span class="badge badge-red">Difficile en prod</span></td>
+                <td>Modéré</td>
+                <td>Modéré</td>
+            </tr>
+            <tr>
+                <td>Coût</td>
+                <td><span class="badge badge-green">Gratuit (starter)</span></td>
+                <td>Gratuit</td>
+                <td>Freemium</td>
+                <td>Freemium</td>
+            </tr>
+            <tr>
+                <td>Scalabilité</td>
+                <td><span class="badge badge-green">Automatique</span></td>
+                <td>Limitée</td>
+                <td>Bonne</td>
+                <td>Bonne</td>
+            </tr>
+            <tr>
+                <td>Filtrage métadonnées</td>
+                <td><span class="badge badge-green">Oui</span></td>
+                <td>Oui</td>
+                <td>Oui</td>
+                <td>Oui</td>
+            </tr>
+            <tr>
+                <td>Intégration LangChain</td>
+                <td><span class="badge badge-green">Native</span></td>
+                <td>Native</td>
+                <td>Native</td>
+                <td>Native</td>
+            </tr>
+            <tr>
+                <td>Persistance</td>
+                <td><span class="badge badge-green">Cloud (auto)</span></td>
+                <td>Fichier local</td>
+                <td>Cloud/Docker</td>
+                <td>Cloud/Docker</td>
+            </tr>
+        </table>
+        <div class="info-box">
+            <strong>Choix :</strong> Pinecone est un vector store <strong>cloud serverless</strong> qui ne nécessite
+            aucune infrastructure à gérer. Contrairement à ChromaDB (local/fichier), Pinecone est parfait pour le
+            déploiement en production : les vecteurs sont hébergés sur AWS, accessibles via API, avec un tier gratuit
+            suffisant pour un PFE. Le filtrage par métadonnées (<code>language: "fr"</code> ou
+            <code>language: "ar"</code>) permet la recherche bilingue.
+        </div>
+
+        <h3>Sécurité — Hachage de mot de passe</h3>
+        <table>
+            <tr>
+                <th>Critère</th>
+                <th>bcrypt ✅</th>
+                <th>Argon2</th>
+                <th>SHA-256</th>
+                <th>MD5</th>
+            </tr>
+            <tr>
+                <td>Sécurité</td>
+                <td><span class="badge badge-green">Très élevée</span></td>
+                <td>Maximale</td>
+                <td><span class="badge badge-orange">Faible</span></td>
+                <td><span class="badge badge-red">Obsolète</span></td>
+            </tr>
+            <tr>
+                <td>Résistance brute-force</td>
+                <td><span class="badge badge-green">Élevée</span> (salt + cost)</td>
+                <td>Maximale</td>
+                <td>Faible</td>
+                <td>Nulle</td>
+            </tr>
+            <tr>
+                <td>Compatibilité Python</td>
+                <td><span class="badge badge-green">Native</span></td>
+                <td>Plugin</td>
+                <td>Native</td>
+                <td>Native</td>
+            </tr>
+            <tr>
+                <td>Standard OWASP</td>
+                <td><span class="badge badge-green">Recommandé</span></td>
+                <td>Recommandé</td>
+                <td>Non recommandé</td>
+                <td>Interdit</td>
+            </tr>
+        </table>
+        <div class="info-box">
+            <strong>Choix :</strong> bcrypt est le standard OWASP le plus utilisé. Chaque hash inclut un <em>salt</em>
+            aléatoire et un <em>cost factor</em> ajustable, rendant les attaques par dictionnaire impossibles.
+        </div>
+
+        <!-- ==================== 4. BACKEND ==================== -->
+        <div class="page-break"></div>
+        <h1 id="backend">4. Backend — Structure et composants</h1>
+
+        <h2>4.1 Point d'entrée (<code>main.py</code>)</h2>
+        <p>Fichier principal qui initialise l'application FastAPI, configure les middlewares (CORS, sécurité, rate
+            limiting), monte les routes API et sert le frontend statique.</p>
+        <pre><code>app = FastAPI(title="API Sécurité Routière")
+app.add_middleware(CORSMiddleware, ...)       # Cross-Origin
+app.add_middleware(SecurityHeadersMiddleware)  # B2: Headers sécurité
+app.add_middleware(APIRateLimitMiddleware)     # B5: Rate limiting global
+app.include_router(auth_router)               # /api/auth/*
+app.include_router(chat_router)               # /api/chat/*
+app.include_router(conversations_router)      # /api/conversations/*
+app.mount("/static", StaticFiles(...))        # Frontend</code></pre>
+
+        <h2>4.2 Services métier</h2>
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Fichier</th>
+                <th>Responsabilité</th>
+            </tr>
+            <tr>
+                <td><strong>RAG Service</strong></td>
+                <td>rag_service.py</td>
+                <td>Pipeline complet : détection langue → recherche vectorielle → prompt → LLM → réponse</td>
+            </tr>
+            <tr>
+                <td><strong>Auth Service</strong></td>
+                <td>auth_service.py</td>
+                <td>JWT (access+refresh), bcrypt, Google OAuth2 token verification</td>
+            </tr>
+            <tr>
+                <td><strong>Vector Store</strong></td>
+                <td>vector_store.py</td>
+                <td>Pinecone Cloud : indexation et recherche sémantique des documents (serverless AWS)</td>
+            </tr>
+            <tr>
+                <td><strong>Sign Detector</strong></td>
+                <td>sign_detector.py</td>
+                <td>Base de 41+ panneaux routiers tunisiens, détection par mots-clés dans le texte</td>
+            </tr>
+            <tr>
+                <td><strong>Image Detector</strong></td>
+                <td>image_detector.py</td>
+                <td>Analyse d'images via Groq Vision (Llama 4 Scout) pour identifier les panneaux</td>
+            </tr>
+            <tr>
+                <td><strong>Language Detector</strong></td>
+                <td>language_detector.py</td>
+                <td>Détection automatique français/arabe par analyse de caractères Unicode</td>
+            </tr>
+            <tr>
+                <td><strong>Email Service</strong></td>
+                <td>email_service.py</td>
+                <td>Envoi d'emails SMTP (code de réinitialisation) avec template HTML</td>
+            </tr>
+            <tr>
+                <td><strong>Audit Logger</strong></td>
+                <td>audit_logger.py</td>
+                <td>Journalisation des événements de sécurité (fichier + console)</td>
+            </tr>
+            <tr>
+                <td><strong>Document Loader</strong></td>
+                <td>document_loader.py</td>
+                <td>Chargement et chunking des documents source (TXT, PDF, DOCX)</td>
+            </tr>
+        </table>
+
+        <h2>4.3 Configuration centralisée (<code>config.py</code>)</h2>
+        <p>Utilise <code>pydantic-settings</code> pour charger les variables depuis un fichier <code>.env</code> avec
+            validation automatique des types :</p>
+        <table>
+            <tr>
+                <th>Variable</th>
+                <th>Valeur</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>GROQ_API_KEY</td>
+                <td>.env</td>
+                <td>Clé API Groq (gratuite)</td>
+            </tr>
+            <tr>
+                <td>DATABASE_URL</td>
+                <td>mysql+pymysql://...</td>
+                <td>Connexion MySQL</td>
+            </tr>
+            <tr>
+                <td>JWT_SECRET_KEY</td>
+                <td>.env</td>
+                <td>Secret des access tokens</td>
+            </tr>
+            <tr>
+                <td>JWT_REFRESH_SECRET_KEY</td>
+                <td>.env</td>
+                <td>Secret des refresh tokens (différent)</td>
+            </tr>
+            <tr>
+                <td>JWT_ACCESS_TOKEN_EXPIRE_MINUTES</td>
+                <td>15</td>
+                <td>Durée de vie access token</td>
+            </tr>
+            <tr>
+                <td>JWT_REFRESH_TOKEN_EXPIRE_DAYS</td>
+                <td>7</td>
+                <td>Durée de vie refresh token</td>
+            </tr>
+            <tr>
+                <td>SMTP_EMAIL / SMTP_PASSWORD</td>
+                <td>.env</td>
+                <td>Identifiants Gmail pour l'envoi d'emails</td>
+            </tr>
+            <tr>
+                <td>GOOGLE_CLIENT_ID</td>
+                <td>.env</td>
+                <td>Client ID Google OAuth2</td>
+            </tr>
+            <tr>
+                <td>PINECONE_API_KEY</td>
+                <td>.env</td>
+                <td>Clé API Pinecone (vector store cloud)</td>
+            </tr>
+            <tr>
+                <td>PINECONE_INDEX_NAME</td>
+                <td>securite-routiere</td>
+                <td>Nom de l'index Pinecone (serverless AWS)</td>
+            </tr>
+            <tr>
+                <td>HUGGINGFACE_API_KEY</td>
+                <td>.env</td>
+                <td>Clé API HuggingFace (embeddings gratuits)</td>
+            </tr>
+        </table>
+
+        <!-- ==================== 5. BASE DE DONNÉES ==================== -->
+        <div class="page-break"></div>
+        <h1 id="bdd">5. Base de données — Schéma et modèles</h1>
+
+        <h2>5.1 Diagramme de classes (SQLAlchemy)</h2>
+        <div class="arch-diagram">
+            ┌──────────────────────────────────────┐
+            │ USER │
+            ├──────────────────────────────────────┤
+            │ id : Integer (PK, AI) │
+            │ username : String(50) UNIQUE │
+            │ email : String(100) UNIQUE │
+            │ hashed_password: String(255) NULL │
+            │ full_name : String(100) NULL │
+            │ avatar_url : String(500) NULL │
+            │ auth_provider: String(20) = "local" │
+            │ google_id : String(100) UNIQUE │
+            │ is_active : Boolean = True │
+            │ created_at : DateTime (auto) │
+            │ updated_at : DateTime (auto) │
+            ├──────────────────────────────────────┤
+            │ conversations: 1 → N Conversation │
+            └─────────────────┬────────────────────┘
+            │ 1:N
+            ▼
+            ┌──────────────────────────────────────┐
+            │ CONVERSATION │
+            ├──────────────────────────────────────┤
+            │ id : Integer (PK, AI) │
+            │ user_id : Integer (FK → users) │
+            │ title : String(200) │
+            │ language : String(5) NULL │
+            │ created_at : DateTime (auto) │
+            │ updated_at : DateTime (auto) │
+            ├──────────────────────────────────────┤
+            │ messages : 1 → N Message │
+            └─────────────────┬────────────────────┘
+            │ 1:N
+            ▼
+            ┌──────────────────────────────────────┐
+            │ MESSAGE │
+            ├──────────────────────────────────────┤
+            │ id : Integer (PK, AI) │
+            │ conversation_id : Integer (FK) │
+            │ role : String(10) │
+            │ content : Text │
+            │ language : String(5) NULL │
+            │ created_at : DateTime (auto) │
+            └──────────────────────────────────────┘
+
+            ┌──────────────────────────────────────┐
+            │ FEEDBACK │
+            ├──────────────────────────────────────┤
+            │ id : Integer (PK, AI) │
+            │ session_id : String(100) │
+            │ question : Text │
+            │ answer : Text │
+            │ language : String(5) │
+            │ is_positive : Boolean (👍/👎) │
+            │ comment : Text NULL │
+            │ created_at : DateTime (auto) │
+            └──────────────────────────────────────┘
+        </div>
+
+        <h2>5.2 Relations</h2>
+        <table>
+            <tr>
+                <th>Relation</th>
+                <th>Type</th>
+                <th>Cascade</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>User → Conversation</td>
+                <td>1:N</td>
+                <td>DELETE orphan</td>
+                <td>Un utilisateur peut avoir plusieurs conversations</td>
+            </tr>
+            <tr>
+                <td>Conversation → Message</td>
+                <td>1:N</td>
+                <td>DELETE orphan</td>
+                <td>Une conversation contient des messages ordonnés par date</td>
+            </tr>
+            <tr>
+                <td>Feedback</td>
+                <td>Standalone</td>
+                <td>—</td>
+                <td>Évaluations anonymes des réponses du chatbot</td>
+            </tr>
+        </table>
+
+        <h2>5.3 Particularités du modèle User</h2>
+        <ul>
+            <li><code>hashed_password</code> est <strong>nullable</strong> — les comptes Google n'ont pas de mot de
+                passe local</li>
+            <li><code>auth_provider</code> distingue <code>"local"</code> (email/mot de passe) de <code>"google"</code>
+                (OAuth2)</li>
+            <li><code>google_id</code> est <strong>unique</strong> et indexé pour retrouver rapidement un utilisateur
+                Google</li>
+            <li>Les mots de passe sont <strong>hachés avec bcrypt</strong> (jamais stockés en clair)</li>
+        </ul>
+
+        <!-- ==================== 6. RAG ==================== -->
+        <div class="page-break"></div>
+        <h1 id="rag">6. Pipeline RAG (Retrieval-Augmented Generation)</h1>
+
+        <h2>6.1 Qu'est-ce que le RAG ?</h2>
+        <p>Le RAG combine la <strong>recherche d'information</strong> (retrieval) avec la <strong>génération de
+                texte</strong> (generation) pour produire des réponses précises et sourcées. Contrairement à un LLM
+            classique qui "invente" ses réponses, le RAG les base sur des documents réels.</p>
+
+        <h2>6.2 Pipeline en 5 étapes</h2>
+        <div class="arch-diagram">
+            Question utilisateur
+            │
+            ▼
+            ┌─────────────────┐
+            │ 1. Détection │ language_detector.py
+            │ langue │ (FR ou AR par caractères Unicode)
+            └────────┬────────┘
+            ▼
+            ┌─────────────────┐
+            │ 2. Recherche │ vector_store.py + Pinecone Cloud
+            │ vectorielle │ Embedding → cosine similarity → Top K
+            └────────┬────────┘
+            ▼
+            ┌─────────────────┐
+            │ 3. Construction │ Contexte = chunks pertinents
+            │ du prompt │ + instructions système (FR ou AR)
+            └────────┬────────┘
+            ▼
+            ┌─────────────────┐
+            │ 4. Génération │ Groq API → Llama 3.1 8B
+            │ LLM │ Temperature: 0.3 (factuel)
+            └────────┬────────┘
+            ▼
+            ┌─────────────────┐
+            │ 5. Détection │ sign_detector.py
+            │ panneaux │ 41+ panneaux avec images SVG
+            └────────┬────────┘
+            ▼
+            Réponse enrichie (texte + panneaux)
+        </div>
+
+        <h2>6.3 Documents source</h2>
+        <table>
+            <tr>
+                <th>Document</th>
+                <th>Langue</th>
+                <th>Contenu</th>
+            </tr>
+            <tr>
+                <td>code_route_tunisie.txt</td>
+                <td>Français</td>
+                <td>Code de la route tunisien complet</td>
+            </tr>
+            <tr>
+                <td>code_route_tunisie.txt</td>
+                <td>Arabe</td>
+                <td>قانون الطرقات التونسي</td>
+            </tr>
+        </table>
+
+        <h2>6.4 Paramètres du chunking</h2>
+        <table>
+            <tr>
+                <th>Paramètre</th>
+                <th>Valeur</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>CHUNK_SIZE</td>
+                <td>800 caractères</td>
+                <td>Taille de chaque fragment</td>
+            </tr>
+            <tr>
+                <td>CHUNK_OVERLAP</td>
+                <td>150 caractères</td>
+                <td>Chevauchement pour la continuité</td>
+            </tr>
+            <tr>
+                <td>TOP_K_RESULTS</td>
+                <td>4</td>
+                <td>Nombre de chunks retournés par recherche</td>
+            </tr>
+        </table>
+
+        <!-- ==================== 7. AUTH ==================== -->
+        <div class="page-break"></div>
+        <h1 id="auth">7. Authentification et autorisation</h1>
+
+        <h2>7.1 Méthode 1 — Email + Mot de passe (Local)</h2>
+        <div class="arch-diagram">
+            Inscription:
+            Client → POST /api/auth/register → Validation Pydantic (A2: force MDP)
+            → bcrypt.hash(password) → INSERT INTO users → JWT access + refresh
+
+            Connexion:
+            Client → POST /api/auth/login → Rate limit check (A3)
+            → SELECT user WHERE email → bcrypt.verify(password)
+            → JWT access (15min) + refresh (7j) → Client
+        </div>
+
+        <h2>7.2 Méthode 2 — Google OAuth2</h2>
+        <div class="arch-diagram">
+            Client → Bouton Google → Google Identity Services (One Tap/Popup)
+            → Google ID Token (credential) → POST /api/auth/google
+            → httpx → googleapis.com/tokeninfo (vérification)
+            → get_or_create_user(google_id, email, name, avatar)
+            → JWT access + refresh → Client
+        </div>
+
+        <h2>7.3 Méthode 3 — Mot de passe oublié</h2>
+        <div class="arch-diagram">
+            Étape 1: POST /api/auth/forgot-password { email }
+            → Génère code 6 chiffres → Stockage mémoire (10min) → Email SMTP
+
+            Étape 2: Utilisateur entre le code dans l'interface
+
+            Étape 3: POST /api/auth/reset-password { email, code, new_password }
+            → Vérifie code → Valide force MDP (A2) → bcrypt.hash → UPDATE user
+        </div>
+
+        <h2>7.4 Système JWT dual (Access + Refresh)</h2>
+        <table>
+            <tr>
+                <th>Token</th>
+                <th>Durée</th>
+                <th>Secret</th>
+                <th>Usage</th>
+            </tr>
+            <tr>
+                <td><strong>Access Token</strong></td>
+                <td>15 minutes</td>
+                <td>JWT_SECRET_KEY</td>
+                <td>Authentifier chaque requête API (header Authorization)</td>
+            </tr>
+            <tr>
+                <td><strong>Refresh Token</strong></td>
+                <td>7 jours</td>
+                <td>JWT_REFRESH_SECRET_KEY</td>
+                <td>Renouveler l'access token sans re-login</td>
+            </tr>
+        </table>
+        <p>Le frontend renouvelle automatiquement l'access token 1 minute avant son expiration via
+            <code>scheduleTokenRefresh()</code>.
+        </p>
+
+        <!-- ==================== 8. SÉCURITÉ ==================== -->
+        <div class="page-break"></div>
+        <h1 id="security">8. Sécurité — 8 techniques implémentées</h1>
+
+        <div class="info-box">
+            Les techniques suivent les recommandations <strong>OWASP Top 10</strong> pour la sécurité des applications
+            web.
+        </div>
+
+        <table>
+            <tr>
+                <th>Code</th>
+                <th>Technique</th>
+                <th>Fichier</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><span class="badge badge-red">A2</span></td>
+                <td><strong>Validation mot de passe fort</strong></td>
+                <td>schemas/auth.py</td>
+                <td>Min 8 chars, 1 majuscule, 1 minuscule, 1 chiffre, 1 spécial. Validateur Pydantic
+                    <code>field_validator</code>.
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-red">A3</span></td>
+                <td><strong>Rate limiting login (anti brute-force)</strong></td>
+                <td>core/security.py + api/auth.py</td>
+                <td>Max 5 tentatives par IP en 5 minutes. Retourne 429 si dépassé. Classe <code>RateLimitStore</code>.
+                </td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-red">A5</span></td>
+                <td><strong>Token refresh + expiration courte</strong></td>
+                <td>services/auth_service.py</td>
+                <td>Access token 15min + refresh token 7j. Deux secrets JWT distincts. Auto-refresh frontend.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-red">A6</span></td>
+                <td><strong>Changement de mot de passe</strong></td>
+                <td>api/auth.py</td>
+                <td>PUT /api/auth/change-password. Vérifie ancien MDP, valide force nouveau MDP, audit log.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">B2</span></td>
+                <td><strong>Headers de sécurité HTTP</strong></td>
+                <td>core/security.py</td>
+                <td>X-Frame-Options, CSP, HSTS, X-XSS-Protection, Referrer-Policy, Permissions-Policy, nosniff.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">B5</span></td>
+                <td><strong>Rate limiting global API</strong></td>
+                <td>core/security.py</td>
+                <td>Max 100 requêtes/min par IP sur toute l'API. Middleware Starlette. Exclut /static/.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">B6</span></td>
+                <td><strong>Sanitisation des entrées</strong></td>
+                <td>schemas/chat.py</td>
+                <td>Supprime balises HTML, caractères de contrôle, espaces excessifs. Max 1000 chars.</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">B7</span></td>
+                <td><strong>Journalisation d'audit</strong></td>
+                <td>services/audit_logger.py</td>
+                <td>Log fichier + console : LOGIN_OK, LOGIN_FAIL, REGISTER, PASSWORD_CHANGE, RATE_LIMIT, etc.</td>
+            </tr>
+        </table>
+
+        <h2>8.1 Détail des headers de sécurité (B2)</h2>
+        <table>
+            <tr>
+                <th>Header</th>
+                <th>Valeur</th>
+                <th>Attaque bloquée</th>
+            </tr>
+            <tr>
+                <td>X-Frame-Options</td>
+                <td>DENY</td>
+                <td>Clickjacking (iframe)</td>
+            </tr>
+            <tr>
+                <td>X-Content-Type-Options</td>
+                <td>nosniff</td>
+                <td>MIME sniffing</td>
+            </tr>
+            <tr>
+                <td>X-XSS-Protection</td>
+                <td>1; mode=block</td>
+                <td>XSS réfléchi</td>
+            </tr>
+            <tr>
+                <td>Content-Security-Policy</td>
+                <td>default-src 'self'; ...</td>
+                <td>Injection de scripts</td>
+            </tr>
+            <tr>
+                <td>Strict-Transport-Security</td>
+                <td>max-age=31536000</td>
+                <td>Downgrade HTTPS→HTTP</td>
+            </tr>
+            <tr>
+                <td>Referrer-Policy</td>
+                <td>strict-origin-when-cross-origin</td>
+                <td>Fuite d'URL</td>
+            </tr>
+            <tr>
+                <td>Permissions-Policy</td>
+                <td>camera=(self), microphone=(self), geolocation=()</td>
+                <td>Abus d'APIs</td>
+            </tr>
+        </table>
+
+        <!-- ==================== 9. FRONTEND ==================== -->
+        <div class="page-break"></div>
+        <h1 id="frontend">9. Frontend — Interface utilisateur</h1>
+
+        <h2>9.1 Architecture</h2>
+        <p>Le frontend est une <strong>Single Page Application (SPA)</strong> dans un seul fichier
+            <code>index.html</code> contenant HTML, CSS et JavaScript inline. Ce choix simplifie le déploiement (pas de
+            build step) et réduit les requêtes HTTP.
+        </p>
+
+        <h2>9.2 Pages</h2>
+        <table>
+            <tr>
+                <th>Page</th>
+                <th>Description</th>
+                <th>Composants</th>
+            </tr>
+            <tr>
+                <td><strong>Auth Page</strong></td>
+                <td>Connexion / Inscription</td>
+                <td>Login form, Register form, Google OAuth button, Forgot password (3 steps)</td>
+            </tr>
+            <tr>
+                <td><strong>App Page</strong></td>
+                <td>Interface principale</td>
+                <td>Sidebar conversations, Chat area, Quick questions, Input bar</td>
+            </tr>
+        </table>
+
+        <h2>9.3 Fonctionnalités UI</h2>
+        <ul>
+            <li><strong>Conversations persistantes</strong> — Sidebar avec liste des conversations, création/suppression
+            </li>
+            <li><strong>Affichage panneaux</strong> — Cards visuelles avec images SVG des panneaux détectés</li>
+            <li><strong>Speech-to-Text (STT)</strong> — Bouton 🎤 pour dicter les questions (Web Speech API, FR/AR)</li>
+            <li><strong>Text-to-Speech (TTS)</strong> — Bouton 🔊 pour écouter les réponses</li>
+            <li><strong>Détection par caméra</strong> — Modal avec upload/photo pour identifier les panneaux</li>
+            <li><strong>Changement de mot de passe</strong> — Modal 🔒 dans la sidebar</li>
+            <li><strong>Mode bilingue</strong> — Toggle FR/AR/Auto dans le header</li>
+            <li><strong>Feedback</strong> — Boutons 👍/👎 sur chaque réponse</li>
+        </ul>
+
+        <!-- ==================== 10. FEATURES ==================== -->
+        <h1 id="features">10. Fonctionnalités avancées</h1>
+
+        <h2>10.1 Détection des panneaux par texte</h2>
+        <p>Le service <code>sign_detector.py</code> contient une base de <strong>41+ panneaux routiers
+                tunisiens</strong> avec :</p>
+        <ul>
+            <li>Nom (FR + AR)</li>
+            <li>Mots-clés de détection</li>
+            <li>Catégorie (danger, interdiction, obligation, information)</li>
+            <li>Image SVG générée</li>
+        </ul>
+        <p>Quand l'utilisateur pose une question mentionnant un panneau, le système détecte automatiquement les panneaux
+            pertinents et affiche leurs images.</p>
+
+        <h2>10.2 Détection par image (Vision IA)</h2>
+        <p>L'utilisateur peut prendre une photo d'un panneau réel. L'image est envoyée à <strong>Groq Vision</strong>
+            (Llama 4 Scout 17B) qui l'analyse et retourne :</p>
+        <ul>
+            <li>Le nom du panneau identifié</li>
+            <li>Sa signification</li>
+            <li>Les règles associées</li>
+        </ul>
+
+        <h2>10.3 Mot de passe oublié par email</h2>
+        <p>Flow en 3 étapes avec un code à 6 chiffres envoyé par email SMTP. Le code expire après 10 minutes. L'email
+            contient un template HTML professionnel avec le branding de l'application.</p>
+
+        <!-- ==================== 11. DEPLOY ==================== -->
+        <div class="page-break"></div>
+        <h1 id="deploy">11. Déploiement et hébergement</h1>
+
+        <h2>11.1 Environnement de développement</h2>
+        <table>
+            <tr>
+                <th>Composant</th>
+                <th>Outil</th>
+                <th>Commande</th>
+            </tr>
+            <tr>
+                <td>Serveur Python</td>
+                <td>Uvicorn</td>
+                <td><code>python -m uvicorn app.main:app --reload</code></td>
+            </tr>
+            <tr>
+                <td>Base de données</td>
+                <td>XAMPP (MySQL)</td>
+                <td>Démarrer via panneau XAMPP</td>
+            </tr>
+            <tr>
+                <td>Python</td>
+                <td>venv</td>
+                <td><code>.\venv\Scripts\activate</code></td>
+            </tr>
+            <tr>
+                <td>Dépendances</td>
+                <td>pip</td>
+                <td><code>pip install -r requirements.txt</code></td>
+            </tr>
+        </table>
+
+        <h2>11.2 Déploiement en production</h2>
+        <table>
+            <tr>
+                <th>Option</th>
+                <th>Coût</th>
+                <th>Avantages</th>
+                <th>Inconvénients</th>
+            </tr>
+            <tr>
+                <td><strong>Railway.app</strong></td>
+                <td>Gratuit (limité)</td>
+                <td>Déploiement GitHub auto, MySQL inclus</td>
+                <td>Limite 500h/mois gratuit</td>
+            </tr>
+            <tr>
+                <td><strong>Render.com</strong></td>
+                <td>Gratuit (limité)</td>
+                <td>Simple, HTTPS auto</td>
+                <td>Slow start (free tier)</td>
+            </tr>
+            <tr>
+                <td><strong>VPS (DigitalOcean)</strong></td>
+                <td>~5$/mois</td>
+                <td>Contrôle total, pas de limite</td>
+                <td>Configuration manuelle</td>
+            </tr>
+            <tr>
+                <td><strong>Heroku</strong></td>
+                <td>~7$/mois</td>
+                <td>PaaS simple</td>
+                <td>Pas de free tier</td>
+            </tr>
+        </table>
+
+        <h2>11.3 Variables d'environnement pour production</h2>
+        <pre><code># .env (production)
+DATABASE_URL=mysql+pymysql://user:password@host:3306/dbname
+GROQ_API_KEY=gsk_...
+JWT_SECRET_KEY=une-clé-très-longue-et-aléatoire
+JWT_REFRESH_SECRET_KEY=une-autre-clé-différente
+GOOGLE_CLIENT_ID=769...apps.googleusercontent.com
+PINECONE_API_KEY=pcsk_...
+PINECONE_INDEX_NAME=securite-routiere
+HUGGINGFACE_API_KEY=hf_...
+SMTP_EMAIL=votre-email@gmail.com
+SMTP_PASSWORD=xxxx xxxx xxxx xxxx</code></pre>
+
+        <h2>11.4 Checklist production</h2>
+        <ul>
+            <li>☐ Changer tous les secrets JWT (clés aléatoires de 64+ caractères)</li>
+            <li>☐ Configurer MySQL distant (pas localhost)</li>
+            <li>☐ Activer HTTPS (Nginx reverse proxy ou plateforme cloud)</li>
+            <li>☐ Mettre à jour les origines CORS avec le domaine de production</li>
+            <li>☐ Mettre à jour Google Cloud Console (origines JS + URI de redirection)</li>
+            <li>☐ Configurer SMTP pour les emails de réinitialisation</li>
+            <li>☐ Vérifier que les logs d'audit s'écrivent correctement</li>
+            <li>☐ Vérifier que l'index Pinecone est créé et peuplé</li>
+            <li>☐ Configurer les clés API (PINECONE_API_KEY, HUGGINGFACE_API_KEY)</li>
+        </ul>
+
+        <!-- ==================== 12. API ==================== -->
+        <div class="page-break"></div>
+        <h1 id="api">12. Référence API complète</h1>
+
+        <h2>12.1 Authentification (<code>/api/auth</code>)</h2>
+        <table>
+            <tr>
+                <th>Méthode</th>
+                <th>Endpoint</th>
+                <th>Auth</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/auth/register</td>
+                <td>Non</td>
+                <td>Inscription (email + mot de passe)</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/auth/login</td>
+                <td>Non</td>
+                <td>Connexion (rate limited A3)</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/auth/google</td>
+                <td>Non</td>
+                <td>Connexion Google OAuth2</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/auth/refresh</td>
+                <td>Non</td>
+                <td>Renouveler access token (A5)</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/auth/forgot-password</td>
+                <td>Non</td>
+                <td>Demander code de réinitialisation</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/auth/reset-password</td>
+                <td>Non</td>
+                <td>Réinitialiser avec le code</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-orange">PUT</span></td>
+                <td>/api/auth/change-password</td>
+                <td><span class="badge badge-red">JWT</span></td>
+                <td>Changer mot de passe (A6)</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">GET</span></td>
+                <td>/api/auth/me</td>
+                <td><span class="badge badge-red">JWT</span></td>
+                <td>Profil utilisateur connecté</td>
+            </tr>
+        </table>
+
+        <h2>12.2 Chat (<code>/api/chat</code>)</h2>
+        <table>
+            <tr>
+                <th>Méthode</th>
+                <th>Endpoint</th>
+                <th>Auth</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/chat/ask</td>
+                <td>Optionnel</td>
+                <td>Poser une question (pipeline RAG)</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/chat/detect-sign</td>
+                <td>Optionnel</td>
+                <td>Analyser une image de panneau (Vision)</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/chat/feedback</td>
+                <td>Non</td>
+                <td>Évaluer une réponse (👍/👎)</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">GET</span></td>
+                <td>/api/chat/stats</td>
+                <td>Non</td>
+                <td>Statistiques du chatbot</td>
+            </tr>
+        </table>
+
+        <h2>12.3 Conversations (<code>/api/conversations</code>)</h2>
+        <table>
+            <tr>
+                <th>Méthode</th>
+                <th>Endpoint</th>
+                <th>Auth</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td><span class="badge badge-green">POST</span></td>
+                <td>/api/conversations/</td>
+                <td><span class="badge badge-red">JWT</span></td>
+                <td>Créer une conversation</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">GET</span></td>
+                <td>/api/conversations/</td>
+                <td><span class="badge badge-red">JWT</span></td>
+                <td>Lister les conversations</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-blue">GET</span></td>
+                <td>/api/conversations/{id}/messages</td>
+                <td><span class="badge badge-red">JWT</span></td>
+                <td>Messages d'une conversation</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-red">DELETE</span></td>
+                <td>/api/conversations/{id}</td>
+                <td><span class="badge badge-red">JWT</span></td>
+                <td>Supprimer une conversation</td>
+            </tr>
+        </table>
+
+        <!-- ==================== 13. CONCLUSION ==================== -->
+        <div class="page-break"></div>
+        <h1 id="conclusion">13. Conclusion</h1>
+
+        <p>Ce projet intègre les technologies modernes du développement web et de l'intelligence artificielle dans une
+            application complète et sécurisée :</p>
+
+        <table>
+            <tr>
+                <th>Aspect</th>
+                <th>Résumé</th>
+            </tr>
+            <tr>
+                <td><strong>Intelligence Artificielle</strong></td>
+                <td>Pipeline RAG avec LangChain + Groq (Llama 3.1/4) + embeddings multilingues + Pinecone Cloud</td>
+            </tr>
+            <tr>
+                <td><strong>Backend</strong></td>
+                <td>FastAPI avec 3 routers, 9 services métier, validation Pydantic, ORM SQLAlchemy</td>
+            </tr>
+            <tr>
+                <td><strong>Base de données</strong></td>
+                <td>MySQL (4 tables relationnelles) + Pinecone Cloud (vecteurs)</td>
+            </tr>
+            <tr>
+                <td><strong>Authentification</strong></td>
+                <td>3 méthodes (email, Google OAuth2, reset par email) avec JWT dual tokens</td>
+            </tr>
+            <tr>
+                <td><strong>Sécurité</strong></td>
+                <td>8 techniques OWASP : validation MDP, rate limiting, headers HTTP, sanitisation, audit logs</td>
+            </tr>
+            <tr>
+                <td><strong>Frontend</strong></td>
+                <td>SPA responsive avec STT, TTS, détection panneaux (texte + image), conversations</td>
+            </tr>
+            <tr>
+                <td><strong>Bilingue</strong></td>
+                <td>Détection automatique FR/AR, réponses dans la langue de la question</td>
+            </tr>
+        </table>
+
+        <div class="info-box" style="margin-top: 30px; text-align: center;">
+            <strong>Projet de Fin d'Études — Chatbot Sécurité Routière Tunisie</strong><br>
+            Technologies : Python • FastAPI • MySQL • LangChain • Groq • Pinecone • HTML/CSS/JS<br>
+            Mars 2026
+        </div>
+
+    </div>
+
+</body>
+
+</html>

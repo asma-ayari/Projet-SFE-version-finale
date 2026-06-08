@@ -1,0 +1,132 @@
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-journal-text me-2"></i>{{ 'FORMATEUR.COURS_MANAGE.TITLE' | translate }}</h2>
+            <p class="text-muted mb-0">{{ 'FORMATEUR.COURS_MANAGE.TOTAL' | translate:{ count: total() } }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a routerLink="/formateur/dashboard" class="btn btn-outline-secondary back-dashboard-link">
+                <i class="bi bi-arrow-left me-1"></i>{{ 'FORMATEUR.COURS_MANAGE.BACK_DASHBOARD' | translate }}
+            </a>
+            <a routerLink="/formateur/cours/create" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-1"></i>{{ 'FORMATEUR.COURS_MANAGE.NEW_COURSE' | translate }}
+            </a>
+        </div>
+    </div>
+
+    <div *ngIf="error()" class="alert alert-danger alert-dismissible fade show">
+        {{ error() }}<button type="button" class="btn-close" (click)="error.set('')"></button>
+    </div>
+    <div *ngIf="success()" class="alert alert-success alert-dismissible fade show">
+        {{ success() }}<button type="button" class="btn-close" (click)="success.set('')"></button>
+    </div>
+
+    <!-- Filtre -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">{{ 'FORMATEUR.COURS_MANAGE.CATEGORY' | translate }}</label>
+                    <select class="form-select" [value]="filterCategory()" (change)="onFilterChange($event)">
+                        <option value="">{{ 'FORMATEUR.COURS_MANAGE.CATEGORIES.ALL' | translate }}</option>
+                        <option value="conduite">{{ 'FORMATEUR.COURS_MANAGE.CATEGORIES.CONDUITE' | translate }}</option>
+                        <option value="securite">{{ 'FORMATEUR.COURS_MANAGE.CATEGORIES.SECURITE' | translate }}</option>
+                        <option value="secours">{{ 'FORMATEUR.COURS_MANAGE.CATEGORIES.SECOURS' | translate }}</option>
+                        <option value="signalisation">{{ 'FORMATEUR.COURS_MANAGE.CATEGORIES.SIGNALISATION' | translate }}</option>
+                        <option value="general">{{ 'FORMATEUR.COURS_MANAGE.CATEGORIES.GENERAL' | translate }}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <div class="card-body p-0">
+            <div *ngIf="loading()" class="text-center py-5">
+                <div class="spinner-border text-primary"></div>
+            </div>
+            <div class="table-responsive" *ngIf="!loading()">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>{{ 'FORMATEUR.COURS_MANAGE.TABLE.COVER' | translate }}</th>
+                            <th>{{ 'FORMATEUR.COURS_MANAGE.TABLE.TITLE' | translate }}</th>
+                            <th>{{ 'FORMATEUR.COURS_MANAGE.TABLE.CATEGORY' | translate }}</th>
+                            <th>{{ 'FORMATEUR.COURS_MANAGE.TABLE.DURATION' | translate }}</th>
+                            <th>{{ 'FORMATEUR.COURS_MANAGE.TABLE.STATUS' | translate }}</th>
+                            <th>{{ 'FORMATEUR.COURS_MANAGE.TABLE.ACTIONS' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let c of courses()">
+                            <td>
+                                <div class="course-thumb">
+                                    <ng-container
+                                        *ngIf="getCourseImagePath(c) && !hasImageError(c.id); else placeholder">
+                                        <img [src]="getCourseImagePath(c)" [alt]="('FORMATEUR.COURS_MANAGE.TABLE.COVER_ALT' | translate) + ' ' + c.title"
+                                            (error)="onImageError(c.id)" />
+                                    </ng-container>
+                                    <ng-template #placeholder>
+                                        <div class="course-thumb-placeholder" [attr.aria-label]="'FORMATEUR.COURS_MANAGE.TABLE.IMAGE_UNAVAILABLE' | translate">
+                                            <i class="bi bi-image"></i>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </td>
+                            <td class="fw-semibold">{{ c.title }}</td>
+                            <td>{{ c.category }}</td>
+                            <td>{{ c.duration || '—' }}</td>
+                            <td>
+                                <div *ngIf="canManage(c); else publishedLabel" class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" [checked]="c.is_published"
+                                        (change)="togglePublish(c)">
+                                    <label class="form-check-label small">{{ c.is_published ? ('FORMATEUR.COURS_MANAGE.STATUS.PUBLISHED' | translate) : ('FORMATEUR.COURS_MANAGE.STATUS.DRAFT'
+                                        | translate)
+                                        }}</label>
+                                </div>
+                                <ng-template #publishedLabel>
+                                    <span class="badge bg-success">{{ 'FORMATEUR.COURS_MANAGE.STATUS.PUBLISHED' | translate }}</span>
+                                </ng-template>
+                            </td>
+                            <td>
+                                <a [routerLink]="['/formateur/cours', c.id, 'voir']"
+                                    class="btn btn-sm btn-outline-secondary" [attr.title]="'FORMATEUR.COURS_MANAGE.ACTIONS.VIEW' | translate">
+                                    <i class="bi bi-eye"></i> {{ 'FORMATEUR.COURS_MANAGE.ACTIONS.VIEW' | translate }}
+                                </a>
+                                <ng-container *ngIf="canManage(c)">
+                                    <a [routerLink]="['/formateur/cours', c.id, 'modifier']"
+                                        class="btn btn-sm btn-outline-primary ms-2" [attr.title]="'FORMATEUR.COURS_MANAGE.ACTIONS.EDIT' | translate">
+                                        <i class="bi bi-pencil"></i> {{ 'FORMATEUR.COURS_MANAGE.ACTIONS.EDIT' | translate }}
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger ms-2" (click)="deleteCourse(c)"
+                                        [attr.title]="'FORMATEUR.COURS_MANAGE.ACTIONS.DELETE' | translate">
+                                        <i class="bi bi-trash"></i> {{ 'FORMATEUR.COURS_MANAGE.ACTIONS.DELETE' | translate }}
+                                    </button>
+                                </ng-container>
+                            </td>
+                        </tr>
+                        <tr *ngIf="courses().length === 0">
+                            <td colspan="6" class="text-center text-muted py-4">{{ 'FORMATEUR.COURS_MANAGE.EMPTY' | translate }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center" *ngIf="pages() > 1">
+                <small class="text-muted">{{ 'FORMATEUR.COURS_MANAGE.PAGINATION.PAGE' | translate:{ current: page(), total: pages() } }}</small>
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" [class.disabled]="page() === 1"><a class="page-link"
+                            (click)="goPage(page() - 1)">«</a></li>
+                    <li class="page-item" *ngFor="let p of [].constructor(pages()); let i = index"
+                        [class.active]="page() === i + 1">
+                        <a class="page-link" (click)="goPage(i + 1)">{{ i + 1 }}</a>
+                    </li>
+                    <li class="page-item" [class.disabled]="page() === pages()"><a class="page-link"
+                            (click)="goPage(page() + 1)">»</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

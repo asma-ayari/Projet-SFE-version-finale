@@ -1,0 +1,153 @@
+<div class="chatbot-page">
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="header-left">
+      <div class="bot-avatar-large">
+        <i class="fas fa-robot"></i>
+        <span class="status-dot"></span>
+      </div>
+      <div class="header-info">
+        <h1>Assistant IA</h1>
+        <span class="status-text">
+          <i class="fas fa-circle"></i> En ligne
+        </span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" (click)="toggleLanguage()"
+        [title]="currentLang() === 'fr' ? 'Passer en Arabe' : 'Switch to French'">
+        <span class="lang-badge">{{ currentLang() === 'fr' ? 'FR' : 'AR' }}</span>
+      </button>
+      <button class="header-btn" (click)="clearChat()" title="Effacer le chat">
+        <i class="fas fa-trash-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Chat Area -->
+  <div class="chat-container">
+    <!-- Sidebar with Quick Actions -->
+    <aside class="chat-sidebar">
+      <div class="sidebar-section">
+        <h3><i class="fas fa-bolt"></i> Questions Rapides</h3>
+        <div class="quick-actions">
+          @for (action of quickActions; track action.label) {
+          <button class="quick-action-btn" (click)="sendQuickAction(action)">
+            <span class="action-emoji">{{ action.icon }}</span>
+            <span>{{ action.label }}</span>
+          </button>
+          }
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3><i class="fas fa-lightbulb"></i> Suggestions</h3>
+        <div class="suggestions">
+          @for (question of suggestedQuestions; track question) {
+          <button class="suggestion-btn" (click)="sendSuggestion(question)">
+            {{ question }}
+          </button>
+          }
+        </div>
+      </div>
+
+      <div class="sidebar-section info-box">
+        <div class="info-icon">
+          <i class="fas fa-info-circle"></i>
+        </div>
+        <p>Posez vos questions sur la sécurité routière</p>
+      </div>
+    </aside>
+
+    <!-- Chat Messages Area -->
+    <main class="chat-main">
+      <div class="messages-container" #messagesContainer>
+        @for (message of messages(); track message.id) {
+        <div class="message" [class.user-message]="message.sender === 'user'"
+          [class.bot-message]="message.sender === 'bot'">
+          @if (message.sender === 'bot') {
+          <div class="message-avatar bot-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          }
+          <div class="message-content">
+            <div class="message-bubble" [innerHTML]="message.content | slice:0:5000"></div>
+            <!-- Signs display -->
+            @if (message.signs && message.signs.length > 0) {
+            <div class="signs-container">
+              @for (sign of message.signs; track sign.name) {
+              <div class="sign-card">
+                @if (sign.image_svg) {
+                <div class="sign-image" [innerHTML]="sanitizeSvg(sign.image_svg)"></div>
+                }
+                <div class="sign-info">
+                  <strong>{{ sign.name }}</strong>
+                  <span class="sign-category">{{ sign.category }}</span>
+                </div>
+              </div>
+              }
+            </div>
+            }
+            <!-- Feedback buttons for bot messages -->
+            @if (message.sender === 'bot' && !message.isTyping) {
+            <div class="feedback-buttons">
+              <button class="feedback-btn" [class.active]="message.feedbackGiven === 'positive'"
+                [disabled]="!!message.feedbackGiven" (click)="giveFeedback(message, true)" title="Bonne réponse">
+                👍
+              </button>
+              <button class="feedback-btn" [class.active]="message.feedbackGiven === 'negative'"
+                [disabled]="!!message.feedbackGiven" (click)="giveFeedback(message, false)" title="Mauvaise réponse">
+                👎
+              </button>
+            </div>
+            }
+            <span class="message-time">{{ message.timestamp | date:'HH:mm' }}</span>
+          </div>
+          @if (message.sender === 'user') {
+          <div class="message-avatar user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          }
+        </div>
+        }
+
+        <!-- Typing Indicator -->
+        @if (isTyping()) {
+        <div class="message bot-message">
+          <div class="message-avatar bot-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="message-content">
+            <div class="typing-indicator">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <div class="input-container">
+          <button class="attach-btn" title="Joindre un fichier">
+            <i class="fas fa-paperclip"></i>
+          </button>
+          <input type="text" [(ngModel)]="currentMessage" (keyup.enter)="sendMessage()"
+            placeholder="Écrivez votre question..." class="message-input">
+          <button class="voice-btn" title="Message vocal">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button class="send-btn" (click)="sendMessage()" [disabled]="!currentMessage.trim()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+        <p class="input-hint">
+          <i class="fas fa-shield-alt"></i>
+          Communication sécurisée
+        </p>
+      </div>
+    </main>
+  </div>
+</div>

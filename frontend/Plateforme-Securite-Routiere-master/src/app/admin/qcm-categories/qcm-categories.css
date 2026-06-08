@@ -1,0 +1,12 @@
+.action-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}

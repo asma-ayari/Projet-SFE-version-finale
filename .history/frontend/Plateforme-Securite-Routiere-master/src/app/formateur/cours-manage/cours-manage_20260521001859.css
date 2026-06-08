@@ -1,0 +1,114 @@
+/* Afficher les boutons d'actions en permanence */
+.table-responsive {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.table {
+  table-layout: auto;
+}
+
+.table th:last-child,
+.table td:last-child {
+  width: auto;
+  min-width: 200px;
+  text-align: center;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.table td {
+  vertical-align: middle;
+  padding: 0.75rem !important;
+  overflow: visible;
+}
+
+.course-thumb {
+  width: 120px;
+  height: 72px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e9ecef;
+  border: 1px solid #dee2e6;
+}
+
+.course-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.course-thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b95a1;
+  background: linear-gradient(135deg, #e9ecef 0%, #d7dce1 100%);
+}
+
+/* Boutons toujours visibles */
+.btn-sm {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-block !important;
+  padding: 0.375rem 0.75rem !important;
+}
+
+.btn-outline-primary,
+.btn-outline-danger {
+  opacity: 1 !important;
+  visibility: visible !important;
+  white-space: nowrap;
+  overflow: visible;
+}
+
+.course-action-view {
+  background: #e3f2fd;
+  border-color: #1565c0;
+  color: #1565c0;
+}
+
+.course-action-view:hover {
+  background: #1565c0;
+  border-color: #1565c0;
+  color: #ffffff;
+}
+
+.course-action-edit {
+  background: #fff3e0;
+  border-color: #ff9800;
+  color: #e65100;
+}
+
+.course-action-edit:hover {
+  background: #ff9800;
+  border-color: #ff9800;
+  color: #ffffff;
+}
+
+.back-dashboard-link {
+  background: #fff3e0;
+  border-color: #ff9800;
+  color: #e65100;
+}
+
+.back-dashboard-link:hover {
+  background: #ff9800;
+  border-color: #ff9800;
+  color: #ffffff;
+}
+
+/* Forcer l'affichage dans le tableau */
+tbody tr .btn {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: inline-block !important;
+  margin-right: 0.5rem;
+}
+
+tbody tr .btn i {
+  margin-right: 0.25rem;
+}

@@ -1,0 +1,153 @@
+<div class="formateur-layout">
+  <aside class="formateur-sidebar" [class.sidebar--expanded]="isSidebarOpen()"
+    [class.sidebar--collapsed]="!isSidebarOpen()">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" *ngIf="isSidebarOpen()">
+        <i class="fas fa-shield-alt"></i>
+        <span>Sécurité Routière</span>
+      </div>
+      <div class="sidebar-logo-collapsed" *ngIf="!isSidebarOpen()">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <i [class]="isSidebarOpen() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <h3 class="nav-section-title" *ngIf="isSidebarOpen()">FORMATEUR</h3>
+      <ul class="nav-menu">
+        <li class="nav-item" *ngFor="let item of navItems">
+          <a [routerLink]="item.route" [fragment]="item.fragment" routerLinkActive="active" class="nav-link">
+            <i class="nav-icon" [class]="item.icon"></i>
+            <span class="nav-label" *ngIf="isSidebarOpen()">{{ item.label }}</span>
+          </a>
+        </li>
+      
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="isSidebarOpen()">Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="formateur-main" [class.formateur-main--collapsed]="!isSidebarOpen()">
+    <div class="formateur-dashboard">
+      <div class="dashboard-header">
+        <div class="welcome-section">
+          <div class="welcome-text">
+            <span class="greeting">Bonjour,</span>
+            <h3>{{ formateurName }} 👋</h3>
+            <p>Vue complète de vos cours et de vos performances</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-primary">
+          <div class="kpi-icon"><i class="fas fa-book-open"></i></div>
+          <div class="kpi-content">
+            <span class="kpi-value">{{ totalPublishedCourses() }}</span>
+            <span class="kpi-title">Cours publiés</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-success">
+          <div class="kpi-icon"><i class="fas fa-users"></i></div>
+          <div class="kpi-content">
+            <span class="kpi-value">{{ totalEnrolledLearners() }}</span>
+            <span class="kpi-title">Apprenants inscrits</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-info">
+          <div class="kpi-icon"><i class="fas fa-star"></i></div>
+          <div class="kpi-content">
+            <span class="kpi-value">{{ averageCourseRating() }}</span>
+            <span class="kpi-title">Note moyenne</span>
+          </div>
+        </div>
+        
+
+      </div>
+
+      <div class="section-card stats-section full-width" id="formateur-stats">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-pie"></i> Statistiques des cours</h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Total</span>
+            <span class="stat-value">{{ courseStats().total }}</span>
+          </div>
+          <div class="stat-card stat-success">
+            <span class="stat-label">Publiés</span>
+            <span class="stat-value">{{ courseStats().published }}</span>
+          </div>
+          <div class="stat-card stat-warning">
+            <span class="stat-label">Brouillons</span>
+            <span class="stat-value">{{ courseStats().draft }}</span>
+          </div>
+        </div>
+        <div class="themes-header">Répartition par thèmes</div>
+        @if (courseThemes().length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Aucun thème disponible.</p>
+        </div>
+        } @else {
+        <div class="themes-grid">
+          @for (theme of courseThemes(); track theme.theme) {
+          <div class="theme-chip">
+            <span class="theme-name">{{ theme.theme | titlecase }}</span>
+            <span class="theme-count">{{ theme.count }}</span>
+          </div>
+          }
+        </div>
+        }
+      </div>
+
+      <div class="section-card cours-section full-width" id="quick-actions">
+        <div class="section-header">
+          <h2><i class="fas fa-book-open"></i> Derniers cours publiés</h2>
+          <a routerLink="/formateur/cours" class="view-all">Voir tout <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        @if (quickPublishedCourses().length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Aucun cours publié pour le moment.</p>
+        </div>
+        } @else {
+        <div class="cours-grid quick-grid">
+          @for (cours of quickPublishedCourses(); track cours.id) {
+          <div class="course-card">
+            <div class="course-image">
+              @if (getCourseImagePath(cours) && !hasImageError(cours.id)) {
+              <img class="course-cover" [src]="getCourseImagePath(cours)" [alt]="'Couverture ' + cours.titre"
+                (error)="onImageError(cours.id)" />
+              } @else {
+              <div class="image-placeholder"><i class="fas fa-image"></i></div>
+              }
+            </div>
+            <div class="course-content">
+              <div class="course-category">{{ cours.categorie | titlecase }}</div>
+              <h3 class="course-title">{{ cours.titre }}</h3>
+              <div class="course-actions">
+                <button class="btn-action btn-view" (click)="viewCours(cours)"><i class="fas fa-eye"></i> Voir</button>
+                <button class="btn-action btn-edit" (click)="editCours(cours)"><i class="fas fa-edit"></i>
+                  Éditer</button>
+                <button class="btn-action btn-stats" (click)="viewStatistics(cours)"><i class="fas fa-chart-bar"></i>
+                  Stats</button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,17 @@
+.back-button-orange {
+	background: #fff3e0;
+	border-color: #ff9800;
+	color: #e65100;
+}
+
+.cover-preview-wrap {
+  max-width: 320px;
+}
+
+.cover-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+}

@@ -1,0 +1,73 @@
+<div class="chatbot-container">
+  <!-- Bouton flottant -->
+  <button 
+    class="chatbot-button" 
+    [class.open]="isOpen()"
+    (click)="toggleChat()"
+    title="Ouvrir le chat">
+    <span *ngIf="!isOpen()">💬</span>
+    <span *ngIf="isOpen()">✕</span>
+  </button>
+
+  <!-- Modal chat -->
+  <div class="chatbot-modal" *ngIf="isOpen()">
+    <!-- En-tête -->
+    <div class="chat-header">
+      <div class="header-title">
+        <span class="bot-icon">🤖</span>
+        <div>
+          <h3>Assistant Sécurité</h3>
+          <span class="status">🟢 En ligne</span>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeChat()" title="Fermer">✕</button>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-container" #messagesContainer>
+      <div *ngFor="let msg of messages()" [class]="'message ' + msg.sender">
+        <div class="message-bubble">
+          <p>{{ msg.content }}</p>
+        </div>
+      </div>
+
+      <!-- Indicateur de chargement -->
+      <div *ngIf="isLoading()" class="message bot">
+        <div class="message-bubble typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions rapides (au premier message) -->
+    <div class="quick-actions" *ngIf="messages().length === 1">
+      <button 
+        *ngFor="let action of quickActions"
+        class="quick-action-btn"
+        (click)="sendQuickAction(action)">
+        {{ action.emoji }} {{ action.label }}
+      </button>
+    </div>
+
+    <!-- Saisie -->
+    <div class="input-container">
+      <input
+        type="text"
+        [(ngModel)]="currentMessage"
+        (keyup.enter)="sendMessage()"
+        placeholder="Posez une question..."
+        class="message-input"
+        [disabled]="isLoading()">
+      <button 
+        class="send-btn"
+        (click)="sendMessage()"
+        [disabled]="!currentMessage.trim() || isLoading()"
+        title="Envoyer">
+        ➤
+      </button>
+    </div>
+  </div>
+
+  <!-- Overlay pour fermer au clic extérieur -->
+  <div class="overlay" *ngIf="isOpen()" (click)="closeChat()"></div>
+</div>

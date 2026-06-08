@@ -1,0 +1,130 @@
+<div class="auth-container">
+  <!-- Left Side - Branding -->
+  <div class="auth-branding">
+    <div class="branding-content">
+      <div class="branding-logo">
+        <a routerLink="/" class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">{{ 'AUTH.LOGIN.BRAND_TITLE' | translate }}</span>
+            <span class="logo-subtitle">{{ 'AUTH.LOGIN.BRAND_SUBTITLE' | translate }}</span>
+          </div>
+        </a>
+      </div>
+      <div class="branding-message">
+        <h1>{{ 'AUTH.LOGIN.WELCOME' | translate }}</h1>
+        <p>{{ 'AUTH.LOGIN.WELCOME_SUB' | translate }}</p>
+      </div>
+      <div class="branding-features">
+        <div class="feature">
+          <i class="fas fa-book-open"></i>
+          <span>{{ 'AUTH.LOGIN.FEATURE_COURSES' | translate }}</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-clipboard-check"></i>
+          <span>{{ 'AUTH.LOGIN.FEATURE_TESTS' | translate }}</span>
+        </div>
+        <div class="feature">
+          <i class="fas fa-robot"></i>
+          <span>{{ 'AUTH.LOGIN.FEATURE_AI' | translate }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="branding-decoration">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+  </div>
+
+  <!-- Right Side - Login Form -->
+  <div class="auth-form-container">
+    <div class="auth-form-wrapper">
+      <div class="form-header">
+        <h2>{{ 'AUTH.LOGIN.TITLE' | translate }}</h2>
+        <p>{{ 'AUTH.LOGIN.SUBTITLE' | translate }}</p>
+      </div>
+
+      <!-- Error/Success Messages -->
+      @if (errorMessage()) {
+      <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ errorMessage() }}
+      </div>
+      }
+      @if (successMessage()) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        {{ successMessage() }}
+      </div>
+      }
+
+      <form class="auth-form" (ngSubmit)="onSubmit()">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">{{ 'AUTH.LOGIN.EMAIL' | translate }}</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="email" class="form-control" [placeholder]="'AUTH.LOGIN.EMAIL' | translate" [(ngModel)]="email"
+              name="email" required>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">{{ 'AUTH.LOGIN.PASSWORD' | translate }}</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input [type]="hidePassword() ? 'password' : 'text'" id="password" class="form-control with-toggle"
+              placeholder="••••••••" [(ngModel)]="password" name="password" required>
+            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+              <i [class]="hidePassword() ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="form-options">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" [(ngModel)]="rememberMe" name="rememberMe">
+            <span class="checkmark"></span>
+            {{ 'AUTH.LOGIN.REMEMBER_ME' | translate }}
+          </label>
+          <a routerLink="/auth/forgot-password" class="forgot-link">{{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" [class.loading]="isLoading()">
+          @if (isLoading()) {
+          <span class="spinner"></span>
+          {{ 'AUTH.LOGIN.LOADING' | translate }}
+          } @else {
+          <i class="fas fa-sign-in-alt"></i>
+          {{ 'AUTH.LOGIN.SUBMIT' | translate }}
+          }
+        </button>
+      </form>
+
+      <!-- Social Login -->
+      <div class="social-divider">
+        <span>{{ 'AUTH.LOGIN.OR_CONTINUE' | translate }}</span>
+      </div>
+
+      <div class="social-buttons">
+        <button class="social-btn google" (click)="onGoogleLogin()">
+          <i class="fab fa-google"></i>
+          Google
+        </button>
+        <div id="google-btn-container"></div>
+      </div>
+
+      <!-- Register Link -->
+      <div class="auth-footer">
+        <p>{{ 'AUTH.LOGIN.NO_ACCOUNT' | translate }} <a routerLink="/auth/register">{{ 'AUTH.LOGIN.REGISTER_LINK' | translate }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

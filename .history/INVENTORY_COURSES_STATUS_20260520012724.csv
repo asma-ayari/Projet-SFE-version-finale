@@ -1,0 +1,12 @@
+ID,Titre,Type,Pages,Clés,Status,Priorité,PAGE_1,PAGE_2,PAGE_3,PAGE_4,PAGE_5,PAGE_6,PAGE_7,Notes
+1,Distance d'arrêt,Complet,6,76,✅ Complet,Basse,✅,✅,✅,✅,✅,✅,,Formation complète et opérationnelle
+2,Angles morts,Incomplet,7,8,⚠️ Partiel,🔴 Critique,✅,❌,❌,❌,❌,❌,❌,PAGE_1 présent - PAGE_2 à PAGE_7 manquantes
+3,Alcool : les effets,Incomplet,5,8,⚠️ Partiel,🔴 Critique,✅,❌,❌,❌,❌,,,"PAGE_1 présent - PAGE_2 à PAGE_5 manquantes"
+4,Adhérence,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise
+5,Champ visuel,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise
+6,Alcool : les doses,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise
+7,Temps de réaction,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise
+8,Téléphone mobile,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise
+9,Cannabis : les effets,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise
+10,Ceintures de sécurité,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise
+11,Premiers secours,Vide,?,1,❌ Vide,🔴 Critique,❌,❌,❌,❌,❌,❌,,À développer - Structure minimale requise

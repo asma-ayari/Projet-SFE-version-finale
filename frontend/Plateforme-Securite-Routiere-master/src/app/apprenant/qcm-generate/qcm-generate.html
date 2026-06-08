@@ -1,0 +1,72 @@
+<div class="qcm-config">
+    <div class="header-row">
+        <div>
+            <h2>QCM securite routiere</h2>
+            <p>Configurez votre session d'entrainement</p>
+        </div>
+        <a class="back-link" routerLink="/apprenant/qcm">Retour aux quiz</a>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div class="config-card">
+        <div class="section">
+            <h4>Mode</h4>
+            <div class="mode-grid">
+                <button class="mode-card" [class.active]="mode === 'general'" (click)="setMode('general')">
+                    <span class="mode-title">General</span>
+                    <span class="mode-sub">Questions sur les 11 cours</span>
+                </button>
+                <button class="mode-card" [class.active]="mode === 'specific'" (click)="setMode('specific')">
+                    <span class="mode-title">Par theme</span>
+                    <span class="mode-sub">Choisir un ou plusieurs cours</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section" *ngIf="mode === 'specific'">
+            <h4>Themes</h4>
+            <div class="themes-grid">
+                <label class="theme-item" *ngFor="let theme of availableThemes">
+                    <input type="checkbox" [checked]="isThemeSelected(theme)" (change)="toggleTheme(theme)" />
+                    <span>{{ theme }}</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="section">
+            <h4>Nombre de questions</h4>
+            <div class="chip-group">
+                <button class="chip" [class.active]="questionCount === 5" (click)="setQuestionCount(5)">5</button>
+                <button class="chip" [class.active]="questionCount === 10" (click)="setQuestionCount(10)">10</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h4>Temps par question</h4>
+            <div class="chip-group">
+                <button class="chip" [class.active]="timePerQuestion === 20" (click)="setTimePerQuestion(20)">20
+                    s</button>
+                <button class="chip" [class.active]="timePerQuestion === 30" (click)="setTimePerQuestion(30)">30
+                    s</button>
+                <button class="chip" [class.active]="timePerQuestion === 45" (click)="setTimePerQuestion(45)">45
+                    s</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h4>Langue</h4>
+            <div class="chip-group">
+                <button class="chip" [class.active]="language === 'fr'" (click)="setLanguage('fr')">Francais</button>
+                <button class="chip" [class.active]="language === 'ar'" (click)="setLanguage('ar')">Arabe</button>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="start-btn" (click)="generate()" [disabled]="loading">
+                <span *ngIf="loading" class="spinner"></span>
+                {{ loading ? 'Generation...' : 'Demarrer le QCM' }}
+            </button>
+        </div>
+    </div>
+</div>

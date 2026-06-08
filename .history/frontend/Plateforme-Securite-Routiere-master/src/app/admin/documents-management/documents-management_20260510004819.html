@@ -1,0 +1,106 @@
+<div class="container-fluid py-4">
+    <h2 class="mb-4"><i class="bi bi-file-earmark-text me-2"></i>{{ 'ADMIN.DOCUMENTS.TITLE' | translate }}</h2>
+
+    <!-- Alerts -->
+    <div *ngIf="error" class="alert alert-danger alert-dismissible fade show">
+        {{ error }}<button type="button" class="btn-close" (click)="error=''"></button>
+    </div>
+    <div *ngIf="success" class="alert alert-success alert-dismissible fade show">
+        {{ success }}<button type="button" class="btn-close" (click)="success=''"></button>
+    </div>
+
+    <!-- Upload Card -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-upload me-2"></i>{{ 'ADMIN.DOCUMENTS.UPLOAD_TITLE' | translate }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="form-label">{{ 'ADMIN.DOCUMENTS.FILE_LABEL' | translate }}</label>
+                    <input type="file" class="form-control" accept=".txt,.pdf,.docx" (change)="onFileSelect($event)">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">{{ 'ADMIN.DOCUMENTS.LANGUAGE' | translate }}</label>
+                    <select class="form-select" [(ngModel)]="uploadLang">
+                        <option value="fr">{{ 'ADMIN.DOCUMENTS.LANG_FR' | translate }}</option>
+                        <option value="ar">{{ 'ADMIN.DOCUMENTS.LANG_AR' | translate }}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary" (click)="upload()" [disabled]="!selectedFile || uploading">
+                        <span *ngIf="uploading" class="spinner-border spinner-border-sm me-1"></span>
+                        <i class="bi bi-cloud-upload me-1" *ngIf="!uploading"></i>
+                        {{ uploading ? ('ADMIN.DOCUMENTS.UPLOADING' | translate) : ('ADMIN.DOCUMENTS.UPLOAD' | translate) }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">{{ 'ADMIN.DOCUMENTS.LIST_TITLE' | translate }} ({{ documents.length }})</h5>
+        <select class="form-select w-auto" [(ngModel)]="filterLang" (change)="load()">
+            <option value="">Toutes les langues</option>
+            <option value="fr">Français</option>
+            <option value="ar">Arabe</option>
+        </select>
+    </div>
+
+    <!-- Documents Table -->
+    <div class="card">
+        <div class="card-body p-0">
+            <div *ngIf="loading" class="text-center py-5">
+                <div class="spinner-border text-primary"></div>
+            </div>
+            <div class="table-responsive" *ngIf="!loading">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                                    <th>{{ 'ADMIN.DOCUMENTS.TH_NAME' | translate }}</th>
+                                    <th>{{ 'ADMIN.DOCUMENTS.TH_LANG' | translate }}</th>
+                                    <th>{{ 'ADMIN.DOCUMENTS.TH_TYPE' | translate }}</th>
+                                    <th>{{ 'ADMIN.DOCUMENTS.TH_SIZE' | translate }}</th>
+                                    <th>{{ 'ADMIN.DOCUMENTS.TH_ACTIONS' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let doc of documents">
+                            <td>
+                                <i class="bi me-2" [ngClass]="getExtIcon(doc.extension)"></i>
+                                {{ doc.name }}
+                            </td>
+                            <td>
+                                <span class="badge" [ngClass]="doc.language === 'fr' ? 'bg-primary' : 'bg-success'">
+                                    {{ doc.language === 'fr' ? ('ADMIN.DOCUMENTS.LANG_FR' | translate) : ('ADMIN.DOCUMENTS.LANG_AR' | translate) }}
+                                </span>
+                            </td>
+                            <td>{{ doc.extension }}</td>
+                            <td>{{ formatSize(doc.size) }}</td>
+                            <td>
+                                <div class="action-buttons-group">
+                                    <button class="btn-action btn-download" title="Télécharger" (click)="downloadDoc(doc)">
+                                        <i class="fas fa-download"></i>
+                                        <span>{{ 'ADMIN.DOCUMENTS.DOWNLOAD' | translate }}</span>
+                                    </button>
+                                    <button class="btn-action btn-preview" title="Aperçu" (click)="previewDoc(doc)">
+                                        <i class="fas fa-eye"></i>
+                                        <span>{{ 'ADMIN.DOCUMENTS.PREVIEW' | translate }}</span>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Supprimer" (click)="deleteDoc(doc)">
+                                        <i class="fas fa-trash"></i>
+                                        <span>{{ 'ADMIN.DOCUMENTS.DELETE' | translate }}</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="documents.length === 0">
+                            <td colspan="5" class="text-center text-muted py-4">{{ 'ADMIN.DOCUMENTS.NO_DOCUMENTS' | translate }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

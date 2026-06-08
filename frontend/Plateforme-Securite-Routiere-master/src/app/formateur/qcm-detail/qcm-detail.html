@@ -1,0 +1,128 @@
+<div class="qcm-detail-page">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p class="mt-3">Chargement du QCM en cours...</p>
+    </div>
+  } @else if (error()) {
+    <!-- Error State -->
+    <div class="error-container">
+      <div class="alert alert-danger" role="alert">
+        <i class="fas fa-exclamation-circle"></i>
+        <strong>Erreur:</strong> {{ error() }}
+      </div>
+      <button class="btn btn-primary" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Retour au dashboard
+      </button>
+    </div>
+  } @else if (qcm()) {
+    <!-- QCM Details -->
+    <div class="qcm-detail-content">
+      <!-- Header -->
+      <div class="qcm-detail-header">
+        <div class="header-top">
+          <button class="btn btn-outline-secondary btn-sm" (click)="goBack()">
+            <i class="fas fa-arrow-left"></i> Retour
+          </button>
+          <span class="badge" [ngClass]="getDifficultyBadgeClass()">
+            {{ getDifficulty() | uppercase }}
+          </span>
+        </div>
+
+        <div class="header-main">
+          <h1 class="qcm-title">{{ qcm()?.title }}</h1>
+          <p class="qcm-description">{{ qcm()?.description || 'Aucune description' }}</p>
+        </div>
+      </div>
+
+      <!-- Info Cards -->
+      <div class="info-cards">
+        <div class="info-card">
+          <i class="fas fa-question-circle"></i>
+          <div>
+            <p class="label">Nombre de questions</p>
+            <p class="value">{{ getQuestionsCount() }}</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-hourglass-end"></i>
+          <div>
+            <p class="label">Durée</p>
+            <p class="value">{{ getDuration() }} min</p>
+          </div>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-star"></i>
+          <div>
+            <p class="label">Score minimum</p>
+            <p class="value">{{ getPassScore() }}%</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Questions List -->
+      <div class="questions-section">
+        <h2><i class="fas fa-list"></i> Questions du QCM</h2>
+        
+        @if (qcm()?.questions && qcm()!.questions.length > 0) {
+          <div class="questions-list">
+            @for (question of qcm()!.questions; let i = $index; track question.id) {
+              <div class="question-item">
+                <div class="question-number">
+                  <span class="badge bg-primary">{{ i + 1 }}</span>
+                </div>
+                <div class="question-content">
+                  <h4 class="question-text">{{ question.text }}</h4>
+                  
+                  @if (question.image_url) {
+                    <div class="question-image-container mb-3">
+                      <img [src]="question.image_url"
+                           [alt]="'Image - ' + question.text"
+                           class="question-image"
+                           loading="lazy" />
+                    </div>
+                  }
+
+                  <div class="answers-list">
+                    @for (answer of question.answers; let j = $index; track answer.id) {
+                      <div class="answer-item" [class.correct]="answer.is_correct">
+                        <div class="answer-indicator">
+                          @if (answer.is_correct) {
+                            <i class="fas fa-check-circle text-success"></i>
+                          } @else {
+                            <i class="fas fa-circle text-muted"></i>
+                          }
+                        </div>
+                        <div class="answer-text">
+                          <p>{{ answer.text }}</p>
+                          @if (answer.is_correct) {
+                            <small class="text-success"><strong>✓ Réponse correcte</strong></small>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Aucune question disponible</p>
+          </div>
+        }
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="qcm-detail-footer">
+        <button class="btn btn-primary" (click)="goBack()">
+          <i class="fas fa-arrow-left"></i> Retour au dashboard
+        </button>
+      </div>
+    </div>
+  }
+</div>

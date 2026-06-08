@@ -1,0 +1,82 @@
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" [class.sidebar--expanded]="isSidebarOpen()" [class.sidebar--collapsed]="!isSidebarOpen()">
+    <!-- Sidebar Header -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo" *ngIf="isSidebarOpen()">
+        <i class="fas fa-shield-alt"></i>
+        <span>{{ 'ADMIN.SIDEBAR.TITLE' | translate }}</span>
+      </div>
+      <div class="sidebar-logo-collapsed" *ngIf="!isSidebarOpen()">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()" [title]="isSidebarOpen() ? ('ADMIN.SIDEBAR.COLLAPSE' | translate) : ('ADMIN.SIDEBAR.EXPAND' | translate)">
+        <i [class]="isSidebarOpen() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+      </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <h3 class="nav-section-title" *ngIf="isSidebarOpen()">{{ 'ADMIN.SIDEBAR.ADMINISTRATION' | translate }}</h3>
+        
+        <ul class="nav-menu">
+          <li *ngFor="let item of navItems" class="nav-item">
+            <a 
+              [routerLink]="item.route" 
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: false }"
+              class="nav-link"
+              [title]="!isSidebarOpen() ? getNavTooltip(item) : ''"
+              [attr.data-tooltip]="!isSidebarOpen() ? getNavTooltip(item) : null">
+              <i class="nav-icon" [class]="item.icon"></i>
+              <span class="nav-label" *ngIf="isSidebarOpen()">
+                {{ getNavLabel(item) }}
+                <span class="badge" *ngIf="item.badge">{{ item.badge }}</span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Sidebar Footer with User Info -->
+    <div class="sidebar-footer">
+      <div class="user-info" *ngIf="isSidebarOpen()" [routerLink]="'/admin/profile'" routerLinkActive="router-link-active">
+        <div class="user-avatar-wrapper">
+          <img *ngIf="currentUser()?.avatar_url" [src]="currentUser()?.avatar_url" alt="Profile" class="user-avatar-img" />
+          <div *ngIf="!currentUser()?.avatar_url" class="user-avatar-initials">
+            {{ getUserInitials() }}
+          </div>
+          <span class="user-status-indicator"></span>
+        </div>
+        <div class="user-details">
+          <p class="user-name">{{ currentUser()?.full_name || currentUser()?.username || 'Admin' }}</p>
+          <p class="user-role">{{ getUserRoleDisplay() }}</p>
+        </div>
+      </div>
+      <div class="user-info-collapsed" *ngIf="!isSidebarOpen()" [routerLink]="'/admin/profile'" routerLinkActive="router-link-active">
+        <div class="user-avatar-wrapper-small">
+          <img *ngIf="currentUser()?.avatar_url" [src]="currentUser()?.avatar_url" alt="Profile" class="user-avatar-img-small" />
+          <div *ngIf="!currentUser()?.avatar_url" class="user-avatar-initials-small">
+            {{ getUserInitials() }}
+          </div>
+          <span class="user-status-indicator"></span>
+        </div>
+      </div>
+      <button class="sidebar-toggle-btn" (click)="toggleSidebar()" [title]="isSidebarOpen() ? ('ADMIN.SIDEBAR.COLLAPSE_SIDEBAR' | translate) : ('ADMIN.SIDEBAR.EXPAND_SIDEBAR' | translate)">
+        <i [class]="isSidebarOpen() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+        <span *ngIf="isSidebarOpen()">{{ isSidebarOpen() ? ('ADMIN.SIDEBAR.COLLAPSE_SIDEBAR' | translate) : ('ADMIN.SIDEBAR.EXPAND_SIDEBAR' | translate) }}</span>
+      </button>
+      <button class="logout-btn" (click)="logout()" [title]="!isSidebarOpen() ? ('ADMIN.SIDEBAR.LOGOUT' | translate) : ''">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="isSidebarOpen()">{{ 'ADMIN.SIDEBAR.LOGOUT' | translate }}</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main" [class.admin-main--collapsed]="!isSidebarOpen()">
+    <router-outlet />
+  </main>
+</div>

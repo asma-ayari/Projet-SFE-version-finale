@@ -1,0 +1,171 @@
+<div class="presentation-page">
+  <section class="page-hero py-5 py-lg-6">
+    <div class="container">
+      <div class="row g-4 g-lg-5 align-items-center">
+        <div class="col-12 col-lg-5">
+          <div class="hero-badge mb-3">
+            <i class="fas fa-bullhorn"></i>
+            Présentation
+          </div>
+          <h1 class="mb-3">Plateforme de la Sécurité Routière</h1>
+          <p class="hero-lead mb-4">
+            Découvrez les campagnes de sensibilisation, les actions de terrain
+            et l'engagement collectif pour une mobilité plus sûre en Tunisie.
+          </p>
+          <div class="atsr-partner-callout mb-4">
+            <img
+              class="atsr-partner-logo"
+              src="assets/presentation/atsr-logo.png"
+              alt="Logo ATSR"
+              loading="lazy"
+              onerror="this.style.display='none'"
+            />
+            <p class="atsr-partner-text mb-0">
+              En partenariat avec l'ATSR - Association Tunisie Sécurité Routière
+            </p>
+          </div>
+          <div class="d-flex flex-wrap gap-3">
+            <a routerLink="/auth/register" class="btn btn-warning btn-lg fw-semibold px-4">
+              Rejoindre la plateforme
+            </a>
+
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-7">
+          <div id="campaignCarousel" class="carousel slide hero-carousel shadow-lg" data-bs-ride="carousel"
+            data-bs-interval="4500">
+            <div class="carousel-indicators mb-2">
+              <button *ngFor="let image of campaignImages; let i = index" type="button"
+                data-bs-target="#campaignCarousel" [attr.data-bs-slide-to]="i" [class.active]="i === 0"
+                [attr.aria-label]="'Slide ' + (i + 1)" [attr.aria-current]="i === 0 ? 'true' : null"></button>
+            </div>
+
+            <div class="carousel-inner rounded-4 overflow-hidden">
+              <div class="carousel-item" *ngFor="let image of campaignImages; let i = index" [class.active]="i === 0">
+                <img [src]="image.src" [alt]="image.title" class="d-block w-100 hero-carousel-image" />
+                <div class="carousel-caption text-start">
+                  <h5>{{ image.title }}</h5>
+                  <p>{{ image.subtitle }}</p>
+                </div>
+              </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#campaignCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Précédent</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#campaignCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Suivant</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section campaign-gallery-section py-5">
+    <div class="container">
+      <div class="section-title text-center mb-4 mb-lg-5">
+        <h2>Nos Actions de Sensibilisation</h2>
+        <p>Un aperçu visuel des campagnes de terrain et des événements de prévention</p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12 col-md-6 col-xl-4" *ngFor="let image of campaignImages; let i = index">
+          <article class="campaign-card h-100">
+            <div class="campaign-image-wrap">
+              <img [src]="image.src" [alt]="image.title" class="campaign-image" />
+              <div class="campaign-overlay">
+                <span class="campaign-chip"> {{ i + 1 }}</span>
+              </div>
+            </div>
+            <div class="campaign-card-body">
+              <h3>{{ image.title }}</h3>
+              <p>{{ image.subtitle }}</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section objectives-section">
+    <div class="container">
+      <div class="section-title">
+        <span class="section-badge">Objectifs</span>
+        <h2>Nos Fonctionnalités</h2>
+        <p>Une plateforme complète pour apprendre</p>
+      </div>
+      <div class="objectives-grid">
+        <div class="objective-card" *ngFor="let objective of objectives">
+          <div class="objective-icon">
+            <i class="fas" [ngClass]="objective.icon"></i>
+          </div>
+          <h3>{{ objective.title }}</h3>
+          <p>{{ objective.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section solution-section">
+    <div class="container">
+      <div class="solution-grid">
+        <div class="solution-image-card">
+          <img [src]="campaignImages[0].src" alt="Sensibilisation routière" class="img-fluid" />
+        </div>
+        <div class="solution-content">
+          <h2>Notre Solution</h2>
+          <p>Maîtrisez les règles de la route avec notre plateforme complète</p>
+          <ul class="solution-list">
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>Contenu complet et à jour</span>
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>Assistance IA intelligente</span>
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>Tests interactifs et engageants</span>
+            </li>
+            <li>
+              <i class="fas fa-check-circle"></i>
+              <span>Suivi personnalisé des progrès</span>
+            </li>
+          </ul>
+          <a routerLink="/auth/register" class="btn btn-primary btn-lg">
+            <i class="fas fa-rocket"></i>
+            Commencer Maintenant
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section partner-section">
+    <div class="container">
+      <div class="partner-box">
+        <div class="partner-info">
+          <h3>Partenaire</h3>
+          <h2>Cellule de Sensibilisation pour la Sécurité Routière</h2>
+          <p>
+            Rue Ahmed Skolli - Immeuble Alambra 2 - 1er étage - 3027 - Sfax
+          </p>
+          <div class="partner-contacts">
+            <span><i class="fas fa-envelope"></i> tsecuriteroutiere.sfax&#64;gmail.com</span>
+            <span><i class="fas fa-phone"></i> +216 20 412 543</span>
+          </div>
+        </div>
+        <div class="partner-logo">
+          <div class="logo-placeholder">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

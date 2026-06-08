@@ -1,0 +1,117 @@
+@import '../../apprenant/cours-detail/cours-detail.css';
+@import '../../core/data/courses/course-1-distance.css';
+
+.formateur-cours-detail-page {
+  min-height: 100vh;
+}
+
+.formateur-cours-detail-page .header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.formateur-cours-detail-page .back-link {
+  margin-bottom: 0;
+}
+
+.formateur-cours-detail-page .edit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.16);
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.formateur-cours-detail-page .edit-link:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
+.formateur-cours-detail-page .course-info {
+  width: 100%;
+}
+
+.formateur-cours-detail-page .page-card {
+  background: #ffffff;
+}
+
+.formateur-cours-detail-page .lesson-host {
+  display: block;
+}
+
+.formateur-cours-detail-page .loading-container,
+.formateur-cours-detail-page .error-message-container {
+  margin-top: 1rem;
+}
+
+.formateur-cours-detail-page .page-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 2rem 2rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.formateur-cours-detail-page .page-counter {
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.formateur-cours-detail-page .btn-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  border: 0;
+  border-radius: 10px;
+  background: #c62828;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.formateur-cours-detail-page .btn-nav:hover:not(:disabled) {
+  background: #b71c1c;
+  transform: translateY(-1px);
+}
+
+.formateur-cours-detail-page .btn-nav:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.formateur-cours-detail-page .page-body {
+  padding-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .formateur-cours-detail-page .header-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .formateur-cours-detail-page .page-navigation {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .formateur-cours-detail-page .page-counter {
+    text-align: center;
+  }
+
+  .formateur-cours-detail-page .btn-nav {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,117 @@
+<div class="formateur-layout">
+  <aside class="formateur-sidebar" [class.sidebar--expanded]="isSidebarOpen()"
+    [class.sidebar--collapsed]="!isSidebarOpen()">
+    <div class="sidebar-header">
+      <div class="sidebar-logo" *ngIf="isSidebarOpen()">
+        <i class="fas fa-shield-alt"></i>
+        <span>{{ 'FORMATEUR.DASHBOARD.SIDEBAR_TITLE' | translate }}</span>
+      </div>
+      <div class="sidebar-logo-collapsed" *ngIf="!isSidebarOpen()">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <i [class]="isSidebarOpen() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <h3 class="nav-section-title" *ngIf="isSidebarOpen()">{{ 'FORMATEUR.DASHBOARD.NAV_TITLE' | translate }}</h3>
+      <ul class="nav-menu">
+        <li class="nav-item" *ngFor="let item of navItems">
+          <a [routerLink]="item.route" [fragment]="item.fragment" routerLinkActive="active" class="nav-link">
+            <i class="nav-icon" [class]="item.icon"></i>
+            <span class="nav-label" *ngIf="isSidebarOpen()">{{ item.label }}</span>
+          </a>
+        </li>
+      
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="isSidebarOpen()">{{ 'FORMATEUR.DASHBOARD.LOGOUT' | translate }}</span>
+      </button>
+    </div>
+  </aside>
+
+  <main class="formateur-main" [class.formateur-main--collapsed]="!isSidebarOpen()">
+    <div class="formateur-dashboard">
+      <div class="dashboard-header">
+        <div class="welcome-section">
+          <div class="welcome-text">
+            <span class="greeting">{{ 'FORMATEUR.DASHBOARD.HELLO' | translate }}</span>
+            <h3>{{ formateurName }} 👋</h3>
+            <p>{{ 'FORMATEUR.DASHBOARD.SUBTITLE' | translate }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-primary">
+          <div class="kpi-icon"><i class="fas fa-book-open"></i></div>
+          <div class="kpi-content">
+            <span class="kpi-value">{{ totalPublishedCourses() }}</span>
+            <span class="kpi-title">{{ 'FORMATEUR.DASHBOARD.PUBLISHED_COURSES' | translate }}</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-success">
+          <div class="kpi-icon"><i class="fas fa-users"></i></div>
+          <div class="kpi-content">
+            <span class="kpi-value">{{ totalEnrolledLearners() }}</span>
+            <span class="kpi-title">{{ 'FORMATEUR.DASHBOARD.ENROLLED_LEARNERS' | translate }}</span>
+          </div>
+        </div>
+        <div class="kpi-card kpi-warning">
+          <div class="kpi-icon"><i class="fas fa-video"></i></div>
+          <div class="kpi-content">
+            <span class="kpi-value">{{ totalPublishedVideos() }}</span>
+            <span class="kpi-title">{{ 'FORMATEUR.DASHBOARD.PUBLISHED_VIDEOS' | translate }}</span>
+          </div>
+        </div>
+        
+
+      </div>
+
+      <div class="section-card cours-section full-width" id="quick-actions">
+        <div class="section-header">
+          <h2><i class="fas fa-book-open"></i> Derniers cours publiés</h2>
+          <a routerLink="/formateur/cours" class="view-all">Voir tout <i class="fas fa-arrow-right"></i></a>
+        </div>
+
+        @if (quickPublishedCourses().length === 0) {
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Aucun cours publié pour le moment.</p>
+        </div>
+        } @else {
+        <div class="cours-grid quick-grid">
+          @for (cours of quickPublishedCourses(); track cours.id) {
+          <div class="course-card">
+            <div class="course-image">
+              @if (getCourseImagePath(cours) && !hasImageError(cours.id)) {
+              <img class="course-cover" [src]="getCourseImagePath(cours)" [alt]="'Couverture ' + cours.titre"
+                (error)="onImageError(cours.id)" />
+              } @else {
+              <div class="image-placeholder"><i class="fas fa-image"></i></div>
+              }
+            </div>
+            <div class="course-content">
+              <div class="course-category">{{ cours.categorie | titlecase }}</div>
+              <h3 class="course-title">{{ cours.titre }}</h3>
+              <div class="course-actions">
+                <button class="btn-action btn-view" (click)="viewCours(cours)"><i class="fas fa-eye"></i> Voir</button>
+                <button class="btn-action btn-edit" (click)="editCours(cours)"><i class="fas fa-edit"></i>
+                  Éditer</button>
+                <button class="btn-action btn-delete" (click)="deleteCours(cours)"><i class="fas fa-trash"></i>
+                  Supprimer</button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+  </main>
+</div>

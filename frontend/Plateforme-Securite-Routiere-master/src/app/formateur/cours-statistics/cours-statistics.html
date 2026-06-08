@@ -1,0 +1,157 @@
+<div class="cours-statistics-container">
+  <!-- Header avec actions -->
+  <div class="statistics-header">
+    <div class="header-content">
+      <button class="btn-back" (click)="goBack()" title="Retour au dashboard">
+        <i class="fas fa-arrow-left"></i> Retour
+      </button>
+      <h1>Statistiques du cours</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="viewCourse()" title="Voir le cours">
+        <i class="fas fa-eye"></i> Voir
+      </button>
+      <button class="btn-primary" (click)="editCourse()" title="Modifier le cours">
+        <i class="fas fa-edit"></i> Modifier
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenu des statistiques -->
+  <div class="statistics-content">
+    <!-- État de chargement -->
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Chargement des statistiques...</p>
+      </div>
+    }
+
+    <!-- Message d'erreur -->
+    @if (error()) {
+      <div class="error-container">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>{{ error() }}</p>
+      </div>
+    }
+
+    <!-- Contenu des statistiques -->
+    @if (!loading() && !error() && course()) {
+      <div class="stats-wrapper">
+        <!-- Titre du cours -->
+        <div class="course-header">
+          <h2>{{ course()!.title }}</h2>
+          <p class="course-category">{{ course()!.category }}<span class="course-level">{{ course()!.level }}</span></p>
+        </div>
+
+        <!-- Cartes de statistiques principales -->
+        <div class="stats-cards">
+          <div class="stat-card primary">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-content">
+              <h3>Inscriptions totales</h3>
+              <div class="stat-value">{{ enrollmentStats.total }}</div>
+              <p class="stat-detail">Apprenants inscrits</p>
+            </div>
+          </div>
+
+          <div class="stat-card success">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-content">
+              <h3>Cours complétés</h3>
+              <div class="stat-value">{{ enrollmentStats.completed }}</div>
+              <p class="stat-detail">{{ ((enrollmentStats.completed / enrollmentStats.total) * 100).toFixed(0) }}% de complétion</p>
+            </div>
+          </div>
+
+          <div class="stat-card warning">
+            <div class="stat-icon"><i class="fas fa-play-circle"></i></div>
+            <div class="stat-content">
+              <h3>En cours</h3>
+              <div class="stat-value">{{ enrollmentStats.active }}</div>
+              <p class="stat-detail">Apprenants actifs</p>
+            </div>
+          </div>
+
+          <div class="stat-card danger">
+            <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+            <div class="stat-content">
+              <h3>Abandons</h3>
+              <div class="stat-value">{{ enrollmentStats.abandoned }}</div>
+              <p class="stat-detail">{{ ((enrollmentStats.abandoned / enrollmentStats.total) * 100).toFixed(0) }}% d'abandon</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Graphiques -->
+        <div class="charts-grid">
+          <!-- Inscriptions au fil du temps -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Inscriptions au fil du temps</h3>
+              <span class="chart-badge">Dernières 7 semaines</span>
+            </div>
+            <div class="chart-container line-chart">
+              <canvas baseChart 
+                      [data]="enrollmentChartData" 
+                      [options]="enrollmentChartOptions" 
+                      type="line">
+              </canvas>
+            </div>
+          </div>
+
+          <!-- Progression -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Progression des apprenants</h3>
+              <span class="chart-badge">État actuel</span>
+            </div>
+            <div class="chart-container doughnut-chart">
+              <canvas baseChart 
+                      [data]="progressChartData" 
+                      [options]="progressChartOptions" 
+                      type="doughnut">
+              </canvas>
+            </div>
+          </div>
+
+          <!-- Satisfaction -->
+          <div class="chart-card full-width">
+            <div class="chart-header">
+              <h3>Satisfaction des apprenants</h3>
+              <span class="chart-badge">{{ enrollmentStats.completed }} évaluations</span>
+            </div>
+            <div class="chart-container bar-chart">
+              <canvas baseChart 
+                      [data]="satisfactionChartData" 
+                      [options]="satisfactionChartOptions" 
+                      type="bar">
+              </canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note moyenne -->
+        <div class="average-rating">
+          <div class="rating-box">
+            <div class="rating-value">
+              <span class="stars">★★★★★</span>
+              <span class="score">4.7/5</span>
+            </div>
+            <p class="rating-description">Note moyenne basée sur 136 évaluations</p>
+          </div>
+        </div>
+
+        <!-- Export et actions -->
+        <div class="actions-section">
+          <button class="btn-export" title="Exporter les statistiques en PDF">
+            <i class="fas fa-file-pdf"></i> Exporter en PDF
+          </button>
+          <button class="btn-refresh" title="Rafraîchir les données">
+            <i class="fas fa-sync-alt"></i> Rafraîchir
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

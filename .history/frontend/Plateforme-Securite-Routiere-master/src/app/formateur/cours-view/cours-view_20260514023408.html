@@ -1,0 +1,71 @@
+<div class="lesson-page formateur-lesson-page">
+  <div class="lesson-header">
+    <div class="header-top">
+      <button class="btn-back" type="button" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        {{ 'FORMATEUR.COURS_VIEW.BACK' | translate }}
+      </button>
+      <span class="category-badge">
+        {{ 'FORMATEUR.COURS_VIEW.BADGE' | translate }}
+      </span>
+      <button class="btn-back" type="button" (click)="editCourse()">
+        <i class="fas fa-edit"></i>
+        {{ 'FORMATEUR.COURS_VIEW.EDIT' | translate }}
+      </button>
+    </div>
+
+    <div class="header-title">
+      {{ courseContent()?.title || course()?.title || ('FORMATEUR.COURS_VIEW.LOADING_TITLE' | translate) }}
+    </div>
+
+    <p class="lesson-subtitle">
+      {{ courseContent()?.description || course()?.description || ('FORMATEUR.COURS_VIEW.SUBTITLE' | translate) }}
+    </p>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" [style.width.%]="totalLessons() ? ((currentLessonIndex() + 1) / totalLessons()) * 100 : 0"></div>
+    </div>
+  </div>
+
+  <div class="lesson-content formateur-lesson-content">
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>{{ 'FORMATEUR.COURS_VIEW.LOADING' | translate }}</p>
+      </div>
+    }
+
+    @if (error()) {
+      <div class="error-container">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>{{ error() }}</p>
+      </div>
+    }
+
+    @if (!loading() && !error() && currentLessonHtml()) {
+      <div class="lesson-host" [innerHTML]="currentLessonHtml()"></div>
+    }
+  </div>
+
+  @if (!loading() && !error() && totalLessons() > 1) {
+    <div class="lesson-footer formateur-lesson-footer">
+      <div class="nav-buttons">
+        <button class="btn-nav" type="button" [disabled]="!canGoPrev()" (click)="prevPage()">
+          <span class="arrow">‹</span>
+          <span class="text">{{ 'FORMATEUR.COURS_VIEW.PREVIOUS' | translate }}</span>
+        </button>
+        <button class="btn-nav" type="button" [disabled]="!canGoNext()" (click)="nextPage()">
+          <span class="text">{{ 'FORMATEUR.COURS_VIEW.NEXT' | translate }}</span>
+          <span class="arrow">›</span>
+        </button>
+      </div>
+      <div class="pagination">
+        @for (lesson of courseContent()?.lessons || []; track lesson.lessonNumber; let i = $index) {
+          <button class="page-btn" type="button" [class.active]="currentLessonIndex() === i" (click)="selectLesson(i)">
+            {{ lesson.lessonNumber }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

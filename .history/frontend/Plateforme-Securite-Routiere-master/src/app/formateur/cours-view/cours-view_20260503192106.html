@@ -1,0 +1,134 @@
+<div class="cours-view-container">
+  <!-- Header avec actions -->
+  <div class="view-header">
+    <div class="header-content">
+      <button class="btn-back" (click)="goBack()" title="Retour au dashboard">
+        <i class="fas fa-arrow-left"></i> Retour aux cours
+      </button>
+      <h1>{{ course()?.title || 'Chargement du cours...' }}</h1>
+    </div>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="editCourse()" title="Modifier ce cours">
+        <i class="fas fa-edit"></i> Modifier
+      </button>
+      <button class="btn-secondary" (click)="viewStatistics()" title="Voir les statistiques">
+        <i class="fas fa-chart-bar"></i> Statistiques
+      </button>
+    </div>
+  </div>
+
+  <!-- Contenu du cours -->
+  <div class="view-content">
+    <!-- État de chargement -->
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Chargement du cours...</p>
+      </div>
+    }
+
+    <!-- Message d'erreur -->
+    @if (error()) {
+      <div class="error-container">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>{{ error() }}</p>
+      </div>
+    }
+
+    <!-- Contenu du cours -->
+    @if (!loading() && !error() && course()) {
+      <div class="course-viewer">
+        <!-- Page du cours (style comme l'image) -->
+        <div class="course-page">
+          <!-- Numéro de page -->
+          <div class="page-badge">
+            <span>Page 1/6</span>
+          </div>
+
+          <!-- Titre de la page -->
+          <h2 class="page-title">{{ course()!.title }}</h2>
+
+          <!-- Illustration/Image -->
+          @if (course()!.image_url) {
+            <div class="page-illustration">
+              <img [src]="course()!.image_url" [alt]="course()!.title" />
+            </div>
+          }
+
+          <!-- Contenu principal -->
+          <div class="page-content">
+            <p class="content-intro">{{ course()!.description }}</p>
+
+            @if (course()!.content) {
+              <div class="content-text">
+                {{ course()!.content }}
+              </div>
+            }
+
+            <!-- Points clés -->
+            <div class="key-points">
+              <ul class="points-list">
+                <li><i class="fas fa-check-circle"></i> Comprendre les bases du cours</li>
+                <li><i class="fas fa-check-circle"></i> Appliquer les concepts pratiques</li>
+                <li><i class="fas fa-check-circle"></i> Évaluer votre progression</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation entre pages -->
+        <div class="page-navigation">
+          <button class="btn-nav prev" disabled>
+            <i class="fas fa-chevron-left"></i> Précédent
+          </button>
+          <span class="page-counter">1 / 6</span>
+          <button class="btn-nav next">
+            Page suivante <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Métadonnées du cours -->
+        <div class="course-metadata">
+          <div class="metadata-grid">
+            <div class="metadata-item">
+              <span class="meta-label">Catégorie</span>
+              <span class="meta-value">{{ course()!.category }}</span>
+            </div>
+            <div class="metadata-item">
+              <span class="meta-label">Niveau</span>
+              <span class="meta-value">{{ course()!.level }}</span>
+            </div>
+            <div class="metadata-item">
+              <span class="meta-label">Durée</span>
+              <span class="meta-value">{{ course()!.duration }} min</span>
+            </div>
+            <div class="metadata-item">
+              <span class="meta-label">Statut</span>
+              <span class="meta-value" [ngClass]="course()!.is_published ? 'published' : 'draft'">
+                {{ course()!.is_published ? 'Publié' : 'Brouillon' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vidéo si disponible -->
+        @if (course()!.video_url) {
+          <div class="video-section">
+            <h3>Vidéo pédagogique</h3>
+            <div class="video-container">
+              <video controls width="100%">
+                <source [src]="course()!.video_url" type="video/mp4" />
+                Votre navigateur ne supporte pas la lecture de vidéos.
+              </video>
+            </div>
+          </div>
+        }
+
+        <!-- Badge - Mode lecture seule -->
+        <div class="readonly-badge">
+          <i class="fas fa-lock"></i> Mode lecture seule - Vous visualisez le contenu du cours tel que le voient les apprenants
+        </div>
+      </div>
+    }
+  </div>
+</div>

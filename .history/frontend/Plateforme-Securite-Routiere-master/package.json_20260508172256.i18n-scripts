@@ -1,0 +1,33 @@
+{
+  "scripts": {
+    "i18n:dev": "ng serve --open",
+    "i18n:build": "ng build --configuration production",
+    "i18n:test": "ng test --watch=true",
+    "i18n:lint": "ng lint",
+    "i18n:validate-translations": "node scripts/validate-translations.js",
+    "i18n:extract-keys": "node scripts/extract-keys.js",
+    "i18n:add-translation": "node scripts/add-translation.js",
+    "i18n:check-missing-keys": "node scripts/check-missing-keys.js",
+    "i18n:serve-prod": "http-server dist/ -p 8080 -o",
+    "i18n:language:switch-ar": "echo 'localStorage.setItem(\"language\", \"ar\");' && ng serve --open",
+    "i18n:language:switch-fr": "echo 'localStorage.setItem(\"language\", \"fr\");' && ng serve --open",
+    "i18n:clean": "rm -rf dist/",
+    "i18n:report": "node scripts/generate-report.js"
+  },
+  "devDependencies": {
+    "@angular/animations": "^21.1.0",
+    "@angular/common": "^21.1.0",
+    "@angular/compiler": "^21.1.0",
+    "@angular/core": "^21.1.0",
+    "@angular/forms": "^21.1.0",
+    "@angular/platform-browser": "^21.1.0",
+    "@angular/platform-browser-dynamic": "^21.1.0",
+    "@angular/router": "^21.1.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
+    "typescript": "^5.9.2",
+    "@angular/cli": "^21.1.3",
+    "@angular/compiler-cli": "^21.1.0",
+    "http-server": "^14.1.1"
+  }
+}

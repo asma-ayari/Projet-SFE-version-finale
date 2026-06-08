@@ -1,0 +1,220 @@
+<div class="users-management">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <a routerLink="/admin/dashboard" class="btn-back">
+        <i class="fas fa-arrow-left"></i>
+        {{ 'COMMON.BACK' | translate }}
+      </a>
+      <h1><i class="fas fa-users-cog"></i> {{ 'ADMIN.USERS.TITLE' | translate }}</h1>
+      <p>{{ 'ADMIN.USERS.SUBTITLE' | translate }}</p>
+    </div>
+    <button class="btn-add" (click)="showAddModal.set(true)">
+      <i class="fas fa-plus"></i>
+      {{ 'ADMIN.USERS.ADD_USER' | translate }}
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon total"><i class="fas fa-users"></i></div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().total }}</span>
+        <span class="stat-label">{{ 'ADMIN.USERS.TOTAL' | translate }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon apprenants"><i class="fas fa-user-graduate"></i></div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().apprenants }}</span>
+        <span class="stat-label">{{ 'ADMIN.USERS.LEARNERS' | translate }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon formateurs"><i class="fas fa-chalkboard-teacher"></i></div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().formateurs }}</span>
+        <span class="stat-label">{{ 'ADMIN.USERS.TRAINERS' | translate }}</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon actifs"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().actifs }}</span>
+        <span class="stat-label">{{ 'ADMIN.USERS.ACTIVE' | translate }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="search-box">
+      <i class="fas fa-search"></i>
+      <input type="text" [placeholder]="'ADMIN.USERS.SEARCH_PH' | translate" [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)" (keyup.enter)="onSearch()">
+    </div>
+    <div class="filter-group">
+      <select [ngModel]="roleFilter()" (ngModelChange)="roleFilter.set($event); onFilterChange()">
+        <option value="all">{{ 'ADMIN.USERS.ALL_ROLES' | translate }}</option>
+        <option value="apprenant">{{ 'ADMIN.USERS.ROLE_LEARNER' | translate }}</option>
+        <option value="formateur">{{ 'ADMIN.USERS.ROLE_TRAINER' | translate }}</option>
+        <option value="admin">{{ 'ADMIN.USERS.ROLE_ADMIN' | translate }}</option>
+      </select>
+      <select [ngModel]="statusFilter()" (ngModelChange)="statusFilter.set($event); onFilterChange()">
+        <option value="all">{{ 'ADMIN.USERS.ALL_STATUS' | translate }}</option>
+        <option value="actif">{{ 'ADMIN.USERS.STATUS_ACTIVE' | translate }}</option>
+        <option value="inactif">{{ 'ADMIN.USERS.STATUS_INACTIVE' | translate }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>{{ 'ADMIN.USERS.TH_USER' | translate }}</th>
+          <th>{{ 'ADMIN.USERS.TH_EMAIL' | translate }}</th>
+          <th>{{ 'ADMIN.USERS.TH_ROLE' | translate }}</th>
+          <th>{{ 'ADMIN.USERS.TH_STATUS' | translate }}</th>
+          <th>{{ 'ADMIN.USERS.TH_DATE' | translate }}</th>
+          <th>{{ 'ADMIN.USERS.TH_ACTIONS' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users(); track user.id) {
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="user-avatar">{{ getAvatar(user) }}</div>
+              <div class="user-name">
+                <span class="name">{{ user.full_name || user.username }}</span>
+                <span class="id">#{{ user.id }}</span>
+              </div>
+            </div>
+          </td>
+          <td>{{ user.email }}</td>
+          <td>
+            <select class="role-select" [ngModel]="user.role" (ngModelChange)="changeRole(user, $event)">
+              <option value="apprenant">{{ 'ADMIN.USERS.ROLE_LEARNER' | translate }}</option>
+              <option value="formateur">{{ 'ADMIN.USERS.ROLE_TRAINER' | translate }}</option>
+              <option value="admin">{{ 'ADMIN.USERS.ROLE_ADMIN' | translate }}</option>
+            </select>
+          </td>
+          <td>
+            <span class="status-badge" [class]="user.is_active ? 'status-actif' : 'status-inactif'">
+              <span class="status-dot"></span>
+              {{ user.is_active ? ('ADMIN.USERS.STATUS_ACTIVE' | translate) : ('ADMIN.USERS.STATUS_INACTIVE' | translate) }}
+            </span>
+          </td>
+          <td>{{ user.created_at | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-action btn-toggle" [title]="user.is_active ? ('ADMIN.USERS.DEACTIVATE' | translate) : ('ADMIN.USERS.ACTIVATE' | translate)"
+                (click)="toggleStatus(user)">
+                <i [class]="user.is_active ? 'fas fa-ban' : 'fas fa-check'"></i>
+              </button>
+              <button class="btn-action btn-delete" [title]="'COMMON.DELETE' | translate" (click)="openDeleteModal(user)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+        } @empty {
+        <tr>
+          <td colspan="7" class="empty-state">
+            <i class="fas fa-users-slash"></i>
+            <p>{{ 'ADMIN.USERS.NO_USERS' | translate }}</p>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  @if (totalPages() > 1) {
+  <div class="pagination">
+    <button class="page-btn" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    @for (page of [].constructor(totalPages()); track $index) {
+    <button class="page-btn" [class.active]="currentPage() === $index + 1" (click)="goToPage($index + 1)">
+      {{ $index + 1 }}
+    </button>
+    }
+    <button class="page-btn" [disabled]="currentPage() === totalPages()" (click)="goToPage(currentPage() + 1)">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+  }
+
+  <!-- Alerts -->
+  @if (error()) {
+  <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> {{ error() }}</div>
+  }
+  @if (success()) {
+  <div class="alert alert-success"><i class="fas fa-check-circle"></i> {{ success() }}</div>
+  }
+
+  <!-- Add User Modal -->
+  @if (showAddModal()) {
+  <div class="modal-overlay" (click)="showAddModal.set(false)">
+    <div class="modal-content modal-form" (click)="$event.stopPropagation()">
+      <h3><i class="fas fa-user-plus"></i> {{ 'ADMIN.USERS.ADD_USER' | translate }}</h3>
+      <div class="form-group">
+        <label>{{ 'ADMIN.USERS.USERNAME' | translate }}</label>
+        <input type="text" [(ngModel)]="newUser.username" placeholder="username">
+      </div>
+      <div class="form-group">
+        <label>{{ 'ADMIN.USERS.TH_EMAIL' | translate }}</label>
+        <input type="email" [(ngModel)]="newUser.email" placeholder="email@example.com">
+      </div>
+      <div class="form-group">
+        <label>{{ 'ADMIN.USERS.FULL_NAME' | translate }}</label>
+        <input type="text" [(ngModel)]="newUser.full_name" placeholder="Nom complet">
+      </div>
+      <div class="form-group">
+        <label>{{ 'ADMIN.USERS.PASSWORD' | translate }}</label>
+        <input type="password" [(ngModel)]="newUser.password" placeholder="Min 8 caractères">
+      </div>
+      <div class="form-group">
+        <label>{{ 'ADMIN.USERS.ROLE' | translate }}</label>
+        <select [(ngModel)]="newUser.role">
+          <option value="apprenant">{{ 'ADMIN.USERS.ROLE_LEARNER' | translate }}</option>
+          <option value="formateur">{{ 'ADMIN.USERS.ROLE_TRAINER' | translate }}</option>
+          <option value="admin">{{ 'ADMIN.USERS.ROLE_ADMIN' | translate }}</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="showAddModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button class="btn-confirm-delete" style="background:#1565c0" (click)="createUser()">
+          <i class="fas fa-plus"></i> {{ 'ADMIN.USERS.ADD' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <!-- Delete Confirmation Modal -->
+  @if (showDeleteModal()) {
+  <div class="modal-overlay" (click)="showDeleteModal.set(false)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-icon danger">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3>{{ 'ADMIN.USERS.CONFIRM_DELETE' | translate }}</h3>
+      <p>{{ 'ADMIN.USERS.DELETE_CONFIRM_MSG' | translate }} <strong>{{ selectedUser()?.full_name || selectedUser()?.username }}</strong>
+        ?</p>
+      <p class="warning-text">{{ 'ADMIN.USERS.DELETE_WARNING' | translate }}</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="showDeleteModal.set(false)">{{ 'COMMON.CANCEL' | translate }}</button>
+        <button class="btn-confirm-delete" (click)="deleteUser()">
+          <i class="fas fa-trash"></i> {{ 'COMMON.DELETE' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+</div>

@@ -1,0 +1,86 @@
+<div class="cours-detail-page formateur-cours-detail-page">
+  @if (!loading() && !error()) {
+    <div class="course-header">
+      <div class="container">
+        <div class="header-top">
+          <a routerLink="/formateur/cours" class="back-link">
+            <i class="fas fa-arrow-left"></i> {{ 'COURSE_DETAIL.BACK_TO_COURSES' | translate }}
+          </a>
+          <a
+            [routerLink]="['/formateur/cours', course()?.id, 'modifier']"
+            class="edit-link"
+          >
+            <i class="fas fa-edit"></i> {{ 'FORMATEUR.COURS_MANAGE.ACTIONS.EDIT' | translate }}
+          </a>
+        </div>
+
+        <div class="header-content">
+          <div class="course-info">
+            <span class="course-badge">
+              <i class="fas fa-car"></i> {{ courseContent()?.category || 'Cours formateur' }}
+            </span>
+            <h1>{{ courseContent()?.title || course()?.title || ('FORMATEUR.COURS_EDIT.LOADING' | translate) }}</h1>
+            <div class="progress-info">
+              <span>{{ 'COURSE_DETAIL.PAGE_LABEL' | translate }} {{ currentLessonNumber() }} / {{ totalLessons() || 1 }}</span>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+              </div>
+              <span>{{ progressPercent() }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="course-content">
+    <div class="container">
+      @if (loading()) {
+        <div class="loading-container">
+          <div class="spinner"></div>
+          <p>{{ 'FORMATEUR.COURS_EDIT.LOADING' | translate }}</p>
+        </div>
+      }
+
+      @if (error()) {
+        <div class="error-message-container">
+          <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="error-content">
+              <h3>{{ 'COURSE_DETAIL.ERROR_TITLE' | translate }}</h3>
+              <p>{{ error() }}</p>
+              <a routerLink="/formateur/cours" class="error-button">{{ 'COURSE_DETAIL.BACK_TO_COURSES' | translate }}</a>
+            </div>
+          </div>
+        </div>
+      } @else if (!loading() && courseContent() && !currentLessonHtml()) {
+        <div class="page-card">
+          <div class="page-body">
+            <p class="text-muted">Aucun contenu rédigé pour ce cours. Utilisez « Modifier » pour ajouter du texte.</p>
+          </div>
+        </div>
+      } @else if (!loading() && currentLessonHtml()) {
+        <div class="page-card">
+          <div class="page-header">
+            <span class="page-number">{{ 'COURSE_DETAIL.PAGE_LABEL' | translate }} {{ currentLessonNumber() }} / {{ totalLessons() }}</span>
+            <h2>{{ currentLessonTitle() || courseContent()?.title || course()?.title }}</h2>
+          </div>
+
+          <div class="page-body">
+            <div class="lesson-host" [innerHTML]="currentLessonHtml()"></div>
+          </div>
+
+          <div class="page-navigation">
+            <button class="btn-nav prev" [disabled]="!canGoPrev()" (click)="prevPage()">
+              <i class="fas fa-chevron-left"></i> {{ 'COURSE_DETAIL.PREVIOUS' | translate }}
+            </button>
+            <span class="page-counter">{{ currentLessonNumber() }} / {{ totalLessons() }}</span>
+            <button class="btn-nav next" [disabled]="!canGoNext()" (click)="nextPage()">
+              {{ 'COURSE_DETAIL.NEXT' | translate }} <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

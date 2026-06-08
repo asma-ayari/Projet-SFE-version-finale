@@ -1,0 +1,41 @@
+/* Bouton de suppression des réponses (liste) */
+.qcm-answer-delete-btn {
+	width: 44px;
+	min-width: 44px;
+	height: 40px;
+	padding: 0;
+	border-radius: 10px;
+
+	background-color: #D32F2F;
+	border: 1px solid #D32F2F;
+	color: #fff;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1;
+}
+
+.qcm-answer-delete-btn:hover,
+.qcm-answer-delete-btn:focus {
+	background-color: rgba(211, 47, 47, 0.12);
+	border-color: rgba(211, 47, 47, 0.12);
+	color: #D32F2F;
+	box-shadow: none;
+}
+
+.qcm-answer-delete-btn:active {
+	background-color: rgba(211, 47, 47, 0.18);
+	border-color: rgba(211, 47, 47, 0.18);
+	color: #D32F2F;
+	box-shadow: none;
+}
+
+.qcm-answer-delete-btn i {
+	color: inherit;
+}
+
+.qcm-answer-delete-btn .material-icons {
+	font-size: 20px;
+	line-height: 1;
+}

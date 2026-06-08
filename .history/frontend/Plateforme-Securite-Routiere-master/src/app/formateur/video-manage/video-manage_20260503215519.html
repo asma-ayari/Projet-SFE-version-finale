@@ -1,0 +1,297 @@
+<div class="video-manage-container">
+  <!-- Header -->
+  <div class="manage-header">
+    <div class="header-content">
+      <h1><i class="fas fa-video me-2"></i>Mes Vidéos</h1>
+      <p>Gérez les vidéos que vous avez téléchargées</p>
+    </div>
+    <a routerLink="/formateur/dashboard" class="btn btn-secondary">
+      <i class="fas fa-arrow-left me-1"></i>Retour au dashboard
+    </a>
+  </div>
+
+  <!-- Messages d'alerte -->
+  @if (error()) {
+    <div class="alert alert-danger">
+      <i class="fas fa-exclamation-circle me-2"></i>{{ error() }}
+      <button type="button" class="btn-close" (click)="error.set('')"></button>
+    </div>
+  }
+
+  @if (success()) {
+    <div class="alert alert-success">
+      <i class="fas fa-check-circle me-2"></i>{{ success() }}
+      <button type="button" class="btn-close" (click)="success.set('')"></button>
+    </div>
+  }
+
+  <!-- Filtres -->
+  <div class="filters-section">
+    <div class="filter-group">
+      <label for="categoryFilter">Filtrer par catégorie:</label>
+      <select id="categoryFilter" class="form-select" (change)="onFilterChange($event)">
+        @for (cat of categories; track cat.value) {
+          <option [value]="cat.value">{{ cat.label }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="stats">
+      <span class="stat-item">
+        <i class="fas fa-video"></i>
+        Total: <strong>{{ videos().length }}</strong> vidéo(s)
+      </span>
+    </div>
+  </div>
+
+  <!-- Contenu Principal -->
+  <div class="videos-section">
+    @if (loading()) {
+      <div class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Chargement de vos vidéos...</p>
+      </div>
+    } @else if (videos().length === 0) {
+      <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>Vous n'avez pas encore ajouté de vidéos.</p>
+        <a routerLink="/formateur/videos" class="btn btn-primary mt-3">
+          <i class="fas fa-plus-circle me-1"></i>Ajouter votre première vidéo
+        </a>
+      </div>
+    } @else {
+      <!-- Table Vue -->
+      <div class="table-responsive">
+        <table class="videos-table">
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Catégorie</th>
+              <th>Statut</th>
+              <th>Date d'ajout</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (video of videos(); track video.id) {
+              <tr 
+                [class.deleting]="deleting() === video.id"
+                (click)="openVideoPlayer(video)"
+                class="video-row"
+              >
+                <td class="title-cell">
+                  <div class="title-content">
+                    <i class="fas fa-file-video"></i>
+                    <div class="title-info">
+                      <span class="title">{{ video.title }}</span>
+                      @if (video.description) {
+                        <span class="description">{{ video.description }}</span>
+                      }
+                    </div>
+                  </div>
+                </td>
+                <td class="category-cell">
+                  <span class="category-badge" [ngClass]="'category-' + video.category">
+                    {{ getCategoryLabel(video.category) }}
+                  </span>
+                </td>
+                <td class="publication-cell" (click)="$event.stopPropagation()">
+                  <div class="publication-content">
+                    <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        [checked]="video.is_published"
+                        [disabled]="publishing() === video.id"
+                        (change)="togglePublish(video)"
+                        [attr.aria-label]="video.is_published ? 'Publié' : 'Brouillon'"
+                      />
+                      <label class="form-check-label mb-0">
+                        {{ getPublicationLabel(video) }}
+                      </label>
+                    </div>
+                  </div>
+                </td>
+                <td class="date-cell">{{ formatDate(video.created_at) }}</td>
+                <td class="actions-cell" (click)="$event.stopPropagation()">
+                  <div class="action-buttons">
+                    <button
+                      class="btn-action btn-see"
+                      (click)="openVideoPlayer(video)"
+                      title="Voir la vidéo"
+                    >
+                      <i class="fas fa-eye me-1"></i>Voir
+                    </button>
+                    <button
+                      class="btn-action btn-edit"
+                      (click)="openEditModal(video)"
+                      [disabled]="updating() === video.id"
+                      title="Modifier"
+                    >
+                      @if (updating() === video.id) {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                      } @else {
+                        <i class="fas fa-pen me-1"></i>
+                      }
+                      Modifier
+                    </button>
+                    <button
+                      class="btn-action btn-delete"
+                      (click)="deleteVideo(video)"
+                      [disabled]="deleting() === video.id"
+                      title="Supprimer"
+                    >
+                      @if (deleting() === video.id) {
+                        <span class="spinner-border spinner-border-sm me-1"></span>
+                        Suppression...
+                      } @else {
+                        <i class="fas fa-trash me-1"></i>Supprimer
+                      }
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Ajouter plus de vidéos -->
+      <div class="add-more-section">
+        <a routerLink="/formateur/videos" class="btn btn-primary">
+          <i class="fas fa-plus-circle me-1"></i>Ajouter d'autres vidéos
+        </a>
+      </div>
+    }
+  </div>
+
+  <!-- ===== MODAL: ÉDITION DE VIDÉO ===== -->
+  @if (showEditModal()) {
+    <div class="modal-overlay" (click)="closeEditModal()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="fas fa-pen me-2"></i>Modifier la vidéo
+            </h5>
+            <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+          </div>
+
+          <div class="modal-body">
+            <form [formGroup]="editForm">
+              <!-- Titre -->
+              <div class="mb-3">
+                <label for="titleInput" class="form-label">Titre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="titleInput"
+                  formControlName="title"
+                  placeholder="Entrez le titre"
+                />
+                @if (editForm.get('title')?.invalid && editForm.get('title')?.touched) {
+                  <small class="text-danger d-block mt-1">
+                    Le titre doit faire entre 3 et 255 caractères
+                  </small>
+                }
+              </div>
+
+              <!-- Catégorie -->
+              <div class="mb-3">
+                <label for="categorySelect" class="form-label">Catégorie</label>
+                <select
+                  class="form-select"
+                  id="categorySelect"
+                  formControlName="category"
+                >
+                  @for (cat of categories.slice(1); track cat.value) {
+                    <option [value]="cat.value">{{ cat.label }}</option>
+                  }
+                </select>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
+              <i class="fas fa-times me-1"></i>Annuler
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="saveVideoChanges()"
+              [disabled]="!editForm.valid || updating() === editingVideoId()"
+            >
+              @if (updating() === editingVideoId()) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+                Enregistrement...
+              } @else {
+                <i class="fas fa-save me-1"></i>Enregistrer
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ===== MODAL: LECTEUR VIDÉO ===== -->
+  @if (showVideoPlayer() && selectedVideo()) {
+    <div class="player-overlay" (click)="closeVideoPlayer()">
+      <div class="player-modal" (click)="$event.stopPropagation()">
+        <button type="button" class="player-close-btn" (click)="closeVideoPlayer()">
+          <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Lecteur Vidéo -->
+        <div class="player-container">
+          @if (selectedVideo() && isYoutubeVideo(selectedVideo()!)) {
+            <!-- YouTube Embed -->
+            @let embedUrl = getYoutubeEmbedUrl(selectedVideo()!);
+            @if (embedUrl) {
+              <iframe
+                [src]="embedUrl"
+                class="video-frame"
+                allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              ></iframe>
+            } @else {
+              <div class="video-placeholder">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Impossible de charger la vidéo YouTube</p>
+              </div>
+            }
+          } @else {
+            <!-- Vidéo locale (non supportée pour l'instant) -->
+            <div class="video-placeholder">
+              <i class="fas fa-film"></i>
+              <p>Lecteur vidéo local non supporté</p>
+            </div>
+          }
+        </div>
+
+        <!-- Infos Vidéo -->
+        <div class="player-info">
+          <h4 class="video-title">{{ selectedVideo()!.title }}</h4>
+          <div class="video-meta">
+            <span class="meta-item">
+              <strong>Catégorie:</strong>
+              {{ getCategoryLabel(selectedVideo()!.category) }}
+            </span>
+            <span class="meta-item">
+              <strong>Ajoutée le:</strong>
+              {{ formatDate(selectedVideo()!.created_at) }}
+            </span>
+            @if (selectedVideo()!.file_size) {
+              <span class="meta-item">
+                <strong>Taille:</strong>
+                {{ formatFileSize(selectedVideo()!.file_size) }}
+              </span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

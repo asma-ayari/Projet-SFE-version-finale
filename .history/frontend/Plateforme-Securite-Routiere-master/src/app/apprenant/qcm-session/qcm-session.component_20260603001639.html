@@ -1,0 +1,106 @@
+<!-- Écran de chargement -->
+<div class="loading-state" *ngIf="loading">
+  <div class="spinner-large"></div>
+  <p>Chargement du QCM...</p>
+</div>
+
+<!-- Message d'erreur -->
+<div class="error-state" *ngIf="error && !loading">
+  <p>{{ error }}</p>
+  <button class="btn-primary" (click)="goToQcmList()">Retour</button>
+</div>
+
+<!-- Résultats finaux -->
+<div class="result-state" *ngIf="showResult && result">
+  <div class="result-card">
+    <h2>QCM Terminé !</h2>
+    <div class="score-circle" [class.passed]="result.passed" [class.failed]="!result.passed">
+      <span class="score-value">{{ result.score }}%</span>
+    </div>
+    <p class="score-detail">
+      {{ result.correct_answers }} / {{ result.total_questions }} bonnes réponses
+    </p>
+    <p class="pass-status" *ngIf="result.passed">✅ Réussi</p>
+    <p class="pass-status failed" *ngIf="!result.passed">❌ Non réussi</p>
+    <button class="btn-primary" (click)="goToQcmList()">Retour aux QCM</button>
+  </div>
+</div>
+
+<!-- Session QCM -->
+<div class="qcm-session" *ngIf="!loading && !error && !showResult && qcm && currentQuestion">
+  
+  <!-- Barre de progression -->
+  <div class="progress-section">
+    <div class="progress-info">
+      <span>Question {{ currentIndex + 1 }} / {{ qcm.questions.length }}</span>
+      <span class="timer" [class.urgent]="timeLeft <= 10">⏱ {{ timeLeft }}s</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progressPercent"></div>
+    </div>
+  </div>
+
+  <!-- Carte question -->
+  <div class="question-card">
+    
+    <!-- ═══ IMAGE DE LA QUESTION ═══ -->
+    <div class="question-image-wrapper" *ngIf="hasImage">
+      <img
+        [src]="currentQuestion.image_url"
+        [alt]="'Illustration sécurité routière'"
+        class="question-image"
+        (error)="onImageError()"
+        (load)="onImageLoad()"
+      />
+    </div>
+    <!-- ═════════════════════════════ -->
+
+    <!-- Texte de la question -->
+    <h3 class="question-text" [class.rtl]="qcm.description?.includes('arabe')">
+      {{ currentQuestion.text }}
+    </h3>
+
+    <!-- Options / Réponses -->
+    <div class="answers-list">
+      <button
+        *ngFor="let answer of currentQuestion.answers; let i = index"
+        class="answer-btn"
+        [class.selected]="selectedAnswerId === answer.id"
+        [class.correct]="answered && isCorrectAnswer(answer)"
+        [class.wrong-selected]="answered && isWrongSelected(answer)"
+        [class.correct-selected]="answered && isCorrectSelected(answer)"
+        [disabled]="answered"
+        (click)="selectAnswer(answer)"
+      >
+        <span class="answer-letter">{{ ['A', 'B', 'C', 'D'][i] }}</span>
+        <span class="answer-text">{{ answer.text }}</span>
+        <span class="answer-icon" *ngIf="answered && isCorrectAnswer(answer)">✓</span>
+        <span class="answer-icon wrong" *ngIf="answered && isWrongSelected(answer)">✗</span>
+      </button>
+    </div>
+
+    <!-- Explication -->
+    <div class="explanation" *ngIf="answered && currentQuestion.explanation">
+      <span class="explanation-icon">💡</span>
+      <p>{{ currentQuestion.explanation }}</p>
+    </div>
+
+    <!-- Boutons navigation -->
+    <div class="actions" *ngIf="answered">
+      <button 
+        class="btn-next" 
+        *ngIf="!isLastQuestion" 
+        (click)="nextQuestion()"
+      >
+        Question suivante →
+      </button>
+      <button 
+        class="btn-finish" 
+        *ngIf="isLastQuestion" 
+        (click)="finishQcm()"
+      >
+        Terminer le QCM
+      </button>
+    </div>
+  </div>
+</div>

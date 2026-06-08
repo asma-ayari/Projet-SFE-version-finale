@@ -1,0 +1,128 @@
+<div class="course-reader-page">
+  <div class="reader-hero">
+    <div class="reader-hero__inner">
+      <button type="button" class="back-link" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        {{ 'FORMATEUR.COURS_VIEW.BACK' | translate }}
+      </button>
+
+      <div class="reader-hero__content">
+        <span class="reader-badge">
+          <i class="fas fa-book-open"></i>
+          {{ 'FORMATEUR.COURS_VIEW.BADGE' | translate }}
+        </span>
+        <h1>{{ course()?.title || ('FORMATEUR.COURS_VIEW.LOADING_TITLE' | translate) }}</h1>
+        <p>{{ course()?.description || ('FORMATEUR.COURS_VIEW.SUBTITLE' | translate) }}</p>
+      </div>
+
+      <button class="edit-link" (click)="editCourse()" [title]="'FORMATEUR.COURS_VIEW.EDIT_TITLE' | translate">
+        <i class="fas fa-edit"></i>
+        {{ 'FORMATEUR.COURS_VIEW.EDIT' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div class="reader-content">
+    <div class="reader-shell">
+      @if (loading()) {
+        <div class="loading-container">
+          <div class="spinner"></div>
+          <p>{{ 'FORMATEUR.COURS_VIEW.LOADING' | translate }}</p>
+        </div>
+      }
+
+      @if (error()) {
+        <div class="error-container">
+          <i class="fas fa-exclamation-circle"></i>
+          <p>{{ error() }}</p>
+        </div>
+      }
+
+      @if (!loading() && !error() && course()) {
+        <div class="course-viewer">
+          <div class="course-page">
+            <div class="page-badge">
+              <span>{{ 'FORMATEUR.COURS_VIEW.PAGE' | translate }} {{ currentPageNumber() }}/{{ totalPages() }}</span>
+            </div>
+
+            <h2 class="page-title">{{ course()!.title }}</h2>
+
+            @if (course()!.image_url) {
+              <div class="page-illustration">
+                <img [src]="course()!.image_url" [alt]="course()!.title" />
+              </div>
+            }
+
+            <div class="page-content">
+              @if (course()!.description) {
+                <p class="content-intro">{{ course()!.description }}</p>
+              }
+
+              <div class="content-text">
+                {{ displayedContent() || course()!.content }}
+              </div>
+
+              <div class="key-points">
+                <ul class="points-list">
+                  <li><i class="fas fa-check-circle"></i> {{ 'FORMATEUR.COURS_VIEW.POINTS.ONE' | translate }}</li>
+                  <li><i class="fas fa-check-circle"></i> {{ 'FORMATEUR.COURS_VIEW.POINTS.TWO' | translate }}</li>
+                  <li><i class="fas fa-check-circle"></i> {{ 'FORMATEUR.COURS_VIEW.POINTS.THREE' | translate }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-navigation">
+            <button class="btn-nav prev" [disabled]="!canGoPrev()" (click)="prevPage()">
+              <i class="fas fa-chevron-left"></i> {{ 'FORMATEUR.COURS_VIEW.PREVIOUS' | translate }}
+            </button>
+            <span class="page-counter">{{ currentPageNumber() }} / {{ totalPages() }}</span>
+            <button class="btn-nav next" [disabled]="!canGoNext()" (click)="nextPage()">
+              {{ 'FORMATEUR.COURS_VIEW.NEXT' | translate }} <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <div class="course-metadata">
+            <div class="metadata-grid">
+              <div class="metadata-item">
+                <span class="meta-label">{{ 'FORMATEUR.COURS_VIEW.METADATA.CATEGORY' | translate }}</span>
+                <span class="meta-value">{{ course()!.category || '—' }}</span>
+              </div>
+              <div class="metadata-item">
+                <span class="meta-label">{{ 'FORMATEUR.COURS_VIEW.METADATA.LEVEL' | translate }}</span>
+                <span class="meta-value">{{ course()!.level || '—' }}</span>
+              </div>
+              <div class="metadata-item">
+                <span class="meta-label">{{ 'FORMATEUR.COURS_VIEW.METADATA.DURATION' | translate }}</span>
+                <span class="meta-value">{{ formatDuration(course()!.duration) }}</span>
+              </div>
+              <div class="metadata-item">
+                <span class="meta-label">{{ 'FORMATEUR.COURS_VIEW.METADATA.STATUS' | translate }}</span>
+                <span class="meta-value" [ngClass]="course()!.is_published ? 'published' : 'draft'">
+                  {{ course()!.is_published ? ('FORMATEUR.COURS_VIEW.METADATA.PUBLISHED' | translate) : ('FORMATEUR.COURS_VIEW.METADATA.DRAFT' | translate) }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          @if (course()!.video_url) {
+            <div class="video-section">
+              <h3>{{ 'FORMATEUR.COURS_VIEW.VIDEO_TITLE' | translate }}</h3>
+              <div class="video-container">
+                <video controls width="100%">
+                  <source [src]="course()!.video_url" type="video/mp4" />
+                  {{ 'FORMATEUR.COURS_VIEW.VIDEO_FALLBACK' | translate }}
+                </video>
+              </div>
+            </div>
+          }
+
+          <div class="readonly-badge">
+            <i class="fas fa-lock"></i>
+            {{ 'FORMATEUR.COURS_VIEW.READONLY' | translate }}
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,3041 @@
+% ============================================================
+%  MEMOIRE PFE - Plateforme securite routiere
+%  Version complete corrigee
+% ============================================================
+
+\documentclass[a4paper,12pt]{report}
+
+% --- Encodage et langue ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% --- Mise en page ---
+\usepackage[
+  a4paper,
+  top=3cm, bottom=2.5cm,
+  left=2.5cm, right=2.5cm
+]{geometry}
+
+% --- Interligne ---
+\usepackage{setspace}
+\onehalfspacing
+
+% --- Graphiques / TikZ ---
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+
+\graphicspath{{images/}{logos/}{diagrammes/}{captures/}{sites/}}
+
+% --- Tableaux ---
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+\renewcommand{\arraystretch}{1.45}
+
+% --- Listings ---
+\usepackage{listings}
+\usepackage{inconsolata}
+
+\definecolor{codeblue}{RGB}{0,0,200}
+\definecolor{codegray}{RGB}{128,128,128}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{backcolour}{RGB}{245,245,250}
+\definecolor{codered}{RGB}{180,0,0}
+
+\lstdefinestyle{mystyle}{
+  backgroundcolor   = \color{backcolour},
+  commentstyle      = \color{codegreen}\itshape,
+  keywordstyle      = \color{codeblue}\bfseries,
+  numberstyle       = \tiny\color{codegray},
+  stringstyle       = \color{codered},
+  basicstyle        = \ttfamily\footnotesize,
+  breakatwhitespace = false,
+  breaklines        = true,
+  captionpos        = b,
+  keepspaces        = true,
+  numbers           = left,
+  numbersep         = 8pt,
+  showspaces        = false,
+  showstringspaces  = false,
+  showtabs          = false,
+  tabsize           = 2,
+  frame             = single,
+  rulecolor         = \color{gray!40},
+  xleftmargin       = 15pt,
+  framexleftmargin  = 15pt
+}
+\lstset{style=mystyle}
+
+% --- Boites ---
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\newtcolorbox{notebox}{
+  colback  = cyan!6,
+  colframe = cyan!60!black,
+  fonttitle= \bfseries,
+  title    = Note,
+  breakable
+}
+
+% --- En-tetes / pieds ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small Chapitre \thechapter.\enspace\leftmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[C]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% --- Titres ---
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont}
+  {%
+    \begin{tikzpicture}
+      \draw[line width=0.5pt] (0,0) -- (1.2cm,0);
+      \node[anchor=base west, inner sep=0pt] at (0, 0.15cm) {\footnotesize Chapitre};
+      \node[anchor=base west, inner sep=0pt] at (1.4cm, -0.15cm)
+            {\fontsize{60}{60}\selectfont\bfseries\thechapter};
+      \draw[line width=0.5pt] (3.2cm, 0) -- (\textwidth, 0);
+    \end{tikzpicture}%
+  }
+  {-10pt}
+  {\huge\bfseries}
+  []
+\titlespacing*{\chapter}{0pt}{0pt}{30pt}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{18pt}{8pt}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{14pt}{6pt}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{10pt}{4pt}
+
+% --- Minitoc ---
+\usepackage{minitoc}
+\setlength{\mtcindent}{0pt}
+\mtcsetdepth{minitoc}{2}
+\renewcommand{\mtctitle}{Sommaire}
+
+% --- Captions ---
+\usepackage{caption}
+\captionsetup{
+  labelfont = {sc, bf},
+  labelsep  = endash,
+  font      = small,
+  textfont  = it
+}
+
+% --- Listes ---
+\usepackage{enumitem}
+\setlist[itemize]{label={---}, leftmargin=2em, itemsep=2pt, topsep=4pt}
+\setlist[enumerate]{leftmargin=2em, itemsep=2pt, topsep=4pt}
+
+% --- Hyperliens ---
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  linkcolor  = red,
+  urlcolor   = red,
+  citecolor  = red,
+  pdftitle   = {Memoire PFE -- Plateforme securite routiere},
+  pdfauthor  = {Hammami Dhoha, Asma Ayari}
+}
+
+% --- Paragraphes ---
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt}
+
+% --- Macro sequence detaillee (avec zone erreurs optionnelle) ---
+\newcommand{\ucseq}[8]{%
+\begin{figure}[H]
+  \centering
+  \resizebox{0.96\textwidth}{!}{%
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=2.0cm, minimum height=0.65cm, font=\footnotesize, text centered},
+    life/.style={draw, dashed, thin},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize}
+  ]
+    \node[box] (A) at (0,0) {#2};
+    \node[box] (F) at (120,0) {Frontend};
+    \node[box] (API) at (250,0) {#3};
+    \node[box] (S) at (390,0) {#4};
+
+    \draw[life] (0,-10) -- (0,-300);
+    \draw[life] (120,-10) -- (120,-300);
+    \draw[life] (250,-10) -- (250,-300);
+    \draw[life] (390,-10) -- (390,-300);
+
+    \draw[msg] (0,-35) -- node[above]{#5} (120,-35);
+    \draw[msg] (120,-65) -- node[above]{#6} (250,-65);
+    \draw[msg] (250,-95) -- node[above]{traitement metier} (390,-95);
+
+    % Fragment alt: branche erreur / branche nominale
+    \draw[draw, dashed, rounded corners=3pt] (232,-112) rectangle (398,-268);
+    \node[font=\scriptsize\bfseries, anchor=west] at (236,-118) {[alt]};
+
+    % Branche erreur
+    \draw[draw, dashed, rounded corners=2pt, fill=red!5] (238,-128) rectangle (392,-182);
+    \node[font=\scriptsize\itshape, anchor=west] at (242,-135) {[erreur]};
+    \node[font=\scriptsize, align=center] at (315,-160) {#7};
+    \draw[ret] (250,-177) -- node[above]{4xx erreur} (120,-177);
+
+    % Branche nominale
+    \draw[draw, dashed, rounded corners=2pt, fill=green!5] (238,-190) rectangle (392,-258);
+    \node[font=\scriptsize\itshape, anchor=west] at (242,-197) {[nominal]};
+    \draw[ret] (390,-218) -- node[above]{resultat} (250,-218);
+    \draw[ret] (250,-238) -- node[above]{#8} (120,-238);
+    \draw[ret] (120,-262) -- node[above]{affichage UI} (0,-262);
+  \end{tikzpicture}%
+  }
+  \caption{Diagramme de sequence -- #1}
+\end{figure}
+}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\dominitoc
+\setcounter{page}{2}
+
+% ##########################################################
+%  CHAPITRE 1 – Cadre general du projet
+% ##########################################################
+\chapter{Cadre general du projet}
+\minitoc
+\newpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Dans le cadre de notre stage de fin d'etudes au sein de l'Association Tunisie
+pour la Securite Routiere (ATSR), nous avons ete amenes a concevoir et developper
+une plateforme web intelligente dediee a la sensibilisation et a la formation
+a la securite routiere.
+
+Ce chapitre presente dans un premier temps l'organisme d'accueil, puis expose
+la problematique identifiee, une etude comparative des solutions existantes,
+la specification des besoins, la methodologie retenue, ainsi que l'architecture
+et les technologies adoptees.
+
+\section{Presentation de l'entreprise}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{logo_atsr.png}{%
+    \includegraphics[width=0.4\textwidth]{logo_atsr.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!15] (0,0) rectangle (6cm,-3.2cm);
+      \draw[gray!50] (0,0) rectangle (6cm,-3.2cm);
+      \node[font=\small] at (3cm,-1.6cm) {Logo ATSR};
+    \end{tikzpicture}%
+  }
+  \caption{Logo de l'Association Tunisie pour la Securite Routiere}
+  \label{fig:logo_atsr}
+\end{figure}
+
+Notre projet a ete realise au sein de l'Association Tunisie pour la Securite
+Routiere (ATSR). L'ATSR est une organisation a but non lucratif dont la vocation
+est la sensibilisation, la formation et la promotion des bonnes pratiques en
+matiere de securite routiere sur l'ensemble du territoire tunisien.
+
+\begin{table}[H]
+  \centering
+  \caption{Fiche d'identite de l'organisme d'accueil}
+  \label{tab:organisme}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4.5cm} X}
+    \toprule
+    Champ & Information \\
+    \midrule
+    Nom & Association Tunisie pour la Securite Routiere (ATSR) \\
+    Type & Association a but non lucratif \\
+    Adresse & Rue Ahmed Skolli -- Immeuble Alambra 2 -- 1\textsuperscript{er} etage -- 3027 Sfax \\
+    Contact e-mail & \texttt{tsecuriteroutiere.sfax@gmail.com} \\
+    Telephone & 20 412 543 \\
+    Encadrant organisme & Lotfi Ghorbel \\
+    Encadrant ISET & Elleuch Mohamed \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+    \subsection{Secteurs d'activite}
+
+    L'association intervient dans plusieurs domaines complementaires lies a la
+    securite routiere :
+
+    \begin{itemize}
+      \item Sensibilisation du grand public aux risques routiers via des campagnes
+        de communication (affichages, medias, evenements).
+      \item Formations et programmes pedagogiques a destination des auto-ecoles
+        et des etablissements scolaires.
+      \item Production et diffusion de contenus educatifs (videos, brochures,
+        quiz et cours en ligne).
+      \item Collaboration avec les autorites tunisiennes pour promouvoir le respect
+        du code de la route.
+      \item Collecte et analyse de donnees sur les accidents afin de cibler
+        les actions de prevention.
+    \end{itemize}
+
+    \subsection{Organigramme de l'organisme d'accueil}
+
+    \begin{figure}[H]
+      \centering
+      \begin{tikzpicture}
+        \node[draw, fill=cyan!40, minimum width=3.2cm, minimum height=0.75cm] (pres) at (0,0) {President};
+        \node[draw, fill=cyan!40, minimum width=3.2cm, minimum height=0.75cm] (dir)  at (0,-1.8) {Directeur Executif};
+        \node[draw, fill=cyan!40, minimum width=3.2cm, minimum height=0.75cm] (cf)   at (-4.5,-3.6) {Commission Formation};
+        \node[draw, fill=cyan!40, minimum width=3.2cm, minimum height=0.75cm] (cc)   at (0,-3.6) {Commission Communication};
+        \node[draw, fill=cyan!40, minimum width=3.2cm, minimum height=0.75cm] (cp)   at (4.5,-3.6) {Commission Partenariats};
+        \draw (pres) -- (dir);
+        \draw (dir) -- (cf);
+        \draw (dir) -- (cc);
+        \draw (dir) -- (cp);
+      \end{tikzpicture}
+      \caption{Organigramme de l'organisme d'accueil}
+      \label{fig:organigramme}
+    \end{figure}
+
+\section{Presentation du projet et etude de l'existant}
+
+\subsection{Problematique}
+
+La securite routiere represente un enjeu majeur pour la societe tunisienne.
+Le nombre eleve d'accidents de la route, souvent cause par le non-respect du
+code de la route ou par un manque de sensibilisation, justifie la mise en place
+d'outils pedagogiques innovants et accessibles.
+
+Les methodes traditionnelles d'apprentissage --- cours magistraux, brochures,
+sessions en auto-ecole --- presentent plusieurs limites : faible interactivite,
+absence de personnalisation, et difficulte d'acces a une assistance continue.
+
+La problematique principale est donc :
+\begin{quote}
+\textit{Comment concevoir une plateforme intelligente et interactive permettant
+d'enseigner la securite routiere, d'evaluer le niveau des apprenants de maniere
+personnalisee et d'offrir une assistance pedagogique continue adaptee au contexte
+tunisien ?}
+\end{quote}
+
+\subsection{Etude de l'existant}
+
+Afin de positionner notre solution, nous avons etudie trois plateformes connues
+du domaine : Permis-de-conduire.fr, iPERMIS et Moodle.
+
+\subsubsection{Permis-de-conduire.fr}
+
+Permis-de-conduire.fr est une plateforme web francaise dediee a la preparation
+de l'examen theorique. Elle propose des cours en ligne classes par themes et des
+QCM de simulation.
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{sites/permis_fr.png}{%
+    \includegraphics[width=0.86\textwidth]{sites/permis_fr.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13cm,-5.5cm);
+      \draw[gray!40] (0,0) rectangle (13cm,-5.5cm);
+      \draw[gray!30] (0,0) -- (13cm,-5.5cm);
+      \draw[gray!30] (13cm,0) -- (0,-5.5cm);
+      \node[font=\small\itshape] at (6.5cm,-2.75cm) {[Capture Permis-de-conduire.fr]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de Permis-de-conduire.fr}
+  \label{fig:site_permis}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Forces et faiblesses de Permis-de-conduire.fr}
+  \label{tab:permis}
+  \begin{tabularx}{\textwidth}{X X}
+    \toprule
+    \textbf{Forces} & \textbf{Faiblesses} \\
+    \midrule
+    Cours en ligne structures par themes.
+      & Manque d'assistance intelligente integree. \\
+    QCM de simulation d'examen.
+      & Pas de support bilingue francais/arabe. \\
+    Interface claire, disponible 24h/24.
+      & Contenu non adapte au code de la route tunisien. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{iPERMIS}
+
+iPERMIS est une application mobile de preparation du code de la route,
+orientee vers la repetition des tests et le suivi de progression.
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{sites/ipermis.png}{%
+    \includegraphics[width=0.86\textwidth]{sites/ipermis.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13cm,-5.5cm);
+      \draw[gray!40] (0,0) rectangle (13cm,-5.5cm);
+      \draw[gray!30] (0,0) -- (13cm,-5.5cm);
+      \draw[gray!30] (13cm,0) -- (0,-5.5cm);
+      \node[font=\small\itshape] at (6.5cm,-2.75cm) {[Capture iPERMIS]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de l'application iPERMIS}
+  \label{fig:site_ipermis}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Forces et faiblesses d'iPERMIS}
+  \label{tab:ipermis}
+  \begin{tabularx}{\textwidth}{X X}
+    \toprule
+    \textbf{Forces} & \textbf{Faiblesses} \\
+    \midrule
+    Application mobile ergonomique.
+      & Contenu uniquement en francais. \\
+    Suivi de progression et memorisation par repetition.
+      & Manque d'assistance intelligente. \\
+    Disponible sur iOS et Android.
+      & Pas de gestion documentaire pedagogique evoluee. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{Moodle}
+
+Moodle est une plateforme LMS open source tres complete pour la gestion des
+cours, quiz et activites d'apprentissage en ligne.
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{sites/moodle.png}{%
+    \includegraphics[width=0.86\textwidth]{sites/moodle.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13cm,-5.5cm);
+      \draw[gray!40] (0,0) rectangle (13cm,-5.5cm);
+      \draw[gray!30] (0,0) -- (13cm,-5.5cm);
+      \draw[gray!30] (13cm,0) -- (0,-5.5cm);
+      \node[font=\small\itshape] at (6.5cm,-2.75cm) {[Capture Moodle]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de Moodle}
+  \label{fig:site_moodle}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Forces et faiblesses de Moodle}
+  \label{tab:moodle}
+  \begin{tabularx}{\textwidth}{X X}
+    \toprule
+    \textbf{Forces} & \textbf{Faiblesses} \\
+    \midrule
+    Plateforme LMS complete et open source.
+      & Manque d'assistance intelligente integree. \\
+    Gestion des roles et quiz configurables.
+      & Complexite de configuration elevee. \\
+    Large communaute et ecosysteme de plugins.
+      & Interface peu adaptee au grand public. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{Tableau comparatif des faiblesses}
+
+\begin{table}[H]
+  \centering
+  \caption{Comparaison des limites des plateformes existantes}
+  \label{tab:comparatif}
+  \begin{tabularx}{\textwidth}{
+    >{\raggedright\arraybackslash}X
+    >{\centering\arraybackslash}p{2.8cm}
+    >{\centering\arraybackslash}p{2.2cm}
+    >{\centering\arraybackslash}p{2cm}
+  }
+    \toprule
+    \textbf{Critere / Manque identifie}
+      & \textbf{Permis-de-conduire.fr}
+      & \textbf{iPERMIS}
+      & \textbf{Moodle} \\
+    \midrule
+    Manque d'assistance intelligente
+      & Oui & Oui & Oui \\
+    Absence de support bilingue (FR/AR)
+      & Oui & Oui & Oui \\
+    Adaptation limitee au contexte tunisien
+      & Oui & Oui & Partiel \\
+    Module de detection visuelle des panneaux absent
+      & Oui & Oui & Oui \\
+    Interface difficile pour utilisateurs non techniques
+      & Non & Non & Oui \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Solution proposee}
+
+Notre solution consiste a developper une plateforme web intelligente dediee
+a la securite routiere en Tunisie, avec les fonctionnalites suivantes :
+
+\begin{itemize}
+  \item Cours en ligne structures par thematiques.
+  \item QCM de positionnement et d'evaluation avec correction automatique.
+  \item Assistance conversationnelle bilingue (francais/arabe).
+  \item Detection de panneaux de signalisation a partir d'images.
+  \item Gestion des utilisateurs et des roles (invite, apprenant, formateur, administrateur).
+  \item Tableaux de bord statistiques pour le suivi de l'activite.
+  \item Architecture frontend/backend securisee et evolutive.
+\end{itemize}
+
+\section{Specification des besoins}
+
+\subsection{Identification des acteurs}
+
+\begin{enumerate}
+  \item \textbf{Invite} : utilisateur non authentifie qui peut s'inscrire,
+        se connecter (localement ou via Google) et lancer la recuperation de
+        mot de passe, sans acces aux cours ni aux fonctionnalites protegees.
+  \item \textbf{Apprenant} : utilisateur inscrit qui suit les cours,
+        passe les QCM et interagit avec le chatbot.
+  \item \textbf{Formateur} : responsable pedagogique qui cree et gere
+        les cours.
+  \item \textbf{Administrateur} : responsable fonctionnel et technique
+        qui gere les utilisateurs, documents, QCM et statistiques.
+  \item \textbf{Services externes} : OAuth Google, SMTP, services IA.
+\end{enumerate}
+
+\subsection{Besoins fonctionnels}
+
+Les besoins fonctionnels decrivent les services attendus par chaque type
+d'utilisateur. Ils constituent la base de priorisation du backlog et orientent
+directement la conception des cas d'utilisation globaux et raffines.
+
+\begin{table}[H]
+  \centering
+  \caption{Besoins fonctionnels par acteur}
+  \label{tab:bf}
+  \begin{tabular}{|p{3.2cm}|p{10cm}|}
+    \hline
+    \textbf{Acteur} & \textbf{Fonctionnalites} \\
+    \hline
+    Administrateur & Gestion des utilisateurs, documents, categories et QCM; statistiques; supervision chatbot. \\
+    \hline
+    Formateur & Creation/modification/publication de cours; upload videos; consultation des performances. \\
+    \hline
+    Apprenant & Consultation des cours; passation QCM; consultation resultats; chatbot; detection panneaux; gestion conversations. \\
+    \hline
+    Invite & Inscription; connexion locale/Google; mot de passe oublie; reinitialisation. \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Besoins non fonctionnels}
+
+Les besoins non fonctionnels traduisent les exigences de qualite du systeme.
+Ils garantissent qu'au-dela des fonctionnalites metier, la plateforme reste
+fiable, securisee, performante et facilement maintenable dans la duree.
+
+\begin{itemize}
+  \item Performance
+  \item Securite
+  \item Disponibilite
+  \item Scalabilite
+  \item Maintenabilite
+  \item Utilisabilite
+  \item Internationalisation (FR/AR)
+  \item Fiabilite
+\end{itemize}
+
+\subsection{Diagramme de cas d'utilisation global}
+
+La lisibilite est amelioree en divisant le diagramme global sur deux pages.
+
+% ------------------ Partie 1 ------------------
+\begin{figure}[p]
+\centering
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[
+  >=Stealth,
+  actor/.style={draw, ellipse, minimum width=2.4cm, minimum height=0.9cm, font=\small},
+  uc/.style={draw, ellipse, minimum width=4.8cm, minimum height=0.95cm, align=center, font=\small},
+  rel/.style={draw, ->, line width=0.6pt}
+]
+  \draw[dashed, rounded corners=6pt] (0,0) rectangle (16,-11.8);
+  \node[font=\small\bfseries] at (8,-0.5)
+  {Plateforme Securite Routiere -- Cas d'utilisation globaux (Partie 1/2)};
+
+  \node[actor] (G) at (1.8,-3.0) {Invite};
+  \node[actor] (L) at (1.8,-8.2) {Apprenant};
+
+  \node[uc] (UC1) at (8.2,-2.0) {S'inscrire};
+  \node[uc] (UC2) at (8.2,-3.4) {Se connecter};
+  \node[uc] (UC3) at (8.2,-4.8) {Consulter cours};
+  \node[uc] (UC4) at (8.2,-6.2) {Passer un QCM};
+  \node[uc] (UC5) at (8.2,-7.6) {Consulter resultats};
+  \node[uc] (UC6) at (8.2,-9.0) {Discuter avec le chatbot};
+  \node[uc] (UC7) at (8.2,-10.4) {Analyser panneau par image};
+
+  % Invite: pas de consultation cours
+  \draw[rel] (G) -- (UC1);
+  \draw[rel] (G) -- (UC2);
+
+  \draw[rel] (L) -- (UC2);
+  \draw[rel] (L) -- (UC3);
+  \draw[rel] (L) -- (UC4);
+  \draw[rel] (L) -- (UC5);
+  \draw[rel] (L) -- (UC6);
+  \draw[rel] (L) -- (UC7);
+\end{tikzpicture}%
+}
+\caption{Diagramme de cas d'utilisation global -- Partie 1 (Invite et Apprenant)}
+\label{fig:uc_global_part1}
+\end{figure}
+
+\clearpage
+
+% ------------------ Partie 2 ------------------
+\begin{figure}[p]
+\centering
+\resizebox{0.96\textwidth}{!}{%
+\begin{tikzpicture}[
+  >=Stealth,
+  actor/.style={draw, ellipse, minimum width=2.6cm, minimum height=0.9cm, font=\small},
+  uc/.style={draw, ellipse, minimum width=5.0cm, minimum height=0.95cm, align=center, font=\small},
+  rel/.style={draw, ->, line width=0.6pt}
+]
+  \draw[dashed, rounded corners=6pt] (0,0) rectangle (18,-12.8);
+  \node[font=\small\bfseries] at (9,-0.5)
+  {Plateforme Securite Routiere -- Cas d'utilisation globaux (Partie 2/2)};
+
+  \node[actor] (F) at (1.8,-8.9) {Formateur};
+  \node[actor] (A) at (1.8,-4.2) {Administrateur};
+
+  \node[uc] (UC2)  at (8.0,-2.0)  {Se connecter};
+  \node[uc] (UC3)  at (8.0,-3.4)  {Consulter cours};
+  \node[uc] (UC8)  at (8.0,-4.8)  {Gerer utilisateurs};
+  \node[uc] (UC9)  at (8.0,-6.2)  {Creer / modifier QCM};
+  \node[uc] (UC10) at (8.0,-7.6)  {Publier QCM};
+  \node[uc] (UC11) at (8.0,-9.0)  {Gerer categories QCM};
+  \node[uc] (UC12) at (8.0,-10.4) {Gerer documents};
+  \node[uc] (UC13) at (8.0,-11.8) {Lancer ingestion};
+
+  \node[uc] (UC14) at (14.0,-4.8)  {Voir statistiques};
+  \node[uc] (UC15) at (14.0,-7.0)  {Creer / modifier cours};
+  \node[uc] (UC16) at (14.0,-8.8)  {Publier cours};
+  \node[uc] (UC17) at (14.0,-10.6) {Uploader videos};
+  \node[uc] (UC6)  at (14.0,-2.8)  {Discuter avec le chatbot};
+
+  \draw[rel] (F) -- (UC2);
+  \draw[rel] (F) -- (UC3);
+  \draw[rel] (F) -- (UC15);
+  \draw[rel] (F) -- (UC16);
+  \draw[rel] (F) -- (UC17);
+
+  \draw[rel] (A) -- (UC2);
+  \draw[rel] (A) -- (UC3);
+  \draw[rel] (A) -- (UC6);
+  \draw[rel] (A) -- (UC8);
+  \draw[rel] (A) -- (UC9);
+  \draw[rel] (A) -- (UC10);
+  \draw[rel] (A) -- (UC11);
+  \draw[rel] (A) -- (UC12);
+  \draw[rel] (A) -- (UC13);
+  \draw[rel] (A) -- (UC14);
+\end{tikzpicture}%
+}
+\caption{Diagramme de cas d'utilisation global -- Partie 2 (Formateur et Administrateur)}
+\label{fig:uc_global_part2}
+\end{figure}
+
+\clearpage
+
+\section{Methodologie}
+
+\subsection{Planification du projet}
+
+La planification a ete construite selon une approche iterative afin de livrer
+des increments fonctionnels reguliers et validables avec les encadrants.
+Le projet a ete decoupe en sprints courts pour reduire le risque, valider
+rapidement les choix techniques et ajuster le perimetre en fonction des retours
+metier et pedagogiques.
+
+\subsection{Choix de l'approche Agile et de Scrum}
+
+L'approche Agile a ete retenue car elle privilegie la collaboration continue,
+la capacite d'adaptation et la livraison incrementale de valeur. Parmi les
+methodes agiles, Scrum a ete selectionnee pour son cadre structure (roles,
+ceremonies et artefacts) qui convient particulierement a un projet PFE mene sur
+une duree limitee.
+
+\begin{table}[H]
+  \centering
+  \caption{Comparaison des principales methodes agiles}
+  \label{tab:methodes_agiles}
+  \begin{tabularx}{\textwidth}{
+    >{\bfseries\raggedright\arraybackslash}p{2.5cm}
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}X
+  }
+    \toprule
+    Methode & Principe & Points forts & Limites \\
+    \midrule
+    Scrum
+      & Sprints courts, backlog priorise, revues et retrospectives.
+      & Cadre clair, livraisons frequentes, adaptation continue.
+      & Necessite une coordination frequente de l'equipe. \\
+    Kanban
+      & Flux continu visualise sur tableau avec limites WIP.
+      & Flexibilite elevee et bonne visibilite des taches.
+      & Moins structure sur les jalons temporels. \\
+    XP
+      & TDD, pair programming, integration continue, refactoring.
+      & Haute qualite logicielle et detection precoce des defauts.
+      & Exige une forte maturite technique de l'equipe. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{Pourquoi Scrum :}
+\begin{itemize}
+  \item S'adapte bien a un projet PFE pilote en sprints.
+  \item Facilite le suivi des priorites et la visibilite d'avancement.
+  \item Permet l'integration rapide des retours des encadrants.
+\end{itemize}
+
+\subsection{Les roles dans Scrum}
+
+Le cadre Scrum repose sur trois roles complementaires, chacun ayant une
+responsabilite precise dans la reussite du projet :
+
+\begin{itemize}
+  \item \textbf{Product Owner} : priorise le backlog produit et garantit
+  l'alignement des fonctionnalites avec les besoins metier.
+  \item \textbf{Scrum Master} : facilite l'application de Scrum, supprime les
+  blocages et accompagne l'equipe dans l'amelioration continue.
+  \item \textbf{Equipe de developpement} : concoit, implemente, teste et livre
+  l'increment fonctionnel a chaque sprint.
+\end{itemize}
+
+\subsection{Product Backlog}
+
+Le Product Backlog regroupe l'ensemble des besoins exprimes sous forme de User
+Stories. Chaque element est priorise selon sa valeur metier, son urgence et sa
+faisabilite technique. Ce backlog reste evolutif et est raffine tout au long du
+projet.
+
+\begin{table}[H]
+  \centering
+  \caption{Backlog produit}
+  \label{tab:backlog}
+  \begin{tabular}{|c|p{8.2cm}|c|c|}
+    \hline
+    \textbf{ID} & \textbf{User Story} & \textbf{Priorite} & \textbf{Est.} \\
+    \hline
+    US1  & En tant que visiteur, je veux m'inscrire pour acceder a la plateforme & Haute & 3 SP \\
+    \hline
+    US2  & En tant qu'utilisateur, je veux me connecter avec Google & Moyenne & 5 SP \\
+    \hline
+    US3  & En tant qu'apprenant, je veux consulter les cours publies & Haute & 5 SP \\
+    \hline
+    US6  & En tant qu'admin, je veux creer et publier des QCM & Haute & 8 SP \\
+    \hline
+    US9  & En tant qu'utilisateur, je veux poser des questions a l'assistant & Haute & 8 SP \\
+    \hline
+    US12 & En tant qu'admin, je veux consulter les statistiques globales & Haute & 5 SP \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Planification des sprints}
+
+La planification des sprints organise la mise en oeuvre progressive des modules
+du systeme. Chaque sprint produit un increment testable afin de valider les
+acquis avant de passer au sprint suivant.
+
+\begin{table}[H]
+  \centering
+  \caption{Planification des sprints}
+  \label{tab:sprints}
+  \begin{tabular}{|c|p{4.5cm}|p{7cm}|}
+    \hline
+    \textbf{Sprint} & \textbf{Objectif} & \textbf{Livrables} \\
+    \hline
+    Sprint 1 & Base projet et authentification & Architecture initiale, auth locale, OAuth Google, roles \\
+    \hline
+    Sprint 2 & Module pedagogie & Gestion des cours, consultation apprenant \\
+    \hline
+    Sprint 3 & Evaluation & Gestion QCM, passation, scoring \\
+    \hline
+    Sprint 4 & Intelligence applicative & Assistant intelligent, ingestion, detection image \\
+    \hline
+    Sprint 5 & Administration et qualite & Dashboards, optimisation, tests \\
+    \hline
+    Sprint 6 & Finalisation & Deploiement, documentation, soutenance \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Architecture et outils de travail}
+
+\subsection{Choix de l'architecture}
+
+Le choix architectural devait concilier simplicite de mise en oeuvre,
+maintenabilite et capacite d'evolution. Une architecture en couches a ete
+privilegiee afin de separer clairement la presentation, la logique metier,
+l'acces aux donnees et les composants IA.
+
+\begin{table}[H]
+  \centering
+  \caption{Comparaison des architectures logicielles}
+  \label{tab:archi_comp}
+  \begin{tabularx}{\textwidth}{
+    >{\bfseries\raggedright\arraybackslash}p{2.5cm}
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}X
+  }
+    \toprule
+    Architecture & Principe & Avantages & Inconvenients \\
+    \midrule
+    Monolithique
+      & Application unique qui regroupe toutes les fonctionnalites.
+      & Mise en place initiale simple, deploiement unique.
+      & Couplage fort et evolution difficile a grande echelle. \\
+    En couches (Layered)
+      & Separation presentation, logique metier, donnees et IA.
+      & Maintenabilite, testabilite, responsabilites claires.
+      & Demande une bonne discipline de conception. \\
+    Microservices
+      & Services independants deployables separement.
+      & Scalabilite fine et isolation des composants.
+      & Complexite operationnelle plus elevee. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\textbf{Choix retenu :} architecture en couches, adaptee a la taille du projet,
+maintenable et evolutive.
+
+\subsection{Architecture globale de la plateforme}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{architecture.png}{%
+    \includegraphics[width=0.92\textwidth]{architecture.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6cm);
+      \draw[gray!30] (0,0) -- (13.5cm,-6cm);
+      \draw[gray!30] (13.5cm,0) -- (0,-6cm);
+      \node[font=\small\itshape] at (6.75cm,-3cm) {[Schema architecture globale]};
+    \end{tikzpicture}%
+  }
+  \caption{Architecture globale de la plateforme}
+  \label{fig:archi_globale}
+\end{figure}
+
+\subsection{Architecture du RAG}
+
+Le module de recherche augmentee suit cinq etapes : ingestion documentaire,
+decoupage en segments, vectorisation, indexation, puis generation de reponse
+contextualisee.
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{architecture_rag.png}{%
+    \includegraphics[width=0.92\textwidth]{architecture_rag.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6cm);
+      \draw[gray!30] (0,0) -- (13.5cm,-6cm);
+      \draw[gray!30] (13.5cm,0) -- (0,-6cm);
+      \node[font=\small\itshape] at (6.75cm,-3cm) {[Schema architecture RAG]};
+    \end{tikzpicture}%
+  }
+  \caption{Architecture du module de recherche augmentee}
+  \label{fig:archi_rag}
+\end{figure}
+
+\subsection{Environnement de travail}
+
+\begin{table}[H]
+  \centering
+  \caption{Environnement logiciel}
+  \label{tab:env_logiciel}
+  \begin{tabular}{|p{3cm}|p{4cm}|p{5cm}|}
+    \hline
+    \textbf{Outil} & \textbf{Technologie} & \textbf{Usage} \\
+    \hline
+    Systeme & Windows & Systeme d'exploitation \\
+    \hline
+    IDE & Visual Studio Code & Edition et debug \\
+    \hline
+    Frontend & Angular & Interface utilisateur \\
+    \hline
+    Backend & FastAPI (Python) & API REST \\
+    \hline
+    Base de donnees & MySQL & Stockage relationnel \\
+    \hline
+    Tests API & Postman & Validation endpoints \\
+    \hline
+    Versioning & GitHub & Gestion de versions \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Technologies utilisees}
+
+\begin{table}[H]
+  \centering
+  \caption{Technologies principales du projet}
+  \label{tab:techno}
+  \begin{tabular}{|p{2.7cm}|p{2.2cm}|p{3.6cm}|p{4.3cm}|}
+    \hline
+    \textbf{Composant} & \textbf{Logo} & \textbf{Technologie} & \textbf{Justification} \\
+    \hline
+    Frontend & \IfFileExists{logos/angular.png}{\includegraphics[width=0.65cm]{logos/angular.png}}{Angular} & Angular, TypeScript & SPA modulaire, maintenable et responsive \\
+    \hline
+    Backend & \IfFileExists{logos/fastapi.png}{\includegraphics[width=0.65cm]{logos/fastapi.png}}{FastAPI} & FastAPI (Python) & API performante et integre facilement l'IA \\
+    \hline
+    Base de donnees & \IfFileExists{logos/mysql.png}{\includegraphics[width=0.7cm]{logos/mysql.png}}{MySQL} & MySQL + SQLAlchemy & Stockage relationnel fiable \\
+    \hline
+    Assistant intelligent & \IfFileExists{logos/llm.png}{\includegraphics[width=0.65cm]{logos/llm.png}}{IA} & LLM + recherche semantique & Assistance contextuelle aux apprenants \\
+    \hline
+    Authentification & \IfFileExists{logos/jwt.png}{\includegraphics[width=0.7cm]{logos/jwt.png}}{JWT} & JWT + OAuth Google + bcrypt & Securite et flexibilite d'acces \\
+    \hline
+    Outils & \IfFileExists{logos/github.png}{\includegraphics[width=0.65cm]{logos/github.png}}{GitHub} & GitHub, Postman, VS Code & Collaboration, tests, productivite \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Langages de programmation}
+
+\begin{table}[H]
+  \centering
+  \caption{Langages de programmation utilises}
+  \label{tab:langages}
+  \begin{tabular}{|p{2.8cm}|p{2.2cm}|p{8cm}|}
+    \hline
+    \textbf{Langage} & \textbf{Logo} & \textbf{Usage dans le projet} \\
+    \hline
+    TypeScript & \IfFileExists{logos/typescript.png}{\includegraphics[width=0.65cm]{logos/typescript.png}}{TS} & Developpement du frontend Angular. \\
+    \hline
+    Python & \IfFileExists{logos/python.png}{\includegraphics[width=0.65cm]{logos/python.png}}{Py} & Developpement backend et logique metier. \\
+    \hline
+    SQL & \IfFileExists{logos/sql.png}{\includegraphics[width=0.65cm]{logos/sql.png}}{SQL} & Modelisation et requetes sur la base relationnelle. \\
+    \hline
+    HTML/CSS & \IfFileExists{logos/html_css.png}{\includegraphics[width=0.75cm]{logos/html_css.png}}{HTML/CSS} & Structuration et mise en forme des interfaces. \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\subsection{Langage de modelisation}
+
+Le langage UML est utilise pour modeliser le systeme a travers :
+
+\begin{itemize}
+  \item Diagrammes de cas d'utilisation pour les besoins fonctionnels.
+  \item Diagrammes de classes pour la structure statique.
+  \item Diagrammes de sequence pour les scenarios critiques.
+\end{itemize}
+
+\subsection{Choix technologiques detailles}
+
+\begin{table}[H]
+  \centering
+  \caption{Choix technologiques detailles}
+  \label{tab:choix_tech_detail}
+  \begin{tabularx}{\textwidth}{>{\bfseries\raggedright\arraybackslash}p{2.8cm} p{3.8cm} X}
+    \toprule
+    Composant & Technologie & Justification \\
+    \midrule
+    Frontend & Angular (TypeScript) & Application SPA modulaire, maintenable et reactive. \\
+    Backend & FastAPI (Python) & API REST performante et adaptee a l'integration IA. \\
+    Base de donnees & MySQL + SQLAlchemy & Stockage relationnel robuste pour les donnees metier. \\
+    Authentification & JWT + OAuth Google + bcrypt & Securisation des acces et gestion des roles. \\
+    Assistant & LLM + recherche semantique & Assistance contextuelle basee sur la documentation. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Ce chapitre a presente le cadre general, la problematique, les besoins,
+la methodologie Scrum et l'architecture retenue pour la plateforme.
+
+
+% ##########################################################
+%  CHAPITRE 2 – Sprint 1
+% ##########################################################
+\chapter{Sprint 1 : Base projet et authentification}
+\minitoc
+\newpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Le Sprint 1 a pour objectif de poser les fondations techniques et fonctionnelles
+de la plateforme. Il couvre :
+
+\begin{enumerate}
+  \item La mise en place de la base projet (backend FastAPI, frontend Angular,
+  structure modulaire).
+  \item Le socle de securite et d'authentification (JWT, OAuth Google,
+  protection des acces).
+  \item Les fonctions essentielles de gestion des comptes et des utilisateurs.
+\end{enumerate}
+
+Ce sprint constitue la base sur laquelle les sprints suivants (cours, QCM,
+chatbot, statistiques) peuvent s'appuyer.
+
+\section{Objectif et perimetre}
+
+\subsection{Objectif general}
+
+Fournir un systeme d'authentification fiable, securise et extensible, avec
+gestion des roles (admin, formateur, apprenant).
+
+\subsection{Perimetre fonctionnel retenu}
+
+Les cas d'utilisation raffines pour ce sprint sont :
+
+\begin{enumerate}
+  \item \textbf{Authentification}
+  \begin{itemize}
+    \item Inscription locale
+    \item Connexion locale
+    \item Connexion Google
+    \item Mot de passe oublie
+    \item Reinitialisation du mot de passe
+    \item Rafraichissement du token
+  \end{itemize}
+  \item \textbf{Gestion du profil}
+  \begin{itemize}
+    \item Consultation du profil
+    \item Changement du mot de passe
+  \end{itemize}
+  \item \textbf{Gestion des utilisateurs (admin)}
+  \begin{itemize}
+    \item Lister les utilisateurs
+    \item Creer un utilisateur
+    \item Modifier le role
+    \item Activer/desactiver un compte
+    \item Supprimer un utilisateur
+  \end{itemize}
+\end{enumerate}
+
+\section{Backlog Sprint 1}
+
+\begin{table}[H]
+  \centering
+  \caption{Backlog du Sprint 1}
+  \label{tab:backlog_s1}
+  \begin{tabular}{|c|p{7.5cm}|c|c|}
+    \hline
+    \textbf{ID} & \textbf{User Story} & \textbf{Priorite} & \textbf{Est.} \\
+    \hline
+    US1 & En tant que visiteur, je veux m'inscrire & Haute & 3 SP \\
+    \hline
+    US2 & En tant que visiteur, je veux me connecter localement & Haute & 3 SP \\
+    \hline
+    US3 & En tant qu'utilisateur, je veux me connecter avec Google & Moyenne & 5 SP \\
+    \hline
+    US4 & En tant que visiteur, je veux reinitialiser mon mot de passe & Haute & 3 SP \\
+    \hline
+    US5 & En tant qu'utilisateur, je veux gerer mon profil & Moyenne & 3 SP \\
+    \hline
+    US6 & En tant qu'admin, je veux gerer les utilisateurs (CRUD, roles, statuts) & Haute & 8 SP \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Analyse}
+
+\subsection{Acteurs du Sprint 1}
+\begin{enumerate}
+  \item Visiteur
+  \item Utilisateur authentifie
+  \item Administrateur
+  \item Google OAuth
+  \item Service Email SMTP
+\end{enumerate}
+
+\subsection{Diagramme de cas d'utilisation -- Sprint 1}
+
+\begin{figure}[H]
+  \centering
+  \resizebox{0.94\textwidth}{!}{%
+  \begin{tikzpicture}[
+    >=Stealth,
+    uc/.style={draw, ellipse, minimum width=4.0cm, minimum height=0.95cm, align=center, font=\footnotesize},
+    actor/.style={font=\small\bfseries, align=center},
+    rel/.style={draw, ->, line width=0.6pt},
+    ext/.style={draw, dashed, ->, line width=0.6pt, font=\scriptsize\itshape}
+  ]
+    \draw[dashed, rounded corners=6pt] (0,0) rectangle (18,-15.2);
+    \node[font=\small\bfseries] at (9,-0.5)
+      {Systeme -- Sprint 1 : Base projet et authentification};
+
+    \node[uc] (UC1)  at (9,-1.7)  {S'inscrire};
+    \node[uc] (UC2)  at (9,-3.0)  {Se connecter\\localement};
+    \node[uc] (UC3)  at (9,-4.3)  {Se connecter\\avec Google};
+    \node[uc] (UC4)  at (9,-5.6)  {Mot de passe\\oublie};
+    \node[uc] (UC5)  at (9,-6.9)  {Reinitialiser\\mot de passe};
+    \node[uc] (UC6)  at (9,-8.2)  {Gerer profil\\(consulter / modifier)};
+    \node[uc] (UC7)  at (9,-9.5)  {Changer\\mot de passe};
+    \node[uc] (UC8)  at (9,-10.8) {Lister utilisateurs};
+    \node[uc] (UC9)  at (9,-12.1) {Creer utilisateur};
+    \node[uc] (UC10) at (9,-13.4) {Modifier role /\\activer-desactiver / suppression};
+
+    \node[actor] (Vis) at (-1.8,-3.9)  {Visiteur};
+    \node[actor] (Usr) at (-1.8,-8.9)  {Utilisateur\\authentifie};
+    \node[actor] (Adm) at (-1.8,-12.1) {Administrateur};
+    \node[actor] (Goo) at (19.8,-4.3)  {Google\\OAuth};
+    \node[actor] (Eml) at (19.8,-5.6)  {Service\\Email SMTP};
+
+    \draw[rel] (Vis) -- (UC1);
+    \draw[rel] (Vis) -- (UC2);
+    \draw[rel] (Vis) -- (UC3);
+    \draw[rel] (Vis) -- (UC4);
+    \draw[rel] (Vis) -- (UC5);
+
+    \draw[rel] (Usr) -- (UC6);
+    \draw[rel] (Usr) -- (UC7);
+
+    \draw[rel] (Adm) -- (UC8);
+    \draw[rel] (Adm) -- (UC9);
+    \draw[rel] (Adm) -- (UC10);
+
+    \draw[ext] (UC6) -- node[right]{$\ll$include$\gg$} (UC7);
+    \draw[ext] (UC3) -- node[above]{verification token} (Goo);
+    \draw[ext] (UC4) -- node[above]{envoi code} (Eml);
+  \end{tikzpicture}%
+  }
+  \caption{Diagramme de cas d'utilisation -- Sprint 1 (corrige et centre)}
+  \label{fig:uc_sprint1}
+\end{figure}
+
+\section{Conception}
+
+\subsection{Cas d'utilisation raffines}
+
+\subsubsection{UC1 -- S'inscrire}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC1}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & S'inscrire localement \\
+    \midrule
+    Acteur principal & Visiteur \\
+    Preconditions & Email et username non utilises. \\
+    Scenario nominal & Validation des champs, verification unicite, hachage du mot de passe, creation compte, generation JWT. \\
+    Postconditions & Compte actif cree et session ouverte. \\
+    Exceptions & Email/username deja existants, mot de passe non conforme. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC1 -- S'inscrire}{Visiteur}{API Auth}{AuthService + Base}{Saisie formulaire inscription}{POST /api/auth/register}{Email deja utilise ou mot de passe invalide (HTTP 400)}{201 Compte cree + JWT}
+
+\subsubsection{UC2 -- Se connecter localement}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC2}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Se connecter localement \\
+    \midrule
+    Acteur principal & Visiteur \\
+    Preconditions & Compte local existant et actif. \\
+    Scenario nominal & Verification identifiants, verification hash mot de passe, generation des tokens. \\
+    Postconditions & Session authentifiee ouverte. \\
+    Exceptions & Identifiants invalides, compte desactive, blocage rate limit. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC2 -- Se connecter localement}{Visiteur}{API Auth}{AuthService + Base}{Saisie email + mot de passe}{POST /api/auth/login}{Mot de passe incorrect / token absent ou invalide (401/403)}{200 TokenResponse}
+
+\subsubsection{UC3 -- Se connecter avec Google}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC3}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Se connecter avec Google \\
+    \midrule
+    Acteur principal & Visiteur \\
+    Acteur secondaire & Google OAuth \\
+    Preconditions & Credential Google valide. \\
+    Scenario nominal & Verification du token Google, creation/liaison compte local, generation JWT. \\
+    Postconditions & Session ouverte. \\
+    Exceptions & Token Google invalide, audience non autorisee. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC3 -- Se connecter avec Google}{Visiteur}{API Auth}{Google OAuth}{Clic sur connexion Google}{POST /api/auth/google}{Token Google invalide ou email non verifie (401)}{200 Session ouverte + JWT}
+
+\subsubsection{UC4 -- Mot de passe oublie}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC4}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Mot de passe oublie \\
+    \midrule
+    Acteur principal & Visiteur \\
+    Acteur secondaire & Service Email SMTP \\
+    Preconditions & Adresse email saisie. \\
+    Scenario nominal & Generation d'un code temporaire et envoi SMTP avec message neutre. \\
+    Postconditions & Code stocke avec expiration. \\
+    Exceptions & Erreur SMTP ou email inexistant (message neutre conserve). \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC4 -- Mot de passe oublie}{Visiteur}{API Auth}{Email Service}{Saisie email}{POST /api/auth/forgot-password}{Erreur SMTP ou compte inexistant (message neutre)}{200 Message neutre}
+
+\subsubsection{UC5 -- Reinitialiser le mot de passe}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC5}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Reinitialiser le mot de passe \\
+    \midrule
+    Acteur principal & Visiteur \\
+    Preconditions & Code valide et non expire. \\
+    Scenario nominal & Verification code, hachage du nouveau mot de passe, mise a jour et invalidation du code. \\
+    Postconditions & Nouveau mot de passe actif. \\
+    Exceptions & Code invalide/expire, utilisateur introuvable. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC5 -- Reinitialiser le mot de passe}{Visiteur}{API Auth}{AuthService + Base}{Saisie email + code + nouveau MDP}{POST /api/auth/reset-password}{Code incorrect/expire (400)}{200 Password reset}
+
+\subsubsection{UC6 -- Gerer son profil}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC6}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Gerer son profil (consulter / modifier) \\
+    \midrule
+    Acteur principal & Utilisateur authentifie \\
+    Preconditions & Token JWT valide. \\
+    Scenario nominal & Consultation des donnees, mise a jour des informations du profil. \\
+    Postconditions & Profil affiche et/ou mis a jour. \\
+    Exceptions & Token invalide/expire, compte desactive. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC6 -- Gerer son profil}{Utilisateur authentifie}{API Auth}{Base MySQL}{Acces page profil}{GET/PUT /api/auth/me}{Token JWT invalide ou expire (401)}{200 Profil retourne/mis a jour}
+
+\subsubsection{UC7 -- Changer son mot de passe}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC7}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Changer son mot de passe \\
+    \midrule
+    Acteur principal & Utilisateur authentifie \\
+    Preconditions & Ancien mot de passe correct. \\
+    Scenario nominal & Verification ancien MDP, hachage nouveau MDP et mise a jour. \\
+    Postconditions & Nouveau mot de passe actif. \\
+    Exceptions & Ancien MDP incorrect, nouveau MDP invalide, compte Google pur. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC7 -- Changer son mot de passe}{Utilisateur authentifie}{API Auth}{AuthService + Base}{Saisie ancien + nouveau MDP}{POST /api/auth/change-password}{Ancien mot de passe incorrect (400)}{200 Password updated}
+
+\subsubsection{UC8 -- Lister les utilisateurs}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC8}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Lister les utilisateurs \\
+    \midrule
+    Acteur principal & Administrateur \\
+    Preconditions & Utilisateur connecte avec role admin. \\
+    Scenario nominal & Consultation liste paginee avec filtres. \\
+    Postconditions & Vue de supervision actualisee. \\
+    Exceptions & Acces refuse si role non admin. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC8 -- Lister les utilisateurs}{Administrateur}{API Users}{Base MySQL}{Demande liste paginee}{GET /api/users}{Token invalide ou role insuffisant (401/403)}{200 Liste utilisateurs}
+
+\subsubsection{UC9 -- Creer un utilisateur}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC9}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Creer un utilisateur \\
+    \midrule
+    Acteur principal & Administrateur \\
+    Preconditions & Role admin et donnees valides. \\
+    Scenario nominal & Verification unicite, hachage mot de passe, creation compte. \\
+    Postconditions & Nouvel utilisateur present dans le systeme. \\
+    Exceptions & Email/username existant, role invalide. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC9 -- Creer un utilisateur}{Administrateur}{API Users}{AuthService + Base}{Saisie donnees utilisateur}{POST /api/users}{Email/username deja existant (400)}{201 Utilisateur cree}
+
+\subsubsection{UC10 -- Modifier role / activer-desactiver / supprimer}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC10}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Modifier role / activer-desactiver / suppression \\
+    \midrule
+    Acteur principal & Administrateur \\
+    Preconditions & Role admin et utilisateur cible existant. \\
+    Scenario nominal & Changement role, activation/desactivation ou suppression selon regles metier. \\
+    Postconditions & Compte cible mis a jour. \\
+    Exceptions & Auto-modification critique interdite, utilisateur non trouve. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC10 -- Modifier role / activer-desactiver / suppression}{Administrateur}{API Users}{Base MySQL}{Choix utilisateur + action admin}{PUT/DELETE /api/users/...}{Auto-modification interdite ou cible absente}{200 Action appliquee}
+
+\section{Diagrammes de sequence detailles du Sprint 1}
+
+\subsection{Sequence detaillee -- Connexion locale}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in {0/Visiteur, 90/Frontend, 190/API Auth, 290/AuthService, 390/Base MySQL}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-320);
+  }
+  \draw[msg] (0,-30) -- node[above]{email + mot de passe} (90,-30);
+  \draw[msg] (90,-55) -- node[above]{POST /api/auth/login} (190,-55);
+  \draw[msg] (190,-80) -- node[above]{charger utilisateur} (390,-80);
+  \draw[ret] (390,-100) -- node[above]{User} (190,-100);
+  \draw[msg] (190,-125) -- node[above]{verify\_password()} (290,-125);
+
+  \draw[draw, dashed, rounded corners=3pt] (175,-145) rectangle (405,-240);
+  \node[font=\scriptsize\bfseries] at (195,-152) {[alt]};
+  \node[font=\scriptsize\itshape] at (235,-172) {[mot de passe invalide]};
+  \draw[ret] (190,-190) -- node[above]{401 Invalid credentials} (90,-190);
+  \node[font=\scriptsize\itshape] at (235,-212) {[mot de passe valide]};
+  \draw[msg] (190,-228) -- node[above]{create tokens JWT} (290,-228);
+  \draw[ret] (290,-248) -- node[above]{access + refresh} (190,-248);
+
+  \draw[ret] (190,-275) -- node[above]{200 TokenResponse} (90,-275);
+  \draw[ret] (90,-300) -- node[above]{session ouverte} (0,-300);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Connexion locale}
+  \label{fig:seq_login_detail}
+\end{figure}
+
+\subsection{Sequence detaillee -- Reinitialisation du mot de passe}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in {0/Visiteur, 95/Frontend, 200/API Auth, 305/AuthService, 410/Base MySQL}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-340);
+  }
+  \draw[msg] (0,-30) -- node[above]{email + code + nouveau MDP} (95,-30);
+  \draw[msg] (95,-55) -- node[above]{POST /api/auth/reset-password} (200,-55);
+  \draw[msg] (200,-80) -- node[above]{verify\_reset\_code()} (305,-80);
+
+  \draw[draw, dashed, rounded corners=3pt] (185,-100) rectangle (425,-235);
+  \node[font=\scriptsize\bfseries] at (205,-107) {[alt]};
+  \node[font=\scriptsize\itshape] at (250,-128) {[code invalide/expire]};
+  \draw[ret] (200,-146) -- node[above]{400 Invalid or expired code} (95,-146);
+  \node[font=\scriptsize\itshape] at (250,-170) {[code valide]};
+  \draw[msg] (200,-188) -- node[above]{hash\_password(new\_password)} (305,-188);
+  \draw[ret] (305,-208) -- node[above]{hashed\_password} (200,-208);
+  \draw[msg] (200,-228) -- node[above]{update user + commit} (410,-228);
+
+  \draw[ret] (410,-255) -- node[above]{OK} (200,-255);
+  \draw[ret] (200,-282) -- node[above]{200 Password reset} (95,-282);
+  \draw[ret] (95,-310) -- node[above]{confirmation} (0,-310);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Reinitialisation du mot de passe}
+  \label{fig:seq_reset_detail}
+\end{figure}
+
+\subsection{Sequence detaillee -- Administration des utilisateurs}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in {0/Admin, 95/Users UI, 200/API Users, 305/AuthService, 410/Base MySQL}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-330);
+  }
+  \draw[msg] (0,-30) -- node[above]{choix user + action} (95,-30);
+  \draw[msg] (95,-55) -- node[above]{PUT /api/users/{id}/role} (200,-55);
+  \draw[msg] (200,-80) -- node[above]{verify token + role admin} (305,-80);
+  \draw[ret] (305,-100) -- node[above]{OK admin} (200,-100);
+  \draw[msg] (200,-125) -- node[above]{load target user} (410,-125);
+  \draw[ret] (410,-145) -- node[above]{User cible} (200,-145);
+
+  \draw[draw, dashed, rounded corners=3pt] (185,-165) rectangle (425,-255);
+  \node[font=\scriptsize\bfseries] at (205,-172) {[alt]};
+  \node[font=\scriptsize\itshape] at (255,-192) {[auto-modification critique]};
+  \draw[ret] (200,-210) -- node[above]{400 Action interdite} (95,-210);
+  \node[font=\scriptsize\itshape] at (250,-233) {[cas nominal]};
+  \draw[msg] (200,-248) -- node[above]{update + commit} (410,-248);
+
+  \draw[ret] (410,-273) -- node[above]{OK} (200,-273);
+  \draw[ret] (200,-300) -- node[above]{200 user mis a jour} (95,-300);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Administration des utilisateurs}
+  \label{fig:seq_admin_detail}
+\end{figure}
+
+\subsection{Extraits techniques du Sprint 1}
+
+\textbf{Exemple 1 -- Inscription avec hachage du mot de passe}
+\begin{lstlisting}[language=Python, caption={POST /api/auth/register}]
+@router.post("/register", response_model=TokenResponse)
+async def register(req: RegisterRequest, db: Session = Depends(get_db)):
+    if db.query(User).filter(User.email == req.email).first():
+        raise HTTPException(status_code=400, detail="Email already registered")
+    user = User(
+        username=req.username,
+        email=req.email,
+        hashed_password=hash_password(req.password),
+        role=UserRole.apprenant,
+        is_active=True
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    access = create_access_token({"sub": str(user.id)})
+    refresh = create_refresh_token({"sub": str(user.id)})
+    return TokenResponse(access_token=access, refresh_token=refresh, user=user)
+\end{lstlisting}
+
+\textbf{Exemple 2 -- Connexion locale et verification mot de passe}
+\begin{lstlisting}[language=Python, caption={POST /api/auth/login}]
+@router.post("/login", response_model=TokenResponse)
+async def login(req: LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == req.email).first()
+    if not user or not verify_password(req.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    access = create_access_token({"sub": str(user.id), "role": user.role})
+    refresh = create_refresh_token({"sub": str(user.id)})
+    return TokenResponse(access_token=access, refresh_token=refresh, user=user)
+\end{lstlisting}
+
+\textbf{Exemple 3 -- Reinitialisation du mot de passe}
+\begin{lstlisting}[language=Python, caption={POST /api/auth/reset-password}]
+@router.post("/reset-password")
+async def reset_password(req: ResetPasswordRequest, db: Session = Depends(get_db)):
+    entry = reset_codes.get(req.email)
+    if not entry or entry["code"] != req.code:
+        raise HTTPException(status_code=400, detail="Invalid code")
+    if datetime.utcnow() > entry["expires"]:
+        raise HTTPException(status_code=400, detail="Code expired")
+    user = db.query(User).filter(User.email == req.email).first()
+    user.hashed_password = hash_password(req.new_password)
+    db.commit()
+    del reset_codes[req.email]
+    return {"message": "Password successfully reset"}
+\end{lstlisting}
+
+\subsection{Diagramme de classes -- Sprint 1}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    cls/.style={draw, rounded corners=2pt, fill=gray!10, align=left, font=\scriptsize, text width=4.6cm, inner sep=4pt},
+    dep/.style={draw, dashed, ->, >=Stealth, line width=0.6pt},
+    assoc/.style={draw, ->, >=Stealth, line width=0.6pt}
+  ]
+
+  \node[cls] (User) at (0,0) {
+    \textbf{User}\\
+    \rule{4.2cm}{0.3pt}\\
+    id: int\\
+    username: string\\
+    email: string\\
+    hashed\_password: string\\
+    full\_name: string\\
+    role: UserRole\\
+    is\_active: bool
+  };
+
+  \node[cls] (Role) at (8.2,0) {
+    \textbf{<<enumeration>> UserRole}\\
+    \rule{4.2cm}{0.3pt}\\
+    admin\\
+    formateur\\
+    apprenant
+  };
+
+  \node[cls] (AuthAPI) at (0,-4.8) {
+    \textbf{AuthAPI}\\
+    \rule{4.2cm}{0.3pt}\\
+    register(req)\\
+    login(req)\\
+    google\_auth(req)\\
+    forgot\_password(req)\\
+    reset\_password(req)\\
+    get\_profile()
+  };
+
+  \node[cls] (AuthService) at (8.2,-4.8) {
+    \textbf{AuthService}\\
+    \rule{4.2cm}{0.3pt}\\
+    hash\_password(p)\\
+    verify\_password(p,h)\\
+    create\_access\_token(d)\\
+    decode\_token(t)
+  };
+
+  \node[cls] (UsersAPI) at (4.1,-9.3) {
+    \textbf{UsersAPI}\\
+    \rule{4.2cm}{0.3pt}\\
+    list\_users(...)\\
+    create\_user(req)\\
+    update\_user\_role(id)\\
+    delete\_user(id)
+  };
+
+  \draw[assoc] (User.east) -- node[above]{role} (Role.west);
+  \draw[dep] (AuthAPI.east) -- node[above]{utilise} (AuthService.west);
+  \draw[dep] (UsersAPI.east) -- node[right]{utilise} (AuthService.south);
+  \draw[dep] (AuthAPI.north) -- node[left]{persiste} (User.south);
+  \draw[dep] (UsersAPI.west) -- node[left]{persiste} (User.south east);
+  \end{tikzpicture}
+\caption{Diagramme de classes -- Sprint 1}
+\label{fig:class_sprint1}
+\end{figure}
+
+\subsection{Captures d'ecran des interfaces principales}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/register.png}{%
+    \includegraphics[width=0.85\textwidth]{captures/register.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13cm,-5.8cm);
+      \draw[gray!40] (0,0) rectangle (13cm,-5.8cm);
+      \node[font=\small\itshape] at (6.5cm,-2.9cm) {[Capture page inscription]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface d'inscription}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/login.png}{%
+    \includegraphics[width=0.85\textwidth]{captures/login.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13cm,-5.8cm);
+      \draw[gray!40] (0,0) rectangle (13cm,-5.8cm);
+      \node[font=\small\itshape] at (6.5cm,-2.9cm) {[Capture page connexion]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de connexion}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/profile.png}{%
+    \includegraphics[width=0.85\textwidth]{captures/profile.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13cm,-5.8cm);
+      \draw[gray!40] (0,0) rectangle (13cm,-5.8cm);
+      \node[font=\small\itshape] at (6.5cm,-2.9cm) {[Capture gestion profil]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de gestion du profil}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/admin_users.png}{%
+    \includegraphics[width=0.90\textwidth]{captures/admin_users.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6.2cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6.2cm);
+      \node[font=\small\itshape] at (6.75cm,-3.1cm) {[Capture administration utilisateurs]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface d'administration des utilisateurs}
+\end{figure}
+
+\section{Evaluation du Sprint 1}
+
+\subsection{Scenarios de tests realises}
+
+\begin{table}[H]
+  \centering
+  \caption{Table de tests fonctionnels du Sprint 1}
+  \label{tab:tests_s1}
+  \begin{tabular}{|p{5.2cm}|p{3.2cm}|p{5.4cm}|}
+    \hline
+    \textbf{Scenario} & \textbf{Resultat attendu} & \textbf{Statut} \\
+    \hline
+    Inscription avec donnees valides & Compte cree + JWT & Valide \\
+    \hline
+    Inscription avec email duplique & Erreur 400 & Valide \\
+    \hline
+    Connexion avec mot de passe incorrect & Erreur 401 & Valide \\
+    \hline
+    Connexion Google avec token invalide & Erreur 401 & Valide \\
+    \hline
+    Reinitialisation avec code expire & Erreur 400 & Valide \\
+    \hline
+    Consultation profil avec token invalide & Erreur 401 & Valide \\
+    \hline
+    Modification role par non-admin & Erreur 403 & Valide \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Bilan du Sprint 1}
+  \label{tab:bilan_s1}
+  \begin{tabular}{|p{5cm}|c|p{6.5cm}|}
+    \hline
+    \textbf{Fonctionnalite} & \textbf{Statut} & \textbf{Observations} \\
+    \hline
+    Inscription locale & Fait & Validation MDP + unicite \\
+    \hline
+    Connexion locale & Fait & Controle erreurs et rate limiting \\
+    \hline
+    Connexion Google OAuth & Fait & Verification token + liaison compte \\
+    \hline
+    Mot de passe oublie/reinitialisation & Fait & Code temporaire + expiration \\
+    \hline
+    Gestion du profil & Fait & Consultation/modification + changement MDP \\
+    \hline
+    Administration utilisateurs & Fait & CRUD + roles + statuts \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Le Sprint 1 a permis de livrer un socle applicatif securise, stable et evolutif :
+authentification locale et sociale, gestion des comptes, controle d'acces par roles,
+et operations d'administration des utilisateurs.
+
+\clearpage
+
+% ##########################################################
+%  CHAPITRE 3 – Sprint 2 : Contenus pedagogiques et QCM classique
+% ##########################################################
+\chapter{Sprint 2 : Contenus pedagogiques et QCM classique}
+\minitoc
+\newpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Le Sprint 2 vise la mise en oeuvre des contenus pedagogiques et des QCM classiques.
+Il couvre deux axes principaux :
+
+\begin{enumerate}
+  \item La gestion complete des cours (creation, mise a jour, publication, consultation).
+  \item Le module QCM classique (categories, creation, publication, passage et resultats).
+\end{enumerate}
+
+\section{Objectif et perimetre}
+
+\subsection{Objectif general}
+
+Fournir un module de cours fiable et un module QCM classique administrable, afin
+de proposer un parcours d'apprentissage structure (cours + evaluation) avant
+l'introduction des briques intelligentes du Sprint 3.
+
+\subsection{Perimetre fonctionnel retenu}
+
+\begin{enumerate}
+  \item \textbf{Cours (Formateur/Admin)}
+  \begin{itemize}
+    \item Creer, modifier, supprimer un cours
+    \item Publier / depublier un cours
+    \item Ordonner et categoriser les cours
+  \end{itemize}
+  \item \textbf{Cours (Apprenant)}
+  \begin{itemize}
+    \item Consulter la liste des cours publies
+    \item Consulter le detail d'un cours publie
+  \end{itemize}
+  \item \textbf{QCM classique (Admin)}
+  \begin{itemize}
+    \item Gerer les categories de QCM
+    \item Creer, modifier, supprimer un QCM
+    \item Publier / depublier un QCM
+  \end{itemize}
+  \item \textbf{QCM classique (Apprenant)}
+  \begin{itemize}
+    \item Consulter les QCM publies
+    \item Passer un QCM et obtenir un score avec details
+    \item Consulter l'historique des resultats
+  \end{itemize}
+\end{enumerate}
+
+\section{Backlog Sprint 2}
+
+\begin{table}[H]
+  \centering
+  \caption{Backlog du Sprint 2}
+  \label{tab:backlog_s2}
+  \begin{tabular}{|c|p{7.5cm}|c|c|}
+    \hline
+    \textbf{ID} & \textbf{User Story} & \textbf{Priorite} & \textbf{Est.} \\
+    \hline
+    S2-1 & En tant que formateur, je veux creer et modifier des cours & Haute & 8 SP \\
+    \hline
+    S2-2 & En tant que formateur, je veux publier ou depublier un cours & Haute & 3 SP \\
+    \hline
+    S2-3 & En tant qu'apprenant, je veux consulter les cours publies & Haute & 5 SP \\
+    \hline
+    S2-4 & En tant qu'admin, je veux gerer les categories de QCM & Moyenne & 5 SP \\
+    \hline
+    S2-5 & En tant qu'admin, je veux creer et gerer des QCM classiques & Haute & 8 SP \\
+    \hline
+    S2-6 & En tant qu'apprenant, je veux passer un QCM et voir mon score & Haute & 8 SP \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Analyse}
+
+\subsection{Acteurs du Sprint 2}
+\begin{enumerate}
+  \item Formateur
+  \item Administrateur
+  \item Apprenant
+\end{enumerate}
+
+\subsection{Diagramme de cas d'utilisation -- Sprint 2}
+
+\begin{figure}[H]
+  \centering
+  \resizebox{0.96\textwidth}{!}{%
+  \begin{tikzpicture}[
+    >=Stealth,
+    uc/.style={draw, ellipse, minimum width=4.8cm, minimum height=0.95cm, align=center, font=\footnotesize},
+    actor/.style={font=\small\bfseries, align=center},
+    rel/.style={draw, ->, line width=0.6pt}
+  ]
+    \draw[dashed, rounded corners=6pt] (0,0) rectangle (18,-14.2);
+    \node[font=\small\bfseries] at (9,-0.5)
+      {Systeme -- Sprint 2 : Contenus pedagogiques et QCM classique};
+
+    \node[uc] (UC1)  at (9,-2.0)  {Creer / modifier cours};
+    \node[uc] (UC2)  at (9,-3.6)  {Publier / depublier cours};
+    \node[uc] (UC3)  at (9,-5.2)  {Consulter cours publies};
+    \node[uc] (UC4)  at (9,-6.8)  {Gerer categories QCM};
+    \node[uc] (UC5)  at (9,-8.4)  {Creer / modifier QCM classique};
+    \node[uc] (UC6)  at (9,-10.0) {Publier / depublier QCM};
+    \node[uc] (UC7)  at (9,-11.6) {Passer un QCM et obtenir un score};
+    \node[uc] (UC8)  at (9,-13.2) {Consulter historique des resultats};
+
+    \node[actor] (For) at (-1.6,-3.2) {Formateur};
+    \node[actor] (Adm) at (-1.6,-8.6) {Administrateur};
+    \node[actor] (App) at (-1.6,-12.4) {Apprenant};
+
+    \draw[rel] (For) -- (UC1);
+    \draw[rel] (For) -- (UC2);
+    \draw[rel] (For) -- (UC3);
+
+    \draw[rel] (Adm) -- (UC1);
+    \draw[rel] (Adm) -- (UC2);
+    \draw[rel] (Adm) -- (UC4);
+    \draw[rel] (Adm) -- (UC5);
+    \draw[rel] (Adm) -- (UC6);
+
+    \draw[rel] (App) -- (UC3);
+    \draw[rel] (App) -- (UC7);
+    \draw[rel] (App) -- (UC8);
+  \end{tikzpicture}%
+  }
+  \caption{Diagramme de cas d'utilisation -- Sprint 2}
+  \label{fig:uc_sprint2}
+\end{figure}
+
+\section{Conception}
+
+\subsection{Cas d'utilisation raffines}
+
+% ---- UC1 ----
+\subsubsection{UC1 -- Creer ou modifier un cours}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC1}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Creer / modifier un cours \\
+    \midrule
+    Acteur principal & Formateur / Administrateur \\
+    Preconditions & Compte authentifie avec role formateur ou admin. \\
+    Scenario nominal & Saisie des metadonnees (titre, categorie, niveau), contenu du cours,
+                       validation et enregistrement en base. \\
+    Postconditions & Cours cree ou mis a jour et disponible en gestion. \\
+    Exceptions & Champs invalides, cours introuvable (modification). \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\ucseq{UC1 -- Creer / modifier cours}{Formateur}{API Courses}{CourseService + Base}{Saisie formulaire cours}{POST/PUT /api/courses}{Champs invalides ou cours introuvable}{201/200 Cours sauvegarde}
+
+% ---- UC2 ----
+\subsubsection{UC2 -- Publier / depublier un cours}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC2}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Publier / depublier un cours \\
+    \midrule
+    Acteur principal & Formateur / Administrateur \\
+    Preconditions & Cours existant et droits de gestion. \\
+    Scenario nominal & Changement du statut \texttt{is\_published} via endpoint de publication. \\
+    Postconditions & Le cours est visible ou masque dans la liste publique. \\
+    Exceptions & Cours introuvable, acces non autorise. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% ---- UC3 ----
+\subsubsection{UC3 -- Consulter un cours publie}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC3}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Consulter un cours publie \\
+    \midrule
+    Acteur principal & Apprenant \\
+    Preconditions & Cours publie disponible. \\
+    Scenario nominal & Consultation de la liste, puis affichage detaille du cours. \\
+    Postconditions & Contenu affiche avec metadonnees et ressources. \\
+    Exceptions & Cours introuvable ou non publie. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% ---- UC4 ----
+\subsubsection{UC4 -- Gerer les categories QCM}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC4}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Gerer les categories QCM \\
+    \midrule
+    Acteur principal & Administrateur \\
+    Preconditions & Role admin authentifie. \\
+    Scenario nominal & Creation, modification, activation/desactivation des categories. \\
+    Postconditions & Categories disponibles pour la creation des QCM. \\
+    Exceptions & Nom invalide, categorie utilisee ou deja existante. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% ---- UC5 ----
+\subsubsection{UC5 -- Creer un QCM classique}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC5}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Creer un QCM classique \\
+    \midrule
+    Acteur principal & Administrateur \\
+    Preconditions & Role admin, categorie active selectionnee. \\
+    Scenario nominal & Saisie du QCM (titre, difficulte, duree, questions/reponses),
+                       validation des reponses correctes, sauvegarde. \\
+    Postconditions & QCM enregistre, pret a etre publie. \\
+    Exceptions & Categorie invalide, question sans bonne reponse. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+% ---- UC6 ----
+\subsubsection{UC6 -- Passer un QCM et obtenir un score}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC6}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Passer un QCM et obtenir un score \\
+    \midrule
+    Acteur principal & Apprenant \\
+    Preconditions & QCM publie disponible. \\
+    Scenario nominal & Recuperation du QCM, soumission des reponses,
+                       calcul du score et enregistrement du resultat. \\
+    Postconditions & Score et details disponibles dans l'historique. \\
+    Exceptions & QCM introuvable ou non publie. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Diagrammes de sequence detailles du Sprint 2}
+
+\subsection{Sequence detaillee -- Creation d'un cours}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in
+    {0/Formateur, 90/Frontend, 190/API Courses, 300/Service, 410/Base MySQL}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-300);
+  }
+  \draw[msg] (0,-30)  -- node[above]{donnees cours} (90,-30);
+  \draw[msg] (90,-55) -- node[above]{POST /api/courses} (190,-55);
+  \draw[msg] (190,-80) -- node[above]{controle role} (300,-80);
+  \draw[ret] (300,-100) -- node[above]{OK} (190,-100);
+  \draw[msg] (190,-125) -- node[above]{insert cours} (410,-125);
+  \draw[ret] (410,-145) -- node[above]{course} (190,-145);
+  \draw[ret] (190,-170) -- node[above]{201 CourseDetail} (90,-170);
+  \draw[ret] (90,-190)  -- node[above]{cours cree} (0,-190);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Creation d'un cours}
+  \label{fig:seq_create_course}
+\end{figure}
+
+\subsection{Sequence detaillee -- Passage d'un QCM}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in
+    {0/Apprenant, 90/Frontend, 190/API QCM, 300/Service, 410/Base MySQL}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-320);
+  }
+  \draw[msg] (0,-30)  -- node[above]{selection QCM} (90,-30);
+  \draw[msg] (90,-55) -- node[above]{GET /api/qcm/\{id\}} (190,-55);
+  \draw[msg] (190,-80) -- node[above]{charger QCM publie} (410,-80);
+  \draw[ret] (410,-100) -- node[above]{QCM + questions} (190,-100);
+  \draw[ret] (190,-120) -- node[above]{200 QCM public} (90,-120);
+
+  \draw[msg] (0,-150)  -- node[above]{soumission reponses} (90,-150);
+  \draw[msg] (90,-175) -- node[above]{POST /api/qcm/\{id\}/submit} (190,-175);
+  \draw[msg] (190,-200) -- node[above]{calcul score + sauvegarde} (300,-200);
+  \draw[msg] (300,-225) -- node[above]{insert resultat} (410,-225);
+  \draw[ret] (410,-245) -- node[above]{OK} (190,-245);
+  \draw[ret] (190,-270) -- node[above]{200 QCMResult} (90,-270);
+  \draw[ret] (90,-290)  -- node[above]{affichage score} (0,-290);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Passage d'un QCM}
+  \label{fig:seq_submit_qcm}
+\end{figure}
+
+\section{Diagramme de classes -- Sprint 2}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    cls/.style={draw, rounded corners=2pt, fill=gray!10, align=left,
+                font=\scriptsize, text width=5.2cm, inner sep=4pt},
+    assoc/.style={draw, ->, >=Stealth, line width=0.6pt}
+  ]
+  \node[cls] (User) at (-4.2,0) {
+    \textbf{User}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    username: string\\
+    email: string\\
+    role: UserRole\\
+    is\_active: bool
+  };
+
+  \node[cls] (Course) at (0,0) {
+    \textbf{Course}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    title: string\\
+    category: string\\
+    level: enum\\
+    content: text\\
+    is\_published: bool\\
+    created\_by: int
+  };
+
+  \node[cls] (QCMCat) at (8.6,0) {
+    \textbf{QCMCategory}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    slug: string\\
+    name: string\\
+    is\_active: bool
+  };
+
+  \node[cls] (QCM) at (0,-5.8) {
+    \textbf{QCM}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    title: string\\
+    description: text\\
+    category: string\\
+    difficulty: string\\
+    duration\_minutes: int\\
+    pass\_score: int\\
+    is\_published: bool\\
+    created\_by: int
+  };
+
+  \node[cls] (Question) at (8.6,-5.8) {
+    \textbf{Question}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    qcm\_id: int\\
+    text: text\\
+    image\_url: string\\
+    explanation: text\\
+    order: int
+  };
+
+  \node[cls] (Answer) at (8.6,-11.2) {
+    \textbf{Answer}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    question\_id: int\\
+    text: text\\
+    is\_correct: bool
+  };
+
+  \node[cls] (Result) at (0,-11.2) {
+    \textbf{UserQCMResult}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    user\_id: int\\
+    qcm\_id: int\\
+    score: float\\
+    total\_questions: int\\
+    correct\_answers: int\\
+    passed: bool\\
+    completed\_at: datetime
+  };
+
+  \draw[assoc] (User.east) -- node[above]{cree} (Course.west);
+  \draw[assoc] (User.south) -- node[left]{cree} (QCM.north west);
+  \draw[assoc] (User.south east) -- node[left]{obtient} (Result.north west);
+  \draw[assoc] (QCMCat.south) -- node[right]{categorie} (QCM.north);
+  \draw[assoc] (QCM.east) -- node[above]{contient} (Question.west);
+  \draw[assoc] (Question.south) -- node[right]{contient} (Answer.north);
+  \draw[assoc] (QCM.south) -- node[left]{resultats} (Result.north);
+  \end{tikzpicture}
+  \caption{Diagramme de classes -- Sprint 2}
+  \label{fig:class_sprint2}
+\end{figure}
+
+\section{Extraits de code -- Sprint 2}
+
+\subsection{API Cours (courses.py)}
+
+\begin{lstlisting}[language=Python,
+  caption={courses.py -- Creation, consultation et publication des cours}]
+@router.post("/", response_model=CourseDetailResponse, status_code=201)
+def create_course(data: CourseCreate,
+                  user: User = Depends(require_formateur_or_admin),
+                  db: Session = Depends(get_db)):
+    course = Course(
+        title=data.title, description=data.description,
+        category=data.category, level=data.level,
+        duration=data.duration, image_url=data.image_url,
+        content=data.content, video_url=data.video_url,
+        order=data.order, created_by=user.id,
+    )
+    db.add(course)
+    db.commit()
+    db.refresh(course)
+    return CourseDetailResponse.model_validate(course)
+
+
+@router.get("/published", response_model=List[CourseListResponse])
+def list_published_courses(category: Optional[str] = None,
+                           level: Optional[str] = None,
+                           db: Session = Depends(get_db)):
+    query = db.query(Course).filter(Course.is_published == True)
+    if category:
+        query = query.filter(Course.category == category)
+    if level:
+        query = query.filter(Course.level == level)
+    return [CourseListResponse.model_validate(c) for c in query.all()]
+
+
+@router.put("/{course_id}/publish")
+def toggle_publish(course_id: int,
+                   user: User = Depends(require_formateur_or_admin),
+                   db: Session = Depends(get_db)):
+    course = db.query(Course).filter(Course.id == course_id).first()
+    if not course:
+        raise HTTPException(404, "Cours non trouve")
+    course.is_published = not course.is_published
+    db.commit()
+    return {"is_published": course.is_published}
+\end{lstlisting}
+
+\subsection{API QCM (qcm.py)}
+
+\begin{lstlisting}[language=Python,
+  caption={qcm.py -- Categories, creation et soumission de QCM classiques}]
+@router.post("/categories", response_model=QCMCategoryResponse, status_code=201)
+def create_category(data: QCMCategoryCreate,
+                    admin: User = Depends(require_admin),
+                    db: Session = Depends(get_db)):
+    slug = _slugify(data.name)
+    row = QCMCategory(slug=slug, name=data.name.strip(), is_active=True)
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@router.post("/", response_model=QCMDetailResponse, status_code=201)
+def create_qcm(data: QCMCreate,
+               admin: User = Depends(require_admin),
+               db: Session = Depends(get_db)):
+    category = _require_valid_active_category(db, data.category)
+    qcm = QCM(title=data.title, description=data.description,
+              category=category.slug, difficulty=data.difficulty,
+              duration_minutes=data.duration_minutes,
+              pass_score=data.pass_score, created_by=admin.id)
+    db.add(qcm)
+    db.flush()
+    for q_data in data.questions:
+        question = Question(qcm_id=qcm.id, text=q_data.text,
+                            image_url=q_data.image_url,
+                            explanation=q_data.explanation,
+                            order=q_data.order)
+        db.add(question)
+        db.flush()
+        for a_data in q_data.answers:
+            db.add(Answer(question_id=question.id,
+                          text=a_data.text, is_correct=a_data.is_correct))
+    db.commit()
+    return _qcm_to_detail_response(qcm, _category_name_cache(db))
+
+
+@router.post("/{qcm_id}/submit", response_model=QCMResultResponse)
+def submit_qcm(qcm_id: int, data: SubmitQCMRequest,
+               current_user: User = Depends(get_current_user),
+               db: Session = Depends(get_db)):
+    qcm = db.query(QCM).filter(QCM.id == qcm_id,
+                               QCM.is_published == True).first()
+    if not qcm:
+        raise HTTPException(404, "QCM non trouve")
+    # calcul score + sauvegarde resultat
+\end{lstlisting}
+
+\section{Captures d'ecran des interfaces principales}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/courses_list.png}{%
+    \includegraphics[width=0.90\textwidth]{captures/courses_list.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6.2cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6.2cm);
+      \node[font=\small\itshape] at (6.75cm,-3.1cm) {[Capture liste des cours]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de consultation des cours}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/qcm_list.png}{%
+    \includegraphics[width=0.90\textwidth]{captures/qcm_list.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6.2cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6.2cm);
+      \node[font=\small\itshape] at (6.75cm,-3.1cm) {[Capture liste QCM]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface des QCM classiques}
+\end{figure}
+
+\section{Evaluation du Sprint 2}
+
+\subsection{Scenarios de tests realises}
+
+\begin{table}[H]
+  \centering
+  \caption{Table de tests fonctionnels du Sprint 2}
+  \label{tab:tests_s2}
+  \begin{tabular}{|p{5.2cm}|p{3.2cm}|p{5.4cm}|}
+    \hline
+    \textbf{Scenario} & \textbf{Resultat attendu} & \textbf{Statut} \\
+    \hline
+    Creation cours avec donnees valides & 201 + cours cree & Valide \\
+    \hline
+    Publication cours inexistant & Erreur 404 & Valide \\
+    \hline
+    Consultation cours publies & Liste non vide & Valide \\
+    \hline
+    Creation categorie QCM & 201 + categorie creee & Valide \\
+    \hline
+    Creation QCM sans bonne reponse & Erreur 400 & Valide \\
+    \hline
+    Passage QCM publie & Score calcule + resultat sauvegarde & Valide \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Bilan du Sprint 2}
+  \label{tab:bilan_s2}
+  \begin{tabular}{|p{5cm}|c|p{6.5cm}|}
+    \hline
+    \textbf{Fonctionnalite} & \textbf{Statut} & \textbf{Observations} \\
+    \hline
+    CRUD cours & Fait & Creation, mise a jour, suppression \\
+    \hline
+    Publication cours & Fait & Controle par role formateur/admin \\
+    \hline
+    Consultation cours publies & Fait & Filtre categorie/niveau \\
+    \hline
+    Gestion categories QCM & Fait & Activation/desactivation + contraintes \\
+    \hline
+    QCM classique (admin) & Fait & Questions/reponses valides \\
+    \hline
+    Passage QCM (apprenant) & Fait & Score, details, historique \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Le Sprint 2 a mis en place les contenus pedagogiques et le module QCM classique.
+Les cours sont geres par les formateurs et l'administration, tandis que les QCM
+peuvent etre crees, publies et passes par les apprenants avec calcul du score
+et sauvegarde de l'historique.
+
+\clearpage
+
+% ##########################################################
+%  CHAPITRE 4 – Sprint 3 : Systemes intelligents et evaluation
+% ##########################################################
+\chapter{Sprint 3 : Systemes intelligents et evaluation}
+\minitoc
+\newpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Le Sprint 3 introduit les composants intelligents du systeme : generation
+automatique de QCM par LLM, assistant conversationnel RAG, ingestion des
+documents pedagogiques et detection de panneaux par image.
+
+\section{Objectif et perimetre}
+
+\subsection{Objectif general}
+
+Fournir une experience d'apprentissage personnalisee a travers des services IA
+fiables, avec un moteur RAG cite et une generation de QCM adaptee au niveau
+et au theme.
+
+\subsection{Perimetre fonctionnel retenu}
+
+\begin{enumerate}
+  \item \textbf{QCM intelligent (Apprenant)}
+  \begin{itemize}
+    \item Generer un QCM par LLM (general ou par theme)
+    \item Configurer le nombre de questions, duree et difficulte
+    \item Passer le QCM genere et obtenir un score detaille
+  \end{itemize}
+  \item \textbf{Chatbot RAG (Apprenant)}
+  \begin{itemize}
+    \item Poser une question en FR/AR
+    \item Obtenir une reponse citee avec sources
+    \item Donner un feedback sur la reponse
+  \end{itemize}
+  \item \textbf{Administration IA (Admin)}
+  \begin{itemize}
+    \item Lancer l'ingestion documentaire et suivre le vector store
+    \item Vider le store si necessaire
+  \end{itemize}
+  \item \textbf{Vision par ordinateur}
+  \begin{itemize}
+    \item Detecter les panneaux de signalisation a partir d'une image
+  \end{itemize}
+\end{enumerate}
+
+\section{Backlog Sprint 3}
+
+\begin{table}[H]
+  \centering
+  \caption{Backlog du Sprint 3}
+  \label{tab:backlog_s3}
+  \begin{tabular}{|c|p{7.5cm}|c|c|}
+    \hline
+    \textbf{ID} & \textbf{User Story} & \textbf{Priorite} & \textbf{Est.} \\
+    \hline
+    S3-1 & En tant qu'apprenant, je veux generer un QCM automatique par theme & Haute & 8 SP \\
+    \hline
+    S3-2 & En tant qu'apprenant, je veux configurer mon QCM (duree, difficulte) & Haute & 5 SP \\
+    \hline
+    S3-3 & En tant qu'apprenant, je veux discuter avec un chatbot RAG & Haute & 8 SP \\
+    \hline
+    S3-4 & En tant qu'utilisateur, je veux donner un feedback sur la reponse du chatbot & Moyenne & 3 SP \\
+    \hline
+    S3-5 & En tant qu'admin, je veux ingerer les documents pedagogiques & Haute & 5 SP \\
+    \hline
+    S3-6 & En tant qu'utilisateur, je veux detecter un panneau par image & Moyenne & 8 SP \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Analyse}
+
+\subsection{Acteurs du Sprint 3}
+\begin{enumerate}
+  \item Apprenant
+  \item Administrateur
+  \item Services IA (LLM, RAG, Vision)
+  \item Vector store (embeddings)
+\end{enumerate}
+
+\subsection{Diagramme de cas d'utilisation -- Sprint 3}
+
+\begin{figure}[H]
+  \centering
+  \resizebox{0.96\textwidth}{!}{%
+  \begin{tikzpicture}[
+    >=Stealth,
+    uc/.style={draw, ellipse, minimum width=4.9cm, minimum height=0.95cm, align=center, font=\footnotesize},
+    actor/.style={font=\small\bfseries, align=center},
+    rel/.style={draw, ->, line width=0.6pt}
+  ]
+    \draw[dashed, rounded corners=6pt] (0,0) rectangle (18,-14.6);
+    \node[font=\small\bfseries] at (9,-0.5)
+      {Systeme -- Sprint 3 : IA, RAG et evaluation};
+
+    \node[uc] (UC1) at (9,-2.0)  {Generer QCM intelligent (LLM)};
+    \node[uc] (UC2) at (9,-3.6)  {Configurer QCM (duree, difficulte)};
+    \node[uc] (UC3) at (9,-5.2)  {Passer QCM genere};
+    \node[uc] (UC4) at (9,-6.8)  {Discuter avec le chatbot (RAG)};
+    \node[uc] (UC5) at (9,-8.4)  {Donner un feedback};
+    \node[uc] (UC6) at (9,-10.0) {Ingerer documents pedagogiques};
+    \node[uc] (UC7) at (9,-11.6) {Consulter stats vector store};
+    \node[uc] (UC8) at (9,-13.2) {Detecter panneau par image};
+
+    \node[actor] (App) at (-1.6,-6.0) {Apprenant};
+    \node[actor] (Adm) at (-1.6,-11.0) {Administrateur};
+
+    \draw[rel] (App) -- (UC1);
+    \draw[rel] (App) -- (UC2);
+    \draw[rel] (App) -- (UC3);
+    \draw[rel] (App) -- (UC4);
+    \draw[rel] (App) -- (UC5);
+    \draw[rel] (App) -- (UC8);
+
+    \draw[rel] (Adm) -- (UC6);
+    \draw[rel] (Adm) -- (UC7);
+  \end{tikzpicture}%
+  }
+  \caption{Diagramme de cas d'utilisation -- Sprint 3}
+  \label{fig:uc_sprint3}
+\end{figure}
+
+\section{Conception}
+
+\subsection{Cas d'utilisation raffines}
+
+\subsubsection{UC1 -- Generer un QCM intelligent}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC1}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Generer un QCM intelligent \\
+    \midrule
+    Acteur principal & Apprenant \\
+    Preconditions & Utilisateur authentifie, parametres valides. \\
+    Scenario nominal & Envoi du theme et des parametres, generation LLM,
+                       sauvegarde du QCM genere. \\
+    Postconditions & QCM genere pret a etre passe. \\
+    Exceptions & Theme manquant en mode specifique, erreur IA. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{UC2 -- Discuter avec le chatbot (RAG)}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC2}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Discuter avec le chatbot (RAG) \\
+    \midrule
+    Acteur principal & Apprenant \\
+    Preconditions & Documents ingeress et indexations disponibles. \\
+    Scenario nominal & Recherche semantique, generation reponse citee,
+                       sauvegarde conversation si authentifie. \\
+    Postconditions & Reponse citee retournee. \\
+    Exceptions & Aucun document pertinent, erreur de generation. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{UC3 -- Ingerer les documents}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC3}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Ingerer les documents pedagogiques \\
+    \midrule
+    Acteur principal & Administrateur \\
+    Preconditions & Documents disponibles dans les dossiers fr/ar. \\
+    Scenario nominal & Chargement, decoupage, vectorisation, indexation. \\
+    Postconditions & Vector store alimente et disponible pour le RAG. \\
+    Exceptions & Aucun document ou erreur d'indexation. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{UC4 -- Detecter un panneau par image}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC4}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Detecter un panneau par image \\
+    \midrule
+    Acteur principal & Apprenant \\
+    Preconditions & Image valide (format, taille). \\
+    Scenario nominal & Analyse vision, matching base panneaux, retour du resultat. \\
+    Postconditions & Panneaux detectes affiches a l'utilisateur. \\
+    Exceptions & Format non supporte, aucune detection. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Diagrammes de sequence detailles du Sprint 3}
+
+\subsection{Sequence detaillee -- Generation d'un QCM par LLM}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in
+    {0/Apprenant, 90/Frontend, 190/API QCM, 300/QCMGenerator, 410/LLM}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-300);
+  }
+  \draw[msg] (0,-30)  -- node[above]{parametres QCM} (90,-30);
+  \draw[msg] (90,-55) -- node[above]{POST /api/qcm/generate} (190,-55);
+  \draw[msg] (190,-80) -- node[above]{prepare prompt} (300,-80);
+  \draw[msg] (300,-105) -- node[above]{generation} (410,-105);
+  \draw[ret] (410,-125) -- node[above]{questions JSON} (300,-125);
+  \draw[msg] (300,-150) -- node[above]{sauvegarde QCM} (190,-150);
+  \draw[ret] (190,-175) -- node[above]{201 QCMGenerate} (90,-175);
+  \draw[ret] (90,-195)  -- node[above]{QCM genere} (0,-195);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Generation QCM intelligent}
+  \label{fig:seq_gen_qcm}
+\end{figure}
+
+\subsection{Sequence detaillee -- Question au chatbot RAG}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in
+    {0/Apprenant, 90/Frontend, 190/API Chat, 300/RAGService, 410/VectorStore}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-330);
+  }
+  \draw[msg] (0,-30)  -- node[above]{question} (90,-30);
+  \draw[msg] (90,-55) -- node[above]{POST /api/chat/ask} (190,-55);
+  \draw[msg] (190,-80) -- node[above]{search\_similar()} (410,-80);
+  \draw[ret] (410,-100) -- node[above]{chunks pertinents} (300,-100);
+  \draw[msg] (300,-125) -- node[above]{LLM + citations} (190,-125);
+  \draw[ret] (190,-150) -- node[above]{200 ChatResponse} (90,-150);
+  \draw[ret] (90,-170)  -- node[above]{reponse affichee} (0,-170);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Question au chatbot RAG}
+  \label{fig:seq_chat_rag}
+\end{figure}
+
+\section{Diagramme de classes -- Sprint 3}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    cls/.style={draw, rounded corners=2pt, fill=gray!10, align=left,
+                font=\scriptsize, text width=5.2cm, inner sep=4pt},
+    assoc/.style={draw, ->, >=Stealth, line width=0.6pt}
+  ]
+  \node[cls] (User) at (-4.2,0) {
+    \textbf{User}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    username: string\\
+    role: UserRole
+  };
+
+  \node[cls] (Conversation) at (0,0) {
+    \textbf{Conversation}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    user\_id: int\\
+    title: string\\
+    language: string
+  };
+
+  \node[cls] (Message) at (8.6,0) {
+    \textbf{Message}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    conversation\_id: int\\
+    role: string\\
+    content: text\\
+    language: string
+  };
+
+  \node[cls] (Feedback) at (8.6,-6.0) {
+    \textbf{Feedback}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    session\_id: string\\
+    question: text\\
+    answer: text\\
+    is\_positive: bool
+  };
+
+  \node[cls] (QCM) at (0,-6.0) {
+    \textbf{QCM}\\
+    \rule{4.8cm}{0.3pt}\\
+    id: int\\
+    title: string\\
+    is\_generated: bool\\
+    generation\_mode: string\\
+    generation\_theme: string
+  };
+
+  \draw[assoc] (User.east) -- node[above]{possede} (Conversation.west);
+  \draw[assoc] (Conversation.east) -- node[above]{contient} (Message.west);
+  \draw[assoc] (User.south) -- node[left]{genere} (QCM.north);
+  \draw[assoc] (User.south east) -- node[right]{donne} (Feedback.west);
+  \end{tikzpicture}
+  \caption{Diagramme de classes -- Sprint 3}
+  \label{fig:class_sprint3}
+\end{figure}
+
+\section{Extraits de code -- Sprint 3}
+
+\subsection{Generation QCM (qcm.py)}
+
+\begin{lstlisting}[language=Python,
+  caption={qcm.py -- Generation automatique de QCM par LLM}]
+@router.post("/generate", response_model=QCMGenerateResponse)
+def generate_qcm(data: QCMGenerateRequest,
+                 current_user: User = Depends(get_current_user),
+                 db: Session = Depends(get_db)):
+    if data.question_count not in {20, 25, 30}:
+        raise HTTPException(400, "Nombre de questions invalide")
+    payload = generate_qcm_from_docs(
+        language=data.language,
+        mode=data.mode,
+        theme=data.theme,
+        question_count=data.question_count,
+        difficulty=data.difficulty,
+    )
+    # creation QCM + questions
+\end{lstlisting}
+
+\subsection{Chatbot RAG (chat.py)}
+
+\begin{lstlisting}[language=Python,
+  caption={chat.py -- Endpoint de question au chatbot RAG}]
+@router.post("/ask", response_model=ChatResponse)
+async def ask(request: ChatRequest,
+              conversation_id: Optional[int] = None,
+              current_user: Optional[User] = Depends(get_current_user_optional),
+              db: Session = Depends(get_db)):
+    result = ask_question(
+        question=request.question,
+        language=request.language,
+    )
+    # sauvegarde optionnelle dans conversation
+    return ChatResponse(**result)
+\end{lstlisting}
+
+\subsection{Ingestion RAG (chat.py)}
+
+\begin{lstlisting}[language=Python,
+  caption={chat.py -- Ingestion des documents dans le vector store}]
+@router.post("/ingest", response_model=IngestResponse)
+async def ingest_documents(request: IngestRequest):
+    if request.clear_existing:
+        clear_vector_store()
+    documents = load_documents()
+    chunks = split_documents(documents)
+    add_documents_to_store(chunks)
+    return IngestResponse(status="success")
+\end{lstlisting}
+
+\subsection{Detection de panneaux (image\_detector.py)}
+
+\begin{lstlisting}[language=Python,
+  caption={image_detector.py -- Pipeline de detection vision}]
+def detect_sign_from_image(image_base64: str, language: str = "fr") -> dict:
+    vision_response = analyze_image_with_vision(image_base64, language)
+    matched_signs = match_vision_to_signs(vision_response, language)
+    return {
+        "signs": matched_signs,
+        "description": build_description(matched_signs, vision_response, language),
+    }
+\end{lstlisting}
+
+\section{Captures d'ecran des interfaces principales}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/qcm_generate.png}{%
+    \includegraphics[width=0.90\textwidth]{captures/qcm_generate.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6.2cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6.2cm);
+      \node[font=\small\itshape] at (6.75cm,-3.1cm) {[Capture generation QCM intelligent]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de generation de QCM intelligent}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/chatbot.png}{%
+    \includegraphics[width=0.90\textwidth]{captures/chatbot.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6.2cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6.2cm);
+      \node[font=\small\itshape] at (6.75cm,-3.1cm) {[Capture interface chatbot RAG]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface du chatbot intelligent}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \IfFileExists{captures/detect_sign.png}{%
+    \includegraphics[width=0.90\textwidth]{captures/detect_sign.png}%
+  }{%
+    \begin{tikzpicture}
+      \fill[gray!12] (0,0) rectangle (13.5cm,-6.2cm);
+      \draw[gray!40] (0,0) rectangle (13.5cm,-6.2cm);
+      \node[font=\small\itshape] at (6.75cm,-3.1cm) {[Capture detection de panneaux]};
+    \end{tikzpicture}%
+  }
+  \caption{Interface de detection de panneaux}
+\end{figure}
+
+\section{Evaluation du Sprint 3}
+
+\subsection{Scenarios de tests realises}
+
+\begin{table}[H]
+  \centering
+  \caption{Table de tests fonctionnels du Sprint 3}
+  \label{tab:tests_s3}
+  \begin{tabular}{|p{5.2cm}|p{3.2cm}|p{5.4cm}|}
+    \hline
+    \textbf{Scenario} & \textbf{Resultat attendu} & \textbf{Statut} \\
+    \hline
+    Generation QCM general & QCM genere et sauvegarde & Valide \\
+    \hline
+    Generation QCM theme sans theme & Erreur 400 & Valide \\
+    \hline
+    Question chatbot sans docs & Message "aucune info" & Valide \\
+    \hline
+    Ingestion documents & Chunks indexes dans le store & Valide \\
+    \hline
+    Detection image non supportee & Erreur 400 & Valide \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Bilan du Sprint 3}
+  \label{tab:bilan_s3}
+  \begin{tabular}{|p{5cm}|c|p{6.5cm}|}
+    \hline
+    \textbf{Fonctionnalite} & \textbf{Statut} & \textbf{Observations} \\
+    \hline
+    QCM intelligent & Fait & Generation auto + anti-repetition \\
+    \hline
+    Chatbot RAG & Fait & Reponses citees FR/AR \\
+    \hline
+    Ingestion documents & Fait & Decoupage + vectorisation \\
+    \hline
+    Feedback chatbot & Fait & Stats positives/negatives \\
+    \hline
+    Detection panneaux & Fait & Vision + matching base locale \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Le Sprint 3 a apporte l'intelligence applicative : generation de QCM par LLM,
+assistant RAG bilingue avec citations, ingestion documentaire et detection de
+panneaux par vision. Ces modules preparent l'etape finale de stabilisation et
+d'optimisation.
+
+\clearpage
+
+% ##########################################################
+%  CHAPITRE 5 – Sprint 4 : Finalisation et validation du systeme
+% ##########################################################
+\chapter{Sprint 4 : Finalisation et validation du systeme}
+\minitoc
+\newpage
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+Le Sprint 4 est consacre a la stabilisation globale du produit, la correction
+des anomalies, la validation fonctionnelle et la preparation a la livraison.
+Il consolide l'integration frontend/backend, les tests de regression et la
+documentation finale.
+
+\section{Objectif et perimetre}
+
+\subsection{Objectif general}
+
+Valider l'ensemble des modules et garantir un produit deployable, robuste et
+coherent avant la soutenance.
+
+\subsection{Perimetre fonctionnel retenu}
+
+\begin{enumerate}
+  \item \textbf{Integration}
+  \begin{itemize}
+    \item Verification des flux complets (auth, cours, QCM, IA, stats)
+    \item Harmonisation des interfaces et des messages d'erreur
+  \end{itemize}
+  \item \textbf{Validation et tests}
+  \begin{itemize}
+    \item Tests fonctionnels de regression
+    \item Tests de securite de base (roles, droits, tokens)
+    \item Tests de performance elementaires (temps de reponse)
+  \end{itemize}
+  \item \textbf{Deploiement et documentation}
+  \begin{itemize}
+    \item Preparation des scripts de demarrage
+    \item Nettoyage des logs et donnees de test
+    \item Finalisation de la documentation technique et utilisateur
+  \end{itemize}
+\end{enumerate}
+
+\section{Backlog Sprint 4}
+
+\begin{table}[H]
+  \centering
+  \caption{Backlog du Sprint 4}
+  \label{tab:backlog_s4}
+  \begin{tabular}{|c|p{7.5cm}|c|c|}
+    \hline
+    \textbf{ID} & \textbf{User Story} & \textbf{Priorite} & \textbf{Est.} \\
+    \hline
+    S4-1 & En tant qu'equipe, je veux valider tous les flux metier en bout en bout & Haute & 8 SP \\
+    \hline
+    S4-2 & En tant qu'equipe, je veux corriger les anomalies identifiees & Haute & 5 SP \\
+    \hline
+    S4-3 & En tant qu'equipe, je veux verifier la securite des acces & Haute & 5 SP \\
+    \hline
+    S4-4 & En tant qu'equipe, je veux preparer un deploiement stable & Moyenne & 5 SP \\
+    \hline
+    S4-5 & En tant qu'equipe, je veux finaliser la documentation technique & Moyenne & 3 SP \\
+    \hline
+    S4-6 & En tant qu'equipe, je veux preparer la demo de soutenance & Moyenne & 3 SP \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section{Analyse}
+
+\subsection{Acteurs du Sprint 4}
+\begin{enumerate}
+  \item Equipe de developpement
+  \item Administrateur
+  \item Utilisateurs test (apprenants / formateurs)
+\end{enumerate}
+
+\subsection{Diagramme de cas d'utilisation -- Sprint 4}
+
+\begin{figure}[H]
+  \centering
+  \resizebox{0.96\textwidth}{!}{%
+  \begin{tikzpicture}[
+    >=Stealth,
+    uc/.style={draw, ellipse, minimum width=5.2cm, minimum height=0.95cm, align=center, font=\footnotesize},
+    actor/.style={font=\small\bfseries, align=center},
+    rel/.style={draw, ->, line width=0.6pt}
+  ]
+    \draw[dashed, rounded corners=6pt] (0,0) rectangle (18,-12.8);
+    \node[font=\small\bfseries] at (9,-0.5)
+      {Systeme -- Sprint 4 : Finalisation et validation};
+
+    \node[uc] (UC1) at (9,-2.0)  {Executer tests de regression};
+    \node[uc] (UC2) at (9,-3.8)  {Corriger anomalies};
+    \node[uc] (UC3) at (9,-5.6)  {Verifier securite et roles};
+    \node[uc] (UC4) at (9,-7.4)  {Valider performances};
+    \node[uc] (UC5) at (9,-9.2)  {Deployer et stabiliser};
+    \node[uc] (UC6) at (9,-11.0) {Finaliser documentation};
+
+    \node[actor] (Dev) at (-1.6,-5.0) {Equipe dev};
+    \node[actor] (Adm) at (-1.6,-10.0) {Administrateur};
+
+    \draw[rel] (Dev) -- (UC1);
+    \draw[rel] (Dev) -- (UC2);
+    \draw[rel] (Dev) -- (UC3);
+    \draw[rel] (Dev) -- (UC4);
+    \draw[rel] (Dev) -- (UC5);
+    \draw[rel] (Dev) -- (UC6);
+
+    \draw[rel] (Adm) -- (UC5);
+    \draw[rel] (Adm) -- (UC6);
+  \end{tikzpicture}%
+  }
+  \caption{Diagramme de cas d'utilisation -- Sprint 4}
+  \label{fig:uc_sprint4}
+\end{figure}
+
+\section{Conception}
+
+\subsection{Cas d'utilisation raffines}
+
+\subsubsection{UC1 -- Executer les tests de regression}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC1}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Executer les tests de regression \\
+    \midrule
+    Acteur principal & Equipe de developpement \\
+    Preconditions & Environnement stable et donnees de test. \\
+    Scenario nominal & Execution des scenarii prioritaires et collecte des resultats. \\
+    Postconditions & Rapport de validation et liste d'anomalies. \\
+    Exceptions & Echec de tests critiques. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsubsection{UC2 -- Deployer et stabiliser}
+\begin{table}[H]
+  \centering
+  \caption{Description du cas d'utilisation UC2}
+  \begin{tabularx}{\textwidth}{>{\bfseries}p{4cm} X}
+    \toprule
+    Cas d'utilisation & Deployer et stabiliser \\
+    \midrule
+    Acteur principal & Administrateur \\
+    Preconditions & Configuration finale et verification des dependances. \\
+    Scenario nominal & Deploiement, tests post-deploiement et monitoring. \\
+    Postconditions & Version stable disponible pour demonstration. \\
+    Exceptions & Echec de demarrage ou de connexion aux services. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Diagrammes de sequence detailles du Sprint 4}
+
+\subsection{Sequence detaillee -- Validation de regression}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in
+    {0/Equipe, 90/Frontend, 190/API, 300/Base, 410/Logs}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-260);
+  }
+  \draw[msg] (0,-30)  -- node[above]{lancer scenarios} (90,-30);
+  \draw[msg] (90,-55) -- node[above]{requete API} (190,-55);
+  \draw[msg] (190,-80) -- node[above]{lecture/ecriture} (300,-80);
+  \draw[ret] (300,-100) -- node[above]{OK / erreurs} (190,-100);
+  \draw[ret] (190,-125) -- node[above]{codes HTTP} (90,-125);
+  \draw[msg] (90,-150) -- node[above]{journalisation} (410,-150);
+  \draw[ret] (90,-175) -- node[above]{rapport tests} (0,-175);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Validation de regression}
+  \label{fig:seq_regression}
+\end{figure}
+
+\subsection{Sequence detaillee -- Deploiement}
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[x=1pt, y=1pt,
+    box/.style={draw, fill=gray!10, minimum width=1.8cm, minimum height=0.6cm, font=\footnotesize},
+    msg/.style={draw, ->, >=Stealth, font=\scriptsize},
+    ret/.style={draw, dashed, ->, >=Stealth, font=\scriptsize},
+    life/.style={draw, dashed, thin}
+  ]
+  \foreach \x/\lbl in
+    {0/Admin, 90/Serveur, 190/Backend, 300/DB, 410/Frontend}{
+    \node[box] at (\x,0) {\lbl};
+    \draw[life] (\x,-8) -- (\x,-260);
+  }
+  \draw[msg] (0,-30)  -- node[above]{deployer} (90,-30);
+  \draw[msg] (90,-55) -- node[above]{demarrer API} (190,-55);
+  \draw[msg] (190,-80) -- node[above]{connexion DB} (300,-80);
+  \draw[ret] (300,-100) -- node[above]{OK} (190,-100);
+  \draw[msg] (90,-125) -- node[above]{servir UI} (410,-125);
+  \draw[ret] (410,-150) -- node[above]{OK} (90,-150);
+  \draw[ret] (90,-175) -- node[above]{deploiement termine} (0,-175);
+  \end{tikzpicture}
+  \caption{Diagramme de sequence detaille -- Deploiement}
+  \label{fig:seq_deploy}
+\end{figure}
+
+\section{Evaluation du Sprint 4}
+
+\subsection{Scenarios de tests realises}
+
+\begin{table}[H]
+  \centering
+  \caption{Table de tests fonctionnels du Sprint 4}
+  \label{tab:tests_s4}
+  \begin{tabular}{|p{5.2cm}|p{3.2cm}|p{5.4cm}|}
+    \hline
+    \textbf{Scenario} & \textbf{Resultat attendu} & \textbf{Statut} \\
+    \hline
+    Tests de regression complets & Tous les scenarii critiques valides & Valide \\
+    \hline
+    Verification roles et acces & Acces conforme aux droits & Valide \\
+    \hline
+    Temps de reponse API & Temps stable sur flux principaux & Valide \\
+    \hline
+    Deploiement local de demo & Application demarre sans erreur & Valide \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Bilan du Sprint 4}
+  \label{tab:bilan_s4}
+  \begin{tabular}{|p{5cm}|c|p{6.5cm}|}
+    \hline
+    \textbf{Fonctionnalite} & \textbf{Statut} & \textbf{Observations} \\
+    \hline
+    Integration globale & Fait & Flux complets verifies \\
+    \hline
+    Correction anomalies & Fait & Bugs critiques resolus \\
+    \hline
+    Validation securite & Fait & Roles et droits verifies \\
+    \hline
+    Stabilisation deploiement & Fait & Demo stable \\
+    \hline
+    Documentation finale & Fait & Technique + utilisateur \\
+    \hline
+  \end{tabular}
+\end{table}
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+Le Sprint 4 a permis la validation finale du systeme, avec une integration
+stable, des tests complets, un deploiement pret pour la demonstration et une
+documentation finalisee.
+
+\clearpage
+
+% ============================================================
+\end{document}
+% ============================================================

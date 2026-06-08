@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚗 Chatbot Sécurité Routière - Tunisie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header .title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-header .logo {
+            font-size: 2rem;
+        }
+
+        .chat-header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .chat-header .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            margin-top: 2px;
+        }
+
+        .lang-toggle {
+            display: flex;
+            gap: 5px;
+        }
+
+        .lang-btn {
+            padding: 6px 14px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background: transparent;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #e63946;
+            border-color: white;
+        }
+
+        .lang-btn:hover {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8f9fa;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: #e63946;
+        }
+
+        .message.bot .message-avatar {
+            background: #667eea;
+        }
+
+        .message-content {
+            padding: 12px 18px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .message.user .message-content {
+            background: #e63946;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .message.bot .message-content[dir="rtl"] {
+            text-align: right;
+        }
+
+        /* Sources */
+        .sources {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .sources summary {
+            cursor: pointer;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .source-item {
+            margin-top: 5px;
+            padding: 6px 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            font-size: 0.78rem;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 5px 0;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+            animation: typing 1.4s infinite both;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+
+            30% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+
+        /* Input Area */
+        .chat-input {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input input:focus {
+            border-color: #667eea;
+        }
+
+        .chat-input input[dir="rtl"] {
+            text-align: right;
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border: none;
+            background: linear-gradient(135deg, #e63946, #c1121f);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Quick questions */
+        .quick-questions {
+            padding: 10px 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .quick-q {
+            padding: 6px 14px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #555;
+        }
+
+        .quick-q:hover {
+            border-color: #e63946;
+            color: #e63946;
+            background: #fff5f5;
+        }
+
+        /* Status bar */
+        .status-bar {
+            padding: 8px 20px;
+            background: #f0f0f0;
+            font-size: 0.75rem;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .status-dot.online {
+            background: #2ecc71;
+        }
+
+        .status-dot.offline {
+            background: #e74c3c;
+        }
+
+        /* Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        /* Feedback buttons */
+        .feedback-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .feedback-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #888;
+            transition: all 0.2s;
+        }
+
+        .feedback-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .feedback-btn.selected-positive {
+            border-color: #2ecc71;
+            color: #2ecc71;
+            background: #eafaf1;
+            pointer-events: none;
+        }
+
+        .feedback-btn.selected-negative {
+            border-color: #e74c3c;
+            color: #e74c3c;
+            background: #fdedec;
+            pointer-events: none;
+        }
+
+        .feedback-btn.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .feedback-toast {
+            font-size: 0.78rem;
+            color: #667eea;
+            margin-top: 4px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Clear history button */
+        .clear-history-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            border-radius: 16px;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .clear-history-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="title-section">
+                <span class="logo">🚗</span>
+                <div>
+                    <h1 id="headerTitle">Chatbot Sécurité Routière</h1>
+                    <div class="subtitle" id="headerSubtitle">Assistant intelligent bilingue - Code de la route tunisien
+                    </div>
+                </div>
+            </div>
+            <div class="lang-toggle">
+                <button class="lang-btn active" onclick="setLanguage('fr')" id="btnFr">FR</button>
+                <button class="lang-btn" onclick="setLanguage('ar')" id="btnAr">عربي</button>
+                <button class="lang-btn" onclick="setLanguage('auto')" id="btnAuto">Auto</button>
+                <button class="clear-history-btn" onclick="clearHistory()" title="Effacer l'historique">🗑️</button>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content" id="welcomeMsg">
+                    Bienvenue ! 👋 Je suis votre assistant spécialisé en sécurité routière en Tunisie.<br><br>
+                    Posez-moi vos questions en <strong>français</strong> ou en <strong>arabe</strong> sur le code de la
+                    route tunisien.
+                    <br><br>
+                    <span style="font-size:0.85rem; color:#888;">
+                        مرحباً! أنا مساعدك المتخصص في السلامة المرورية في تونس. اطرح أسئلتك بالعربية أو الفرنسية.
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Questions -->
+        <div class="quick-questions" id="quickQuestions">
+            <span class="quick-q" onclick="askQuick('Quelle est la limitation de vitesse en ville ?')">🚦 Vitesse en
+                ville ?</span>
+            <span class="quick-q" onclick="askQuick('ما هي شروط رخصة السياقة؟')">📝 شروط الرخصة؟</span>
+            <span class="quick-q" onclick="askQuick('Le port de la ceinture est-il obligatoire ?')">🔒 Ceinture ?</span>
+            <span class="quick-q" onclick="askQuick('ما هي عقوبة تجاوز السرعة؟')">⚡ عقوبة السرعة؟</span>
+            <span class="quick-q" onclick="askQuick('Comment fonctionne le système de points ?')">📊 Système points
+                ?</span>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Posez votre question... / ...اطرح سؤالك"
+                onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()" id="sendBtn">➤</button>
+        </div>
+
+        <!-- Status bar -->
+        <div class="status-bar">
+            <span><span class="status-dot online" id="statusDot"></span> <span id="statusText">Connecté</span></span>
+            <span id="statsText">Chargement...</span>
+        </div>
+    </div>
+
+    <script>
+        // ===== Configuration =====
+        const API_BASE = window.location.origin;
+        let currentLanguage = 'auto'; // 'fr', 'ar', 'auto'
+        let isProcessing = false;
+        let messageCounter = 0;
+
+        // ===== Session ID (unique par onglet) =====
+        function getSessionId() {
+            let sid = sessionStorage.getItem('chat_session_id');
+            if (!sid) {
+                sid = 'session_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+                sessionStorage.setItem('chat_session_id', sid);
+            }
+            return sid;
+        }
+        const SESSION_ID = getSessionId();
+
+        // ===== Conversation History =====
+        function getHistory() {
+            try {
+                return JSON.parse(sessionStorage.getItem('chat_history') || '[]');
+            } catch { return []; }
+        }
+
+        function saveHistory(history) {
+            sessionStorage.setItem('chat_history', JSON.stringify(history));
+        }
+
+        function addToHistory(entry) {
+            const history = getHistory();
+            history.push(entry);
+            // Garder max 100 messages en session
+            if (history.length > 100) history.splice(0, history.length - 100);
+            saveHistory(history);
+        }
+
+        function clearHistory() {
+            sessionStorage.removeItem('chat_history');
+            sessionStorage.removeItem('chat_session_id');
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            // Ré-afficher le message de bienvenue
+            addWelcomeMessage();
+            messageCounter = 0;
+        }
+
+        function addWelcomeMessage() {
+            const container = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message bot';
+            msgDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    Bienvenue ! 👋 Je suis votre assistant spécialisé en sécurité routière en Tunisie.<br><br>
+                    Posez-moi vos questions en <strong>français</strong> ou en <strong>arabe</strong> sur le code de la route tunisien.
+                    <br><br>
+                    <span style="font-size:0.85rem; color:#888;">
+                        مرحباً! أنا مساعدك المتخصص في السلامة المرورية في تونس. اطرح أسئلتك بالعربية أو الفرنسية.
+                    </span>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+        }
+
+        // Restaurer l'historique depuis sessionStorage au chargement
+        function restoreHistory() {
+            const history = getHistory();
+            if (history.length === 0) return;
+
+            // Supprimer le message de bienvenue par défaut s'il y a un historique
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            addWelcomeMessage();
+
+            history.forEach(entry => {
+                if (entry.type === 'user') {
+                    addMessage('user', entry.content, entry.isRtl, [], false);
+                } else if (entry.type === 'bot') {
+                    addMessage('bot', entry.content, entry.isRtl, entry.sources || [], false, entry.question, entry.feedbackGiven);
+                }
+            });
+        }
+
+        // ===== Language Toggle =====
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn${lang === 'fr' ? 'Fr' : lang === 'ar' ? 'Ar' : 'Auto'}`).classList.add('active');
+
+            const input = document.getElementById('userInput');
+            if (lang === 'ar') {
+                input.setAttribute('dir', 'rtl');
+                input.placeholder = 'اطرح سؤالك هنا...';
+            } else {
+                input.setAttribute('dir', 'ltr');
+                input.placeholder = lang === 'auto'
+                    ? 'Posez votre question... / ...اطرح سؤالك'
+                    : 'Posez votre question ici...';
+            }
+        }
+
+        // ===== Send Message =====
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const question = input.value.trim();
+            if (!question || isProcessing) return;
+
+            isProcessing = true;
+            document.getElementById('sendBtn').disabled = true;
+            input.value = '';
+
+            // Detect if Arabic for RTL
+            const isArabic = /[\u0600-\u06FF]/.test(question);
+
+            // Add user message
+            addMessage('user', question, isArabic);
+            addToHistory({ type: 'user', content: question, isRtl: isArabic, timestamp: Date.now() });
+
+            // Add typing indicator
+            const typingId = addTypingIndicator();
+
+            try {
+                const payload = { question };
+                if (currentLanguage !== 'auto') {
+                    payload.language = currentLanguage;
+                }
+
+                const response = await fetch(`${API_BASE}/api/chat/ask`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                removeTypingIndicator(typingId);
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.detail || `Erreur ${response.status}`);
+                }
+
+                const data = await response.json();
+                const isResponseArabic = data.language === 'ar';
+                addMessage('bot', data.answer, isResponseArabic, data.sources, true, question);
+                addToHistory({
+                    type: 'bot',
+                    content: data.answer,
+                    isRtl: isResponseArabic,
+                    sources: data.sources,
+                    question: question,
+                    language: data.language,
+                    timestamp: Date.now(),
+                    feedbackGiven: null,
+                });
+
+            } catch (error) {
+                removeTypingIndicator(typingId);
+                addMessage('bot', `❌ Erreur: ${error.message}`, false);
+                addToHistory({ type: 'bot', content: `❌ Erreur: ${error.message}`, isRtl: false, timestamp: Date.now() });
+                updateStatus(false);
+            }
+
+            isProcessing = false;
+            document.getElementById('sendBtn').disabled = false;
+            input.focus();
+        }
+
+        // ===== Quick Questions =====
+        function askQuick(question) {
+            document.getElementById('userInput').value = question;
+            sendMessage();
+        }
+
+        // ===== Add Message to Chat =====
+        function addMessage(type, content, isRtl = false, sources = [], withFeedback = false, originalQuestion = '', feedbackGiven = null) {
+            const container = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${type}`;
+            messageCounter++;
+            const msgId = `msg-${messageCounter}`;
+            msgDiv.id = msgId;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = type === 'user' ? '👤' : '🤖';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            if (isRtl) contentDiv.setAttribute('dir', 'rtl');
+
+            // Format the content (handle newlines)
+            contentDiv.innerHTML = content.replace(/\n/g, '<br>');
+
+            // Add sources if available
+            if (sources && sources.length > 0) {
+                const sourcesDiv = document.createElement('div');
+                sourcesDiv.className = 'sources';
+                const details = document.createElement('details');
+                const summary = document.createElement('summary');
+                summary.textContent = isRtl ? '📚 المصادر' : '📚 Sources';
+                details.appendChild(summary);
+                sources.forEach(src => {
+                    const item = document.createElement('div');
+                    item.className = 'source-item';
+                    item.textContent = `${src.source} (${src.language})`;
+                    details.appendChild(item);
+                });
+                sourcesDiv.appendChild(details);
+                contentDiv.appendChild(sourcesDiv);
+            }
+
+            // Add feedback buttons for bot messages
+            if (type === 'bot' && (withFeedback || feedbackGiven !== undefined)) {
+                const feedbackRow = document.createElement('div');
+                feedbackRow.className = 'feedback-row';
+                feedbackRow.id = `feedback-${msgId}`;
+
+                const thumbUp = document.createElement('button');
+                thumbUp.className = 'feedback-btn';
+                thumbUp.innerHTML = '👍';
+                thumbUp.title = 'Bonne réponse';
+
+                const thumbDown = document.createElement('button');
+                thumbDown.className = 'feedback-btn';
+                thumbDown.innerHTML = '👎';
+                thumbDown.title = 'Réponse à améliorer';
+
+                // If feedback was already given (restored from history)
+                if (feedbackGiven === true) {
+                    thumbUp.classList.add('selected-positive');
+                    thumbDown.classList.add('disabled');
+                } else if (feedbackGiven === false) {
+                    thumbDown.classList.add('selected-negative');
+                    thumbUp.classList.add('disabled');
+                } else if (feedbackGiven === null && withFeedback) {
+                    // Active buttons
+                    thumbUp.onclick = () => submitFeedback(msgId, originalQuestion, content, isRtl ? 'ar' : 'fr', true);
+                    thumbDown.onclick = () => submitFeedback(msgId, originalQuestion, content, isRtl ? 'ar' : 'fr', false);
+                }
+
+                feedbackRow.appendChild(thumbUp);
+                feedbackRow.appendChild(thumbDown);
+                contentDiv.appendChild(feedbackRow);
+            }
+
+            msgDiv.appendChild(avatar);
+            msgDiv.appendChild(contentDiv);
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ===== Submit Feedback =====
+        async function submitFeedback(msgId, question, answer, language, isPositive) {
+            const feedbackRow = document.getElementById(`feedback-${msgId}`);
+            if (!feedbackRow) return;
+
+            const buttons = feedbackRow.querySelectorAll('.feedback-btn');
+
+            try {
+                const response = await fetch(`${API_BASE}/api/chat/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: SESSION_ID,
+                        question: question,
+                        answer: answer.substring(0, 2000),
+                        language: language,
+                        is_positive: isPositive,
+                    }),
+                });
+
+                // Update UI
+                buttons.forEach(btn => {
+                    btn.onclick = null;
+                    if (isPositive && btn.innerHTML.includes('👍')) {
+                        btn.classList.add('selected-positive');
+                    } else if (!isPositive && btn.innerHTML.includes('👎')) {
+                        btn.classList.add('selected-negative');
+                    } else {
+                        btn.classList.add('disabled');
+                    }
+                });
+
+                // Show thank-you toast
+                const toast = document.createElement('div');
+                toast.className = 'feedback-toast';
+                if (response.ok) {
+                    const data = await response.json();
+                    toast.textContent = data.message;
+                } else {
+                    toast.textContent = isPositive ? 'Merci ! 🙏' : 'Merci pour votre retour.';
+                }
+                feedbackRow.parentElement.appendChild(toast);
+
+                // Update history with feedback status
+                const history = getHistory();
+                // Find the last bot message matching this answer
+                for (let i = history.length - 1; i >= 0; i--) {
+                    if (history[i].type === 'bot' && history[i].content === answer) {
+                        history[i].feedbackGiven = isPositive;
+                        break;
+                    }
+                }
+                saveHistory(history);
+
+            } catch (err) {
+                console.error('Feedback error:', err);
+                // Still update UI to avoid double-click
+                buttons.forEach(btn => {
+                    btn.onclick = null;
+                    if (isPositive && btn.innerHTML.includes('👍')) {
+                        btn.classList.add('selected-positive');
+                    } else if (!isPositive && btn.innerHTML.includes('👎')) {
+                        btn.classList.add('selected-negative');
+                    } else {
+                        btn.classList.add('disabled');
+                    }
+                });
+            }
+        }
+
+        // ===== Typing Indicator =====
+        function addTypingIndicator() {
+            const container = document.getElementById('chatMessages');
+            const id = 'typing-' + Date.now();
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message bot';
+            msgDiv.id = id;
+            msgDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        }
+
+        // ===== Status =====
+        function updateStatus(isOnline) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            dot.className = `status-dot ${isOnline ? 'online' : 'offline'}`;
+            text.textContent = isOnline ? 'Connecté' : 'Déconnecté';
+        }
+
+        // ===== Load Stats =====
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API_BASE}/api/chat/stats`);
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('statsText').textContent =
+                        `📊 ${data.total_chunks} chunks vectorisés`;
+                    updateStatus(true);
+                } else {
+                    document.getElementById('statsText').textContent = '⚠️ Vector store vide';
+                    updateStatus(true);
+                }
+            } catch {
+                document.getElementById('statsText').textContent = '❌ API non disponible';
+                updateStatus(false);
+            }
+        }
+
+        // ===== Init =====
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            restoreHistory();
+            document.getElementById('userInput').focus();
+        });
+    </script>
+</body>
+
+</html>
