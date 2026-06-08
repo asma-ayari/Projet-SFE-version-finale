@@ -1,0 +1,12 @@
+{
+    "i18n-ally.localesPaths": [
+        "frontend/Plateforme-Securite-Routiere-master/public/i18n",
+        "frontend/Plateforme-Securite-Routiere-master/public/locales",
+        "frontend/Plateforme-Securite-Routiere-master/src/assets/i18n",
+        "frontend/Plateforme-Securite-Routiere-master/src/public/i18n",
+        "backend/venv/Lib/site-packages/langchain/messages",
+        "backend/venv/Lib/site-packages/langchain_core/messages",
+        "backend/venv/Lib/site-packages/langchain_classic/document_loaders/parsers/language",
+        "backend/venv/Lib/site-packages/langchain_community/document_loaders/parsers/language"
+    ]
+}
