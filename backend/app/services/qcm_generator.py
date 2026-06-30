@@ -24,12 +24,12 @@ _QCM_CONTEXT_MAX_CHARS = 5000
 _QCM_BASE_TEMPERATURE = 0.2
 _QCM_FALLBACK_TEMPERATURE = 0.6
 _QCM_MAX_ATTEMPTS = 6
-_QCM_BATCH_SIZE = 6
 _SIMILARITY_SEQUENCE_THRESHOLD = 0.90
 _SIMILARITY_JACCARD_THRESHOLD = 0.75
-_QCM_RATE_LIMIT_RETRIES = 2
-_QCM_RATE_LIMIT_BASE_DELAY = 6.0
-_QCM_INTER_BATCH_DELAY = 2.5
+_QCM_BATCH_SIZE = 4                  # Réduit à 4 questions/appel (respecte 6000 TPM Groq)
+_QCM_RATE_LIMIT_RETRIES = 4          # Augmenté : 4 retries max
+_QCM_RATE_LIMIT_BASE_DELAY = 12.0    # Délai de base entre retries (12s)
+_QCM_INTER_BATCH_DELAY = 5.0         # Délai entre chaque batch (5s pour respecter 6000 TPM)
 
 # ──────────────────────────────────────────────────────────────────────────────
 # BANQUE D'IMAGES
@@ -141,6 +141,7 @@ def _extract_retry_delay(message: str) -> Optional[float]:
 
 
 def _invoke_llm_with_retry(llm: ChatGroq, prompt: str) -> Any:
+    """Appelle le LLM avec retry exponentiel en respectant le Retry-After de Groq."""
     delay = _QCM_RATE_LIMIT_BASE_DELAY
     last_error: Optional[Exception] = None
     for attempt in range(_QCM_RATE_LIMIT_RETRIES + 1):
@@ -150,10 +151,15 @@ def _invoke_llm_with_retry(llm: ChatGroq, prompt: str) -> Any:
             last_error = exc
             if attempt >= _QCM_RATE_LIMIT_RETRIES:
                 raise
-            wait = _extract_retry_delay(str(exc)) or delay
-            _LOGGER.warning("Rate limit Groq, retry in %.1fs", wait)
+            # Respecter le Retry-After suggere par Groq (prendre le max pour etre sur)
+            suggested = _extract_retry_delay(str(exc))
+            wait = max(suggested or 0.0, delay)
+            _LOGGER.warning(
+                "[Groq rate limit] attempt %d/%d — attente %.1fs avant retry",
+                attempt + 1, _QCM_RATE_LIMIT_RETRIES, wait
+            )
             time.sleep(wait)
-            delay = min(delay * 1.8, 30.0)
+            delay = min(delay * 2.0, 60.0)   # Doublement exponentiel, max 60s
 
     if last_error:
         raise last_error

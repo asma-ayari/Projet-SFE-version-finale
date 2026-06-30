@@ -37,8 +37,8 @@ export class Header implements OnInit {
   private router = inject(Router);
   isMenuOpen = signal(false);
 
-  get currentLang() {
-    return this.languageService.currentLang;
+  currentLang(): 'fr' | 'ar' {
+    return this.languageService.currentLang();
   }
 
   setLanguage(lang: 'fr' | 'ar') {
@@ -75,6 +75,16 @@ export class Header implements OnInit {
       case 'admin': return '/admin/dashboard';
       case 'formateur': return '/formateur/dashboard';
       default: return '/apprenant/dashboard';
+    }
+  }
+
+  getProfileRoute(): string {
+    const user = this.authService.currentUser();
+    if (!user) return '/auth/login';
+    switch (user.role) {
+      case 'admin': return '/admin/profile';
+      case 'formateur': return '/formateur/profile';
+      default: return '/apprenant/profile';
     }
   }
 

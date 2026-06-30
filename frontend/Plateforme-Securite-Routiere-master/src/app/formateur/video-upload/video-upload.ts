@@ -44,6 +44,7 @@ export class VideoUpload implements OnInit {
     { value: 'securite', labelKey: 'FORMATEUR.VIDEO_UPLOAD.CATEGORIES.SECURITE' },
     { value: 'secours', labelKey: 'FORMATEUR.VIDEO_UPLOAD.CATEGORIES.SECOURS' },
     { value: 'signalisation', labelKey: 'FORMATEUR.VIDEO_UPLOAD.CATEGORIES.SIGNALISATION' },
+    { value: 'physique', labelKey: 'FORMATEUR.VIDEO_UPLOAD.CATEGORIES.PHYSIQUE' },
   ];
 
   constructor(

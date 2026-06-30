@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { timeout, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 /* ─── Interfaces ─── */
@@ -207,8 +208,18 @@ export class QcmService {
   listPublished(category?: string, lang?: string): Observable<QCMListItem[]> {
     let params = new HttpParams();
     if (category) params = params.set('category', category);
-    if (lang) params = params.set('lang', lang);
-    return this.http.get<QCMListItem[]>(`${this.api}/list`, { params });
+    // Note: lang n'est plus utilisé pour la traduction de liste (fix 429)
+    // On le garde en paramètre pour compatibilité mais le backend l'ignore désormais.
+    return this.http.get<QCMListItem[]>(`${this.api}/list`, { params }).pipe(
+      timeout(30000),
+      catchError(err => {
+        if (err.name === 'TimeoutError') {
+          // Fallback : recharge sans paramètre (données brutes immédiates)
+          return this.http.get<QCMListItem[]>(`${this.api}/list`);
+        }
+        return throwError(() => err);
+      })
+    );
   }
 
   getQcmForTest(id: number): Observable<QCMDetail> {

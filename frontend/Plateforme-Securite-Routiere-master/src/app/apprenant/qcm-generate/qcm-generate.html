@@ -55,6 +55,18 @@
         </div>
 
         <div class="section">
+            <h4>Niveau de difficulté</h4>
+            <div class="chip-group">
+                <button class="chip" [class.active]="difficulty === 'facile'"
+                    (click)="difficulty = 'facile'">Facile</button>
+                <button class="chip" [class.active]="difficulty === 'moyen'"
+                    (click)="difficulty = 'moyen'">Moyen</button>
+                <button class="chip" [class.active]="difficulty === 'difficile'"
+                    (click)="difficulty = 'difficile'">Difficile</button>
+            </div>
+        </div>
+
+        <div class="section">
             <h4>Langue</h4>
             <div class="chip-group">
                 <button class="chip" [class.active]="language === 'fr'" (click)="setLanguage('fr')">Francais</button>

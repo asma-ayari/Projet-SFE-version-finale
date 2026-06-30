@@ -89,6 +89,7 @@ export class VideosList implements OnInit {
       case 'securite': return 'VIDEOS_PAGE.CATEGORIES.SECURITE';
       case 'secours': return 'VIDEOS_PAGE.CATEGORIES.SECOURS';
       case 'signalisation': return 'VIDEOS_PAGE.CATEGORIES.SIGNALISATION';
+      case 'physique': return 'VIDEOS_PAGE.CATEGORIES.PHYSIQUE';
       default: return category;
     }
   }
@@ -106,7 +107,25 @@ export class VideosList implements OnInit {
       (value): value is string => typeof value === 'string' && value.length > 0
     );
 
-    return possibleUrls.find((value) => value.includes('youtube') || value.includes('youtu.be') || value.startsWith('http')) || '';
+    const match = possibleUrls.find((value) => value.includes('youtube') || value.includes('youtu.be') || value.startsWith('http'));
+    if (match) {
+      return match;
+    }
+
+    const localFile = possibleUrls.find(value => value.includes('uploads/'));
+    if (localFile) {
+      const path = localFile.trim();
+      if (path.startsWith('/')) return path;
+      return '/' + path;
+    }
+
+    if (possibleUrls.length > 0) {
+      const first = possibleUrls[0].trim();
+      if (first && !first.startsWith('http')) {
+        return '/uploads/videos/' + first;
+      }
+    }
+    return '';
   }
 
   openVideo(video: VideoResponse): void {

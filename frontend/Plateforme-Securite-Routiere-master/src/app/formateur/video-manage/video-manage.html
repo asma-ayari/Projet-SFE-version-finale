@@ -262,11 +262,22 @@
                 <p>{{ 'FORMATEUR.VIDEO_MANAGE.PLAYER.YOUTUBE_LOAD_ERROR' | translate }}</p>
               </div>
             }
+          } @else if (selectedVideo() && isLocalVideo(selectedVideo()!)) {
+            <!-- Local Video Playback -->
+            <video
+              [src]="getLocalVideoUrl(selectedVideo()!)"
+              class="video-frame"
+              controls
+              autoplay
+            ></video>
           } @else {
-            <!-- Vidéo locale (non supportée pour l'instant) -->
+            <!-- External Link (Facebook, etc.) -->
             <div class="video-placeholder">
-              <i class="fas fa-film"></i>
-              <p>{{ 'FORMATEUR.VIDEO_MANAGE.PLAYER.LOCAL_UNSUPPORTED' | translate }}</p>
+              <i class="fas fa-external-link-alt mb-3" style="font-size: 3rem; color: #ffa726;"></i>
+              <p class="mb-3">{{ 'FORMATEUR.VIDEO_MANAGE.PLAYER.EXTERNAL_SOURCE' | translate }}</p>
+              <a [href]="getExternalUrl(selectedVideo()!)" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="background-color: #ffa726; border-color: #ffa726; color: white;">
+                <i class="fas fa-external-link-alt me-1"></i>{{ 'FORMATEUR.VIDEO_MANAGE.PLAYER.OPEN_EXTERNAL' | translate }}
+              </a>
             </div>
           }
         </div>

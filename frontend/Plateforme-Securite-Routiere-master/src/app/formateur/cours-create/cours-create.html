@@ -48,20 +48,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.IMAGE_URL' | translate }}</label>
-                    <input type="url" class="form-control" [(ngModel)]="image_url"
-                        (ngModelChange)="onImageUrlChange()"
-                        placeholder="https://..."
-                        [disabled]="!!coverFile">
-                    <small class="text-muted">{{ 'FORMATEUR.COURS_CREATE.FORM.IMAGE_URL_HINT' | translate }}</small>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.VIDEO_URL' | translate }}</label>
-                    <input type="url" class="form-control" [(ngModel)]="video_url"
-                        placeholder="https://youtube.com/...">
-                    <small class="text-muted">{{ 'FORMATEUR.COURS_CREATE.FORM.VIDEO_URL_HINT' | translate }}</small>
-                </div>
+
                 <div class="col-12">
                     <label class="form-label">{{ 'FORMATEUR.COURS_CREATE.FORM.CONTENT' | translate }}</label>
                     <textarea class="form-control" rows="12" [(ngModel)]="content"

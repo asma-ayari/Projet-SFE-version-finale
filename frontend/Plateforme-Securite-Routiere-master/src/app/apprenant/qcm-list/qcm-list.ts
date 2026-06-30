@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { QcmService, QCMListItem } from '../../core/services/qcm';
 import { LanguageService } from '../../core/services/language.service';
-import { finalize, Subscription, timeout } from 'rxjs';
+import { filter, finalize, Subscription, timeout } from 'rxjs';
 import { ChatbotWidgetComponent } from '../../shared/chatbot-widget/chatbot-widget';
 
 @Component({
@@ -25,12 +25,14 @@ export class QcmList implements OnInit, OnDestroy {
   generatedPage = 0;
   readonly generatedPageSize = 3;
   private langSub?: Subscription;
+  private navSub?: Subscription;
 
   constructor(
     private qcmService: QcmService,
     private cdr: ChangeDetectorRef,
     private translateService: TranslateService,
     private languageService: LanguageService,
+    private router: Router,
   ) { }
 
   // ✅ CORRECTION : defaultText accepte string | undefined
@@ -43,10 +45,17 @@ export class QcmList implements OnInit, OnDestroy {
   ngOnInit() {
     this.load();
     this.langSub = this.translateService.onLangChange.subscribe(() => this.load());
+    // Recharger la liste à chaque fois que l'utilisateur revient sur cette page
+    this.navSub = this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd && e.urlAfterRedirects.includes('/apprenant/qcm') && !e.urlAfterRedirects.includes('/apprenant/qcm/'))
+    ).subscribe(() => {
+      this.load();
+    });
   }
 
   ngOnDestroy() {
     this.langSub?.unsubscribe();
+    this.navSub?.unsubscribe();
   }
 
   load() {
@@ -158,6 +167,7 @@ export class QcmList implements OnInit, OnDestroy {
       case 'securite': return 'QCM_PANEL.LIST.CAT_SECURITE';
       case 'conduite': return 'QCM_PANEL.LIST.CAT_CONDUITE';
       case 'general': return 'QCM_PANEL.LIST.CAT_GENERAL';
+      case 'physique': return 'QCM_PANEL.LIST.CAT_PHYSIQUE';
       default: return category;
     }
   }

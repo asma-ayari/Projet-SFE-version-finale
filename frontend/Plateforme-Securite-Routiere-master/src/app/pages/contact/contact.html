@@ -52,9 +52,18 @@
               <div class="info-icon">
                 <i class="fas fa-clock"></i>
               </div>
-              <div class="info-content">
+              <div class="info-content" style="width: 100%;">
                 <h4>{{ 'CONTACT.HOURS' | translate }}</h4>
-                <p style="white-space: pre-line;">{{ 'CONTACT.HOURS_VALUE' | translate }}</p>
+                <table class="hours-table">
+                  <tbody>
+                    @for (row of getHoursRows(); track row.day) {
+                      <tr>
+                        <td class="day-cell">{{ row.day }}</td>
+                        <td class="time-cell">{{ row.time }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

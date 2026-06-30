@@ -129,6 +129,10 @@ export const routes: Routes = [
         loadComponent: () => import('./apprenant/qcm-generate/qcm-generate').then(m => m.QcmGenerateComponent)
       },
       {
+        path: 'qcm-session/:id',
+        loadComponent: () => import('./apprenant/qcm-session/qcm-session.component').then(m => m.QcmSessionComponent)
+      },
+      {
         path: 'qcm/:id',
         loadComponent: () => import('./apprenant/qcm-test/qcm-test').then(m => m.QcmTest)
       },

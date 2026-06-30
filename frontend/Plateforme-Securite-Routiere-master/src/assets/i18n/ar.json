@@ -188,7 +188,13 @@
     "FORM_SENDING": "جاري الإرسال...",
     "SUCCESS_TITLE": "تم إرسال الرسالة!",
     "SUCCESS_TEXT": "سنرد عليك في أقرب وقت ممكن.",
-    "SUCCESS_BUTTON": "إرسال رسالة أخرى"
+    "SUCCESS_BUTTON": "إرسال رسالة أخرى",
+    "ADDRESS_VALUE": "نهج أحمد السقلي - عمارة الحمراء 2\nالطابق الأول - 3027 - صفاقس",
+    "FORM_NAME_PLACEHOLDER": "الاسم واللقب...",
+    "FORM_EMAIL_PLACEHOLDER": "البريد الإلكتروني...",
+    "FORM_SUBJECT_PLACEHOLDER": "موضوع الرسالة...",
+    "FORM_MESSAGE_PLACEHOLDER": "اكتب رسالتك هنا...",
+    "MAP_LABEL": "موقعنا على الخارطة"
   },
   "COMMON": {
     "LOADING": "جاري التحميل...",
@@ -822,7 +828,8 @@
         "SECURITE": "السلامة",
         "SECOURS": "الإسعافات الأولية",
         "SIGNALISATION": "الإشارات",
-        "GENERAL": "عام"
+        "GENERAL": "عام",
+        "PHYSIQUE": "الفيزياء"
       },
       "TABLE": {
         "COVER": "الغلاف",
@@ -883,7 +890,8 @@
         "SECURITE": "السلامة",
         "SECOURS": "الإسعافات الأولية",
         "SIGNALISATION": "الإشارات",
-        "GENERAL": "عام"
+        "GENERAL": "عام",
+        "PHYSIQUE": "الفيزياء"
       },
       "ACTIONS": {
         "CANCEL": "إلغاء",
@@ -918,7 +926,8 @@
         "SECURITE": "السلامة",
         "SECOURS": "الإسعافات الأولية",
         "SIGNALISATION": "الإشارات",
-        "GENERAL": "عام"
+        "GENERAL": "عام",
+        "PHYSIQUE": "الفيزياء"
       },
       "ACTIONS": {
         "CANCEL": "إلغاء",
@@ -975,7 +984,8 @@
         "CONDUITE": "القيادة",
         "SECURITE": "السلامة",
         "SECOURS": "الإسعافات الأولية",
-        "SIGNALISATION": "الإشارات"
+        "SIGNALISATION": "الإشارات",
+        "PHYSIQUE": "الفيزياء"
       },
       "VALIDATION": {
         "TITLE_MIN": "يجب أن يحتوي العنوان على 3 أحرف على الأقل",
@@ -1004,7 +1014,8 @@
         "CONDUITE": "القيادة",
         "SECURITE": "السلامة",
         "SECOURS": "الإسعافات الأولية",
-        "SIGNALISATION": "الإشارات"
+        "SIGNALISATION": "الإشارات",
+        "PHYSIQUE": "الفيزياء"
       },
       "STATS": {
         "TOTAL": "الإجمالي: {{count}} فيديو"
@@ -1054,7 +1065,9 @@
           "CATEGORY": "الفئة:",
           "ADDED_AT": "تاريخ الإضافة:",
           "SIZE": "الحجم:"
-        }
+        },
+        "EXTERNAL_SOURCE": "هذا الفيديو من مصدر خارجي (فيسبوك، إلخ) ولا يمكن تشغيله مباشرة هنا.",
+        "OPEN_EXTERNAL": "افتح الفيديو في علامة تبويب جديدة"
       },
       "MESSAGES": {
         "LOAD_ERROR": "خطأ أثناء التحميل",
@@ -1115,7 +1128,8 @@
       "SECURITE": "الأمان",
       "SECOURS": "الإسعافات الأولية",
       "SIGNALISATION": "الإشارات",
-      "GENERAL": "عام"
+      "GENERAL": "عام",
+      "PHYSIQUE": "الفيزياء"
     }
   },
   "COURSE_DETAIL": {
@@ -2153,7 +2167,8 @@
       "CONDUITE": "القيادة",
       "SECURITE": "الأمان",
       "SECOURS": "الإسعافات الأولية",
-      "SIGNALISATION": "الإشارات"
+      "SIGNALISATION": "الإشارات",
+      "PHYSIQUE": "الفيزياء"
     }
   },
   "QCM_PANEL": {
@@ -2180,7 +2195,8 @@
       "MY_GENERATED": "اختباراتي المُولَّدة تلقائياً",
       "PREV": "السابق",
       "NEXT": "التالي",
-      "NO_QUIZZES": "لا توجد اختبارات متاحة حالياً"
+      "NO_QUIZZES": "لا توجد اختبارات متاحة حالياً",
+      "CAT_PHYSIQUE": "الفيزياء"
     },
     "TEST": {
       "LOADING": "جاري التحميل...",

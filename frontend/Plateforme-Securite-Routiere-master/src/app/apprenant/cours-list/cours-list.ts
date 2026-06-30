@@ -168,7 +168,8 @@ export class CoursList implements OnInit, OnDestroy {
     { value: 'securite', label: 'COURSES_PAGE.CATEGORIES.SECURITE' },
     { value: 'secours', label: 'COURSES_PAGE.CATEGORIES.SECOURS' },
     { value: 'signalisation', label: 'COURSES_PAGE.CATEGORIES.SIGNALISATION' },
-    { value: 'general', label: 'COURSES_PAGE.CATEGORIES.GENERAL' }
+    { value: 'general', label: 'COURSES_PAGE.CATEGORIES.GENERAL' },
+    { value: 'physique', label: 'COURSES_PAGE.CATEGORIES.PHYSIQUE' }
   ];
 
   levels = [

@@ -60,7 +60,7 @@ export class QcmGenerateComponent implements OnInit, OnDestroy {
         private cdr: ChangeDetectorRef,
         private languageService: LanguageService,
         private translate: TranslateService,
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.syncLanguageFromUi();
@@ -131,7 +131,8 @@ export class QcmGenerateComponent implements OnInit, OnDestroy {
 
     get computedDurationMinutes(): number {
         if (!this.timePerQuestion) {
-            return 0;
+            // Default: 1 minute per question when no time limit selected
+            return this.questionCount;
         }
         const totalSeconds = this.timePerQuestion * this.questionCount;
         return Math.max(1, Math.ceil(totalSeconds / 60));
@@ -165,9 +166,11 @@ export class QcmGenerateComponent implements OnInit, OnDestroy {
             })
         ).subscribe({
             next: (res) => {
-                // ═══ CORRIGÉ : navigation vers qcm-session ═══
-                this.router.navigate(['/apprenant/qcm-session', res.qcm_id], { 
-                    queryParams: { generated: '1' } 
+                // Stopper le spinner AVANT la navigation (finalize s'exécute trop tard)
+                this.loading = false;
+                this.cdr.detectChanges();
+                this.router.navigate(['/apprenant/qcm-session', res.qcm_id], {
+                    queryParams: { generated: '1' }
                 });
             },
             error: (err) => {
@@ -177,6 +180,7 @@ export class QcmGenerateComponent implements OnInit, OnDestroy {
                     } else {
                         this.error = err.error?.detail || 'Erreur lors de la generation du QCM';
                     }
+                    this.loading = false;
                     this.cdr.detectChanges();
                 });
             }

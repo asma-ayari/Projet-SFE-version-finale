@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -32,10 +32,42 @@ export class QcmSessionComponent implements OnInit, OnDestroy {
   result: any = null;
   showResult = false;
 
+  get normalizedResultDetails(): Array<{
+    is_correct: boolean;
+    question_text: string;
+    user_answer_text: string;
+    correct_answer_text: string;
+    explanation: string;
+  }> {
+    if (!this.result?.details || !this.qcm) return [];
+    return this.result.details.map((d: any) => {
+      const question = this.qcm!.questions.find(q => q.id === d.question_id);
+      if (!question) {
+        return {
+          is_correct: d.is_correct ?? false,
+          question_text: d.question_text || `Question ${d.question_id}`,
+          user_answer_text: d.user_answer_text || d.selected_answer_text || this.translate.instant('QCM_PANEL.RESULT.NO_ANSWER'),
+          correct_answer_text: d.correct_answer_text || this.translate.instant('QCM_PANEL.RESULT.UNKNOWN'),
+          explanation: d.explanation || '',
+        };
+      }
+      const selectedAnswer = question.answers.find(a => a.id === d.answer_id);
+      const correctAnswer = question.answers.find(a => a.id === d.correct_answer_id) || question.answers.find(a => a.is_correct);
+      return {
+        is_correct: d.is_correct ?? false,
+        question_text: question.text || '',
+        user_answer_text: selectedAnswer?.text || this.translate.instant('QCM_PANEL.RESULT.NO_ANSWER'),
+        correct_answer_text: correctAnswer?.text || this.translate.instant('QCM_PANEL.RESULT.UNKNOWN'),
+        explanation: question.explanation || '',
+      };
+    });
+  }
+
   readonly answerLetters = ['A', 'B', 'C', 'D'];
-  private isGenerated = false;
+  isGenerated = false;   // public for template
   private qcmId = 0;
   private langSub?: Subscription;
+  private paramSub?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -43,18 +75,33 @@ export class QcmSessionComponent implements OnInit, OnDestroy {
     private qcmService: QcmService,
     public translate: TranslateService,
     private languageService: LanguageService,
-  ) {}
+    private cdr: ChangeDetectorRef,
+  ) { }
 
   ngOnInit() {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (!idParam) {
-      this.router.navigate(['/apprenant/qcm']);
-      return;
-    }
-    this.qcmId = +idParam;
-    this.isGenerated = this.route.snapshot.queryParamMap.get('generated') === '1';
-    this.startTime = Date.now();
-    this.loadQcm();
+    this.paramSub = this.route.paramMap.subscribe(params => {
+      const idParam = params.get('id');
+      if (!idParam) {
+        this.router.navigate(['/apprenant/qcm']);
+        return;
+      }
+      const newId = +idParam;
+      const newIsGenerated = this.route.snapshot.queryParamMap.get('generated') === '1';
+      if (newId !== this.qcmId || newIsGenerated !== this.isGenerated) {
+        this.qcmId = newId;
+        this.isGenerated = newIsGenerated;
+        this.qcm = null;
+        this.userAnswers = [];
+        this.currentIndex = 0;
+        this.selectedAnswerId = null;
+        this.answered = false;
+        this.result = null;
+        this.showResult = false;
+        clearInterval(this.timer);
+        this.startTime = Date.now();
+        this.loadQcm();
+      }
+    });
     this.langSub = this.translate.onLangChange.subscribe(() => {
       this.loadQcm(true);
     });
@@ -65,16 +112,17 @@ export class QcmSessionComponent implements OnInit, OnDestroy {
       this.loading = true;
       this.error = '';
     }
-    const lang = this.languageService.getCurrentLang();
+    // QCM générés : pas de lang → backend retourne la langue d'origine (sans traduction)
+    // QCM officiels : on passe la langue UI pour la traduction
     const fetch$ = this.isGenerated
-      ? this.qcmService.getGeneratedQcmForTest(this.qcmId, lang).pipe(
-          catchError((err) => {
-            if (err?.name === 'TimeoutError') {
-              return throwError(() => err);
-            }
-            return this.qcmService.getGeneratedQcmForTest(this.qcmId, lang);
-          }),
-        )
+      ? this.qcmService.getGeneratedQcmForTest(this.qcmId).pipe(
+        catchError((err) => {
+          if (err?.name === 'TimeoutError') {
+            return throwError(() => err);
+          }
+          return this.qcmService.getGeneratedQcmForTest(this.qcmId);
+        }),
+      )
       : this.qcmService.getQcmForTest(this.qcmId);
 
     fetch$.subscribe({
@@ -84,10 +132,15 @@ export class QcmSessionComponent implements OnInit, OnDestroy {
         if (!keepSession) {
           this.startTimer();
         }
+        // Forcer la détection de changement : le callback HTTP ne déclenche
+        // pas toujours le cycle de détection Angular, ce qui laisse le spinner
+        // visible et le QCM invisible jusqu'au prochain événement utilisateur.
+        this.cdr.detectChanges();
       },
       error: () => {
         this.error = this.translate.instant('QCM_PANEL.TEST.LOAD_ERROR');
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -95,6 +148,7 @@ export class QcmSessionComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     clearInterval(this.timer);
     this.langSub?.unsubscribe();
+    this.paramSub?.unsubscribe();
   }
 
   // ─── Getters ───
@@ -131,7 +185,13 @@ export class QcmSessionComponent implements OnInit, OnDestroy {
 
   private startTimer() {
     if (!this.qcm) return;
-    const secondsPerQuestion = (this.qcm.duration_minutes * 60) / this.qcm.questions.length;
+    const durationMinutes = this.qcm.duration_minutes || 0;
+    const questionCount = this.qcm.questions.length || 1;
+    // If no duration configured (0), use 30s per question as default
+    const totalSeconds = durationMinutes > 0
+      ? durationMinutes * 60
+      : questionCount * 30;
+    const secondsPerQuestion = totalSeconds / questionCount;
     this.timeLeft = Math.round(secondsPerQuestion);
     clearInterval(this.timer);
     this.timer = setInterval(() => {
@@ -165,14 +225,14 @@ export class QcmSessionComponent implements OnInit, OnDestroy {
 
   isWrongSelected(answer: AnswerItem): boolean {
     return this.answered &&
-           this.selectedAnswerId === answer.id &&
-           !answer.is_correct;
+      this.selectedAnswerId === answer.id &&
+      !answer.is_correct;
   }
 
   isCorrectSelected(answer: AnswerItem): boolean {
     return this.answered &&
-           this.selectedAnswerId === answer.id &&
-           answer.is_correct;
+      this.selectedAnswerId === answer.id &&
+      answer.is_correct;
   }
 
   // ─── Navigation ───

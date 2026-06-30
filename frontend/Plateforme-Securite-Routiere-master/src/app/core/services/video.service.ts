@@ -242,6 +242,7 @@ export class VideoService {
       /youtu\.be\/([^\?&]+)/,
       /youtube\.com\/(?:embed\/|v\/|watch\?v=)([^\?&]+)/,
       /youtube\.com\/embed\/([^\?&]+)/,
+      /youtube\.com\/shorts\/([^\?&]+)/,
     ];
 
     for (const regexp of regexps) {

@@ -26,6 +26,7 @@ class AnswerPublic(BaseModel):
     """Réponse sans indiquer si elle est correcte (pour le test)."""
     id: int
     text: str
+    is_correct: bool = False
 
     class Config:
         from_attributes = True
@@ -54,10 +55,11 @@ class QuestionResponse(BaseModel):
 
 
 class QuestionPublic(BaseModel):
-    """Question sans les réponses correctes (pour le test)."""
+    """Question avec explanation pour le résultat final."""
     id: int
     text: str
     image_url: Optional[str]
+    explanation: Optional[str] = None
     order: int
     answers: List[AnswerPublic]
 

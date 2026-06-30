@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { VideoService, VideoResponse, VideoUpdateRequest } from '../../core/services/video.service';
+import { AuthService } from '../../core/services/auth.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -40,13 +41,15 @@ export class VideoManage implements OnInit {
     { value: 'securite', labelKey: 'FORMATEUR.VIDEO_MANAGE.CATEGORIES.SECURITE' },
     { value: 'secours', labelKey: 'FORMATEUR.VIDEO_MANAGE.CATEGORIES.SECOURS' },
     { value: 'signalisation', labelKey: 'FORMATEUR.VIDEO_MANAGE.CATEGORIES.SIGNALISATION' },
+    { value: 'physique', labelKey: 'FORMATEUR.VIDEO_MANAGE.CATEGORIES.PHYSIQUE' },
   ];
 
   constructor(
     private videoService: VideoService,
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private authService: AuthService
   ) {
     this.initializeEditForm();
   }
@@ -70,10 +73,12 @@ export class VideoManage implements OnInit {
    */
   load(): void {
     this.loading.set(true);
-    console.log('🚀 Chargement des vidéos...', { category: this.filterCategory() });
+    const currentUser = this.authService.currentUser();
+    const formateurId = currentUser ? currentUser.id : undefined;
+    console.log('🚀 Chargement des vidéos...', { category: this.filterCategory(), formateurId });
 
     this.videoService
-      .listVideos(this.filterCategory() || undefined)
+      .listVideos(this.filterCategory() || undefined, false, 100, formateurId)
       .pipe(
         finalize(() => {
           this.loading.set(false);
@@ -327,6 +332,40 @@ export class VideoManage implements OnInit {
       url => typeof url === 'string' &&
              (url.includes('youtube') || url.includes('youtu.be'))
     );
+  }
+
+  isLocalVideo(video: VideoResponse | null | undefined): boolean {
+    if (!video) return false;
+    const url = video.file_path || (video as any).youtube_url || (video as any).source_url || (video as any).video_url || '';
+    if (url.includes('youtube') || url.includes('youtu.be')) return false;
+    if (url.includes('facebook.com') || url.includes('fb.watch')) return false;
+    return url.includes('uploads/') || !url.startsWith('http');
+  }
+
+  getLocalVideoUrl(video: VideoResponse | null | undefined): string {
+    if (!video) return '';
+    const path = video.file_path || (video as any).youtube_url || (video as any).source_url || (video as any).video_url || '';
+    const trimmed = path.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+    if (trimmed.startsWith('/uploads/')) {
+      return trimmed;
+    }
+    if (trimmed.startsWith('uploads/')) {
+      return '/' + trimmed;
+    }
+    return '/uploads/' + trimmed;
+  }
+
+  isExternalLink(video: VideoResponse | null | undefined): boolean {
+    if (!video) return false;
+    return !this.isYoutubeVideo(video) && !this.isLocalVideo(video);
+  }
+
+  getExternalUrl(video: VideoResponse | null | undefined): string {
+    if (!video) return '';
+    return video.file_path || (video as any).youtube_url || (video as any).source_url || (video as any).video_url || '';
   }
 
   /**

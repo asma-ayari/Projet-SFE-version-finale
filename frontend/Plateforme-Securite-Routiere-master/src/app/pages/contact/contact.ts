@@ -1,7 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contact',
@@ -10,6 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
   styleUrl: './contact.css',
 })
 export class Contact {
+  private translate = inject(TranslateService);
+
   formData = {
     name: '',
     email: '',
@@ -41,6 +43,20 @@ export class Contact {
       content: 'Lun - Ven: 8h00 - 17h00\nSam: 8h00 - 12h00'
     }
   ];
+
+  getHoursRows() {
+    const isAr = this.translate.currentLang === 'ar';
+    return [
+      {
+        day: isAr ? 'الاثنين - الجمعة' : 'Lundi - Vendredi',
+        time: isAr ? '8:00 - 17:00' : '8h00 - 17h00'
+      },
+      {
+        day: isAr ? 'السبت' : 'Samedi',
+        time: isAr ? '8:00 - 12:00' : '8h00 - 12h00'
+      }
+    ];
+  }
 
   onSubmit() {
     this.isSubmitting.set(true);

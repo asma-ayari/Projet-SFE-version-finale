@@ -34,6 +34,7 @@ export class QcmTest implements OnInit, OnDestroy {
   startTime = 0;
   private qcmId = 0;
   private langSub?: Subscription;
+  private paramSub?: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -51,9 +52,28 @@ export class QcmTest implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.qcmId = Number(this.route.snapshot.paramMap.get('id'));
-    this.isGenerated = this.route.snapshot.queryParamMap.get('generated') === '1';
-    this.loadQcm();
+    this.paramSub = this.route.paramMap.subscribe(params => {
+      const newId = Number(params.get('id'));
+      const newIsGenerated = this.route.snapshot.queryParamMap.get('generated') === '1';
+      // Reset state if navigating to a different QCM
+      if (newId !== this.qcmId || newIsGenerated !== this.isGenerated) {
+        this.qcmId = newId;
+        this.isGenerated = newIsGenerated;
+        this.qcm = null;
+        this.selectedAnswers = new Map();
+        this.currentIndex = 0;
+        clearInterval(this.timerInterval);
+        this.loadQcm();
+      }
+    });
+    // Also subscribe to query param changes (generated flag)
+    this.route.queryParamMap.subscribe(qParams => {
+      const newIsGenerated = qParams.get('generated') === '1';
+      if (newIsGenerated !== this.isGenerated && this.qcmId) {
+        this.isGenerated = newIsGenerated;
+        this.loadQcm();
+      }
+    });
     this.langSub = this.translateService.onLangChange.subscribe(() => {
       this.loadQcm(true);
     });
@@ -123,6 +143,7 @@ export class QcmTest implements OnInit, OnDestroy {
   ngOnDestroy() {
     clearInterval(this.timerInterval);
     this.langSub?.unsubscribe();
+    this.paramSub?.unsubscribe();
   }
 
   startTimer() {

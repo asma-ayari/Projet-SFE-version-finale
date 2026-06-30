@@ -307,3 +307,35 @@ textarea.form-control {
     padding: 1.5rem;
   }
 }
+
+/* Working Hours Table */
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.hours-table tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.hours-table tr:last-child {
+  border-bottom: none;
+}
+
+.hours-table td {
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.day-cell {
+  color: #475569;
+  font-weight: 500;
+  text-align: start;
+}
+
+.time-cell {
+  color: #f97316;
+  font-weight: 600;
+  text-align: end;
+}

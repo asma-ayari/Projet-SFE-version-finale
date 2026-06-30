@@ -350,7 +350,13 @@
     "FORM_SUBJECT": "Sujet",
     "FORM_MESSAGE": "Message",
     "FORM_SUBMIT": "Envoyer le message",
-    "FORM_SENDING": "Envoi en cours..."
+    "FORM_SENDING": "Envoi en cours...",
+    "ADDRESS_VALUE": "Rue Ahmed Skolli - Immeuble Alambra 2\n1er étage - 3027 - Sfax",
+    "FORM_NAME_PLACEHOLDER": "Votre nom et prénom...",
+    "FORM_EMAIL_PLACEHOLDER": "Votre adresse email...",
+    "FORM_SUBJECT_PLACEHOLDER": "Objet de votre message...",
+    "FORM_MESSAGE_PLACEHOLDER": "Écrivez votre message ici...",
+    "MAP_LABEL": "Notre emplacement sur la carte"
   },
   "ADMIN": {
     "SIDEBAR": {
@@ -797,7 +803,8 @@
         "SECURITE": "Sécurité",
         "SECOURS": "Premiers secours",
         "SIGNALISATION": "Signalisation",
-        "GENERAL": "Général"
+        "GENERAL": "Général",
+        "PHYSIQUE": "Physique"
       },
       "TABLE": {
         "COVER": "Couverture",
@@ -858,7 +865,8 @@
         "SECURITE": "Sécurité",
         "SECOURS": "Premiers secours",
         "SIGNALISATION": "Signalisation",
-        "GENERAL": "Général"
+        "GENERAL": "Général",
+        "PHYSIQUE": "Physique"
       },
       "ACTIONS": {
         "CANCEL": "Annuler",
@@ -893,7 +901,8 @@
         "SECURITE": "Sécurité",
         "SECOURS": "Premiers secours",
         "SIGNALISATION": "Signalisation",
-        "GENERAL": "Général"
+        "GENERAL": "Général",
+        "PHYSIQUE": "Physique"
       },
       "ACTIONS": {
         "CANCEL": "Annuler",
@@ -950,7 +959,8 @@
         "CONDUITE": "Conduite",
         "SECURITE": "Sécurité",
         "SECOURS": "Premiers secours",
-        "SIGNALISATION": "Signalisation"
+        "SIGNALISATION": "Signalisation",
+        "PHYSIQUE": "Physique"
       },
       "VALIDATION": {
         "TITLE_MIN": "Le titre doit contenir au moins 3 caractères",
@@ -979,7 +989,8 @@
         "CONDUITE": "Conduite",
         "SECURITE": "Sécurité",
         "SECOURS": "Premiers secours",
-        "SIGNALISATION": "Signalisation"
+        "SIGNALISATION": "Signalisation",
+        "PHYSIQUE": "Physique"
       },
       "STATS": {
         "TOTAL": "Total : {{count}} vidéo(s)"
@@ -1029,7 +1040,9 @@
           "CATEGORY": "Catégorie :",
           "ADDED_AT": "Ajoutée le :",
           "SIZE": "Taille :"
-        }
+        },
+        "EXTERNAL_SOURCE": "Cette vidéo provient d'une source externe (Facebook, etc.) et ne peut pas être lue directement ici.",
+        "OPEN_EXTERNAL": "Ouvrir la vidéo dans un nouvel onglet"
       },
       "MESSAGES": {
         "LOAD_ERROR": "Erreur de chargement",
@@ -1090,7 +1103,8 @@
       "SECURITE": "Sécurité",
       "SECOURS": "Premiers secours",
       "SIGNALISATION": "Signalisation",
-      "GENERAL": "Général"
+      "GENERAL": "Général",
+      "PHYSIQUE": "Physique"
     }
   },
   "COURSE_DETAIL": {
@@ -2128,7 +2142,8 @@
       "CONDUITE": "Conduite",
       "SECURITE": "Sécurité",
       "SECOURS": "Premiers secours",
-      "SIGNALISATION": "Signalisation"
+      "SIGNALISATION": "Signalisation",
+      "PHYSIQUE": "Physique"
     }
   },
   "QCM_PANEL": {
@@ -2156,7 +2171,8 @@
       "PREV": "Précédent",
       "NEXT": "Suivant",
       "PUBLISHED": "Publié",
-      "NO_QUIZZES": "Aucun QCM disponible pour le moment"
+      "NO_QUIZZES": "Aucun QCM disponible pour le moment",
+      "CAT_PHYSIQUE": "Physique"
     },
     "TEST": {
       "LOADING": "Chargement...",

@@ -552,24 +552,10 @@ def list_published_qcms(
         base_query = base_query.filter(QCM.category == category)
     qcms = base_query.order_by(QCM.created_at.desc()).all()
     cache = _category_name_cache(db)
-    items = [_qcm_to_list_response(q, cache) for q in qcms]
-    if not lang:
-        return items
-    translated_items = []
-    for item, qcm in zip(items, qcms):
-        if not item.is_generated:
-            translated_items.append(item)
-            continue
-        source_lang = get_source_language(
-            getattr(qcm, "generation_language", None),
-            qcm.title,
-        )
-        try:
-            translated_items.append(translate_list_item(item, source_lang, lang))
-        except Exception as exc:
-            _LOGGER.warning("Traduction liste QCM %s echouee: %s", item.id, exc)
-            translated_items.append(item)
-    return translated_items
+    # ✅ Ne pas traduire dans la liste : la traduction se fait uniquement à l'ouverture
+    # du QCM (/generated/{id}). Cela évite les appels Groq en masse sur le chargement
+    # de la page et supprime les erreurs 429.
+    return [_qcm_to_list_response(q, cache) for q in qcms]
 
 
 @router.get("/generated/{qcm_id}", response_model=QCMPublicResponse)

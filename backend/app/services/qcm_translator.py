@@ -1,6 +1,7 @@
 """
 Traduction bilingue (FR/AR) des QCM auto-générés à la volée.
 """
+import hashlib
 import json
 import logging
 import re
@@ -10,7 +11,8 @@ from app.schemas.qcm import QCMPublicResponse, QCMListResponse
 from app.services.qcm_generator import _extract_json, _invoke_llm_with_retry, _get_llm
 
 _LOGGER = logging.getLogger(__name__)
-_TRANSLATION_CACHE: Dict[Tuple[int, str], Dict[str, Any]] = {}
+_TRANSLATION_CACHE: Dict[str, Dict[str, Any]] = {}
+_CACHE_MAX_SIZE = 500  # évite la croissance non bornée en mémoire
 
 
 def detect_language(text: Optional[str]) -> str:
@@ -95,6 +97,24 @@ def _apply_translation(
     return QCMPublicResponse.model_validate(data)
 
 
+def _make_cache_key(qcm_id: int, target_lang: str, content_hash: str) -> str:
+    """Clé de cache incluant le hash du contenu pour invalider si le QCM change."""
+    return f"{qcm_id}:{target_lang}:{content_hash}"
+
+
+def _content_hash(title: Optional[str], description: Optional[str] = None) -> str:
+    raw = (title or "") + "|¦|" + (description or "")
+    return hashlib.md5(raw.encode("utf-8")).hexdigest()[:8]
+
+
+def _cache_set(key: str, value: Dict[str, Any]) -> None:
+    if len(_TRANSLATION_CACHE) >= _CACHE_MAX_SIZE:
+        # Supprime le premier élément inséré (FIFO simpliste)
+        oldest = next(iter(_TRANSLATION_CACHE))
+        del _TRANSLATION_CACHE[oldest]
+    _TRANSLATION_CACHE[key] = value
+
+
 def translate_public_qcm(
     response: QCMPublicResponse,
     source_lang: str,
@@ -103,8 +123,10 @@ def translate_public_qcm(
     if not target_lang or target_lang not in ("fr", "ar") or source_lang == target_lang:
         return response
 
-    cache_key = (response.id, target_lang)
+    chash = _content_hash(response.title, response.description)
+    cache_key = _make_cache_key(response.id, target_lang, chash)
     if cache_key in _TRANSLATION_CACHE:
+        _LOGGER.debug("[cache hit] QCM %s -> %s", response.id, target_lang)
         return _apply_translation(response, _TRANSLATION_CACHE[cache_key])
 
     payload = {
@@ -131,7 +153,7 @@ def translate_public_qcm(
         _LOGGER.warning("Traduction QCM %s echouee: %s", response.id, exc)
         return response
 
-    _TRANSLATION_CACHE[cache_key] = translated
+    _cache_set(cache_key, translated)
     return _apply_translation(response, translated)
 
 
@@ -145,7 +167,8 @@ def translate_list_item(
     if not target_lang or target_lang not in ("fr", "ar") or source_lang == target_lang:
         return item
 
-    cache_key = (item.id, f"list_{target_lang}")
+    chash = _content_hash(item.title, item.description)
+    cache_key = _make_cache_key(item.id, f"list_{target_lang}", chash)
     if cache_key in _TRANSLATION_CACHE:
         cached = _TRANSLATION_CACHE[cache_key]
         data = item.model_dump()
@@ -163,7 +186,7 @@ def translate_list_item(
     except ValueError:
         return item
 
-    _TRANSLATION_CACHE[cache_key] = translated
+    _cache_set(cache_key, translated)
     data = item.model_dump()
     data["title"] = translated.get("title", data["title"])
     if translated.get("description") is not None:
